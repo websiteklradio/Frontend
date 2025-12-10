@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Card,
   CardContent,
@@ -5,13 +7,16 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Megaphone, Music2, Users } from 'lucide-react';
+import { useAuth } from '@/context/auth-context';
 
 export default function DashboardPage() {
+  const { user } = useAuth();
+  
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
-          Welcome, Station Head
+          Welcome, {user?.name || 'Member'}
         </h1>
         <p className="text-muted-foreground">
           Here's a quick overview of your station's activity.
