@@ -1,4 +1,4 @@
-import { Radio } from 'lucide-react';
+import { Instagram } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -12,7 +12,7 @@ export function SiteFooter() {
             Built for KL Radio. &copy; {new Date().getFullYear()}
           </p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">
             About
           </Link>
@@ -21,6 +21,10 @@ export function SiteFooter() {
           </Link>
           <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">
             Privacy Policy
+          </Link>
+          <Link href="https://www.instagram.com/kl__radio?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">
+            <Instagram className="h-5 w-5" />
+            <span className="sr-only">Instagram</span>
           </Link>
         </div>
       </div>
