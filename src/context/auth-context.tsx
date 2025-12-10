@@ -12,14 +12,14 @@ type User = {
 };
 
 const users: User[] = [
-  { id: '1', name: 'Station Head', email: 'station.head@klradio.com', role: 'Station Head', avatarId: '1' },
-  { id: '2', name: 'RJ Riff', email: 'rj.riff@klradio.com', role: 'RJ', avatarId: '1' },
-  { id: '3', name: 'Creative Carla', email: 'carla.c@klradio.com', role: 'Creative', avatarId: '1' },
+  { id: '1', name: 'Station Head', email: 'stationhead@gmail.com', role: 'Station Head', avatarId: '1' },
+  { id: '2', name: 'RJ Riff', email: 'rj@gmail.com', role: 'RJ', avatarId: '1' },
+  { id: '3', name: 'Creative Carla', email: 'creative@gmail.com', role: 'Creative', avatarId: '1' },
   { id: '4', name: 'Techie Tom', email: 'tom.t@klradio.com', role: 'Technical', avatarId: '1' },
-  { id: '5', name: 'PR Penelope', email: 'penelope.p@klradio.com', role: 'PR', avatarId: '1' },
-  { id: '6', name: 'Designer Dan', email: 'dan.d@klradio.com', role: 'Designing', avatarId: '1' },
-  { id: '7', name: 'Video Vince', email: 'vince.v@klradio.com', role: 'Video Editing', avatarId: '1' },
-  { id: '8', name: 'Broadcast Barry', email: 'barry.b@klradio.com', role: 'Broadcasting', avatarId: '1' },
+  { id: '5', name: 'PR Penelope', email: 'pr@gmail.com', role: 'PR', avatarId: '1' },
+  { id: '6', name: 'Designer Dan', email: 'designing@gmail.com', role: 'Designing', avatarId: '1' },
+  { id: '7', name: 'Video Vince', email: 'videoediting@gmail.com', role: 'Video Editing', avatarId: '1' },
+  { id: '8', name: 'Broadcast Barry', email: 'broadcasting@gmail.com', role: 'Broadcasting', avatarId: '1' },
 ];
 
 type AuthContextType = {
