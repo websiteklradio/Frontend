@@ -14,6 +14,7 @@ import {
   Scissors,
   Radio,
   Shield,
+  Upload,
 } from 'lucide-react';
 import {
   SidebarMenu,
@@ -22,30 +23,68 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
 } from '@/components/ui/sidebar';
+import { useAuth } from '@/context/auth-context';
 
-const wingNavItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
-  { href: '/dashboard/announcements', label: 'Announcements', icon: Megaphone },
-  { href: '/dashboard/suggestions', label: 'Suggestions', icon: Music2 },
+type NavItem = {
+  href: string;
+  label: string;
+  icon: React.ElementType;
+  roles: string[];
+};
+
+const navItems: NavItem[] = [
+  // General
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid, roles: ['Station Head', 'Creative', 'Technical', 'PR', 'Design', 'Video', 'RJ'] },
+  { href: '/dashboard/announcements', label: 'Announcements', icon: Megaphone, roles: ['Station Head', 'PR'] },
+  { href: '/dashboard/suggestions', label: 'Suggestions', icon: Music2, roles: ['Station Head', 'RJ'] },
+  
+  // Wings
+  { href: '/dashboard/broadcasting', label: 'Broadcasting', icon: Radio, roles: ['Station Head', 'RJ', 'Technical'] },
+  { href: '/dashboard/creative', label: 'Creative', icon: Brush, roles: ['Station Head', 'Creative'] },
+  { href: '/dashboard/designing', label: 'Designing', icon: Palette, roles: ['Station Head', 'Design'] },
+  { href: '/dashboard/pr', label: 'PR', icon: Users, roles: ['Station Head', 'PR'] },
+  { href: '/dashboard/technical', label: 'Technical', icon: Wrench, roles: ['Station Head', 'Technical'] },
+  { href: '/dashboard/video-editing', label: 'Video Editing', icon: Scissors, roles: ['Station Head', 'Video'] },
+  { href: '/dashboard/uploads', label: 'Uploads', icon: Upload, roles: ['Station Head', 'PR', 'Design', 'Video'] },
+
+  // Management
+  { href: '/dashboard/admin', label: 'Admin Panel', icon: Shield, roles: ['Station Head'] },
 ];
 
-const memberNavItems = [
-  { href: '/dashboard/broadcasting', label: 'Broadcasting', icon: Radio },
-  { href: '/dashboard/creative', label: 'Creative', icon: Brush },
-  { href: '/dashboard/designing', label: 'Designing', icon: Palette },
-  { href: '/dashboard/pr', label: 'PR', icon: Users },
-  { href: '/dashboard/technical', label: 'Technical', icon: Wrench },
-  { href: '/dashboard/video-editing', label: 'Video Editing', icon: Scissors },
-];
 
-const adminNavItems = [
-  { href: '/dashboard/admin', label: 'Admin Panel', icon: Shield },
-];
+const groupMapping: Record<string, string> = {
+  'Dashboard': 'Menu',
+  'Announcements': 'Menu',
+  'Suggestions': 'Menu',
+  'Broadcasting': 'Wings',
+  'Creative': 'Wings',
+  'Designing': 'Wings',
+  'PR': 'Wings',
+  'Technical': 'Wings',
+  'Video Editing': 'Wings',
+  'Uploads': 'Wings',
+  'Admin Panel': 'Management',
+}
 
 export function MainNav() {
   const pathname = usePathname();
+  const { user } = useAuth();
 
-  const renderNavItems = (items: typeof wingNavItems) => {
+  const userRole = user?.role || 'Guest';
+
+  const accessibleNavItems = navItems.filter(item => item.roles.includes(userRole));
+
+  const groupedNavItems = accessibleNavItems.reduce((acc, item) => {
+    const group = groupMapping[item.label] || 'Menu';
+    if (!acc[group]) {
+      acc[group] = [];
+    }
+    acc[group].push(item);
+    return acc;
+  }, {} as Record<string, typeof accessibleNavItems>);
+
+
+  const renderNavItems = (items: typeof accessibleNavItems) => {
     return items.map((item) => (
       <SidebarMenuItem key={item.label}>
         <Link href={item.href} legacyBehavior passHref>
@@ -63,24 +102,14 @@ export function MainNav() {
 
   return (
     <>
-      <SidebarGroup>
-        <SidebarGroupLabel>Menu</SidebarGroupLabel>
-        <SidebarMenu>
-          {renderNavItems(wingNavItems)}
-        </SidebarMenu>
-      </SidebarGroup>
-      <SidebarGroup>
-        <SidebarGroupLabel>Wings</SidebarGroupLabel>
-        <SidebarMenu>
-          {renderNavItems(memberNavItems)}
-        </SidebarMenu>
-      </SidebarGroup>
-      <SidebarGroup>
-        <SidebarGroupLabel>Management</SidebarGroupLabel>
-        <SidebarMenu>
-          {renderNavItems(adminNavItems)}
-        </SidebarMenu>
-      </SidebarGroup>
+      {Object.entries(groupedNavItems).map(([group, items]) => (
+        <SidebarGroup key={group}>
+          <SidebarGroupLabel>{group}</SidebarGroupLabel>
+          <SidebarMenu>
+            {renderNavItems(items)}
+          </SidebarMenu>
+        </SidebarGroup>
+      ))}
     </>
   );
 }
