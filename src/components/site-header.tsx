@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Radio } from 'lucide-react';
+import Image from 'next/image';
 
 export function SiteHeader() {
   const navItems = [
@@ -13,7 +14,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 max-w-screen-2xl items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <Radio className="h-6 w-6 text-primary" />
+          <Image src="https://ik.imagekit.io/z5fowzj2wr/Screenshot%202025-12-10%20171402.png?updatedAt=1765367128945" alt="KL Radio Hub Logo" width={24} height={24} className="h-6 w-6" />
           <span className="font-bold sm:inline-block">KL Radio Hub</span>
         </Link>
         <nav className="flex items-center gap-4 text-sm lg:gap-6">

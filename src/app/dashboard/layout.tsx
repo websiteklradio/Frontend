@@ -10,6 +10,7 @@ import {
 import { MainNav } from '@/components/dashboard/main-nav';
 import { DashboardHeader } from '@/components/dashboard/header';
 import { AuthProvider } from '@/context/auth-context';
+import Image from 'next/image';
 
 export default function DashboardLayout({
   children,
@@ -22,7 +23,7 @@ export default function DashboardLayout({
         <Sidebar>
           <SidebarHeader className="border-b">
             <div className="flex items-center gap-2 p-2">
-              <Radio className="size-6 text-primary" />
+              <Image src="https://ik.imagekit.io/z5fowzj2wr/Screenshot%202025-12-10%20171402.png?updatedAt=1765367128945" alt="KL Radio Hub Logo" width={24} height={24} className="size-6" />
               <h1 className="font-headline text-lg font-semibold">KL Radio Hub</h1>
             </div>
           </SidebarHeader>
