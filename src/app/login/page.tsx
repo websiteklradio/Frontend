@@ -134,31 +134,6 @@ function LoginComponent() {
         </CardContent>
       </Card>
       
-      <Card className="w-full max-w-sm mt-6">
-        <CardHeader>
-            <CardTitle className="text-lg">Sample Logins</CardTitle>
-            <CardDescription>Use these credentials to test different roles. Any password will work.</CardDescription>
-        </CardHeader>
-        <CardContent>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Role</TableHead>
-                        <TableHead>Email</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {users.filter(u => u.role !== 'Guest').map(user => (
-                        <TableRow key={user.id}>
-                            <TableCell className="font-medium">{user.role}</TableCell>
-                            <TableCell>{user.email}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </CardContent>
-      </Card>
-      
       <p className="mt-6 text-center text-sm text-muted-foreground">
         Not a member? Go back to the{' '}
         <Link href="/" className="underline underline-offset-4 hover:text-primary">
