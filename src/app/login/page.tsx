@@ -16,33 +16,53 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AuthProvider, useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 
 function LoginComponent() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { users, login, setUser } = useAuth();
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState(''); // Password is for UI purposes for now
   const [loading, setLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<string>('');
+
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    if (!email || !password) {
+    if (!email || !password || !selectedRole) {
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: 'Please enter both email and password.',
+        description: 'Please select a role and enter your credentials.',
       });
       setLoading(false);
       return;
     }
 
-    // In a real app, you'd handle authentication here.
-    // For now, we'll just use the mock login from the context.
-    const result = await login(email);
+    const selectedUser = users.find(u => u.role === selectedRole);
+    if (!selectedUser) {
+        toast({
+            variant: 'destructive',
+            title: 'Login Failed',
+            description: 'Invalid role selected.',
+        });
+        setLoading(false);
+        return;
+    }
+
+    // In a real app, you'd verify email and password against the selected role's user.
+    // For now, we're just matching the selected role and a mock user.
+    const result = await login(selectedUser.email);
 
     if (!result.success) {
       toast({
@@ -55,6 +75,8 @@ function LoginComponent() {
 
     setLoading(false);
   };
+  
+  const uniqueRoles = Array.from(new Set(users.map(u => u.role)));
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
@@ -65,10 +87,23 @@ function LoginComponent() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Member Login</CardTitle>
-          <CardDescription>Enter your credentials to access your dashboard.</CardDescription>
+          <CardDescription>Select your role and enter your credentials.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="grid gap-4">
+            <div className="grid gap-2">
+                <Label htmlFor="role">Select Your Role</Label>
+                <Select onValueChange={setSelectedRole} value={selectedRole}>
+                    <SelectTrigger id="role">
+                        <SelectValue placeholder="Login as..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {uniqueRoles.map((role) => (
+                        <SelectItem key={role} value={role}>{role}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
                <Input
