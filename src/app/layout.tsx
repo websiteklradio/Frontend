@@ -8,7 +8,7 @@ const lexend = Lexend({ subsets: ['latin'], weight: ['700', '800'], variable: '-
 
 
 export const metadata: Metadata = {
-  title: 'KL Radio Hub',
+  title: 'KL Radio',
   description: 'The central hub for KL Radio members and listeners.',
 };
 

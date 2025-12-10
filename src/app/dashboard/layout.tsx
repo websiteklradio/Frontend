@@ -1,4 +1,5 @@
 
+
 import { Radio } from 'lucide-react';
 import {
   Sidebar,
@@ -23,8 +24,8 @@ export default function DashboardLayout({
         <Sidebar>
           <SidebarHeader className="border-b">
             <div className="flex items-center gap-2 p-2">
-              <Image src="https://ik.imagekit.io/z5fowzj2wr/Screenshot%202025-12-10%20171402.png?updatedAt=1765367128945" alt="KL Radio Hub Logo" width={24} height={24} className="size-6" />
-              <h1 className="font-headline text-lg font-semibold">KL Radio Hub</h1>
+              <Image src="https://ik.imagekit.io/z5fowzj2wr/Screenshot%202025-12-10%20171402.png?updatedAt=1765367128945" alt="KL Radio Logo" width={24} height={24} className="size-6" />
+              <h1 className="font-headline text-lg font-semibold">KL Radio</h1>
             </div>
           </SidebarHeader>
           <SidebarContent>

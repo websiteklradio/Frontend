@@ -70,7 +70,7 @@ export default function Home() {
                 The Voice of Klians
             </h1>
             <p className="mt-6 max-w-3xl mx-auto text-muted-foreground md:text-xl">
-              KL Radio Hub is your destination for live music, latest announcements, and community connection. Tune in and feel the vibe.
+              KL Radio is your destination for live music, latest announcements, and community connection. Tune in and feel the vibe.
             </p>
           </div>
         </section>
