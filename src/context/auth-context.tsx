@@ -37,24 +37,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   const login = useCallback(async (email: string): Promise<{ success: boolean; error?: string }> => {
-    // Mock login logic. In a real app, this would involve a password and an API call.
-    const foundUser = users.find((u) => u.email.toLowerCase() === email.toLowerCase() || users.find(u2 => u2.role === u.role));
-    
-    if (email) { // This will be improved when Firebase is connected
-      const userToLogin = users.find(u => u.email === email) || users.find(u => u.role === email);
-      if (userToLogin) {
-        setUser(userToLogin);
-        router.push('/dashboard');
-        return { success: true };
-      }
-    }
+    // The 'email' parameter from the form is now treated as the role identifier for this mock setup.
+    const roleToFind = email;
+    const foundUser = users.find((u) => u.role === roleToFind);
     
     if (foundUser) {
       setUser(foundUser);
       router.push('/dashboard');
       return { success: true };
     } else {
-      return { success: false, error: 'No user found with that email.' };
+      return { success: false, error: 'No user found for that role.' };
     }
   }, [router]);
 

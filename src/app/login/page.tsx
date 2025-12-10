@@ -40,30 +40,19 @@ function LoginComponent() {
     e.preventDefault();
     setLoading(true);
     
-    if (!email || !password || !selectedRole) {
+    if (!selectedRole) {
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: 'Please select a role and enter your credentials.',
+        description: 'Please select a role to log in.',
       });
       setLoading(false);
       return;
     }
 
-    const selectedUser = users.find(u => u.role === selectedRole);
-    if (!selectedUser) {
-        toast({
-            variant: 'destructive',
-            title: 'Login Failed',
-            description: 'Invalid role selected.',
-        });
-        setLoading(false);
-        return;
-    }
-
-    // In a real app, you'd verify email and password against the selected role's user.
-    // For now, we're just matching the selected role and a mock user.
-    const result = await login(selectedUser.email);
+    // Pass the selected role to the login function.
+    // The auth context's login function is now expecting the role.
+    const result = await login(selectedRole);
 
     if (!result.success) {
       toast({
