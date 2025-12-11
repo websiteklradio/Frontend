@@ -26,38 +26,76 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useAuth } from '@/context/auth-context';
+import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
-// Mock Data
+// Mock Data for scripts
 const mockScripts = [
   { id: 's1', title: 'Morning Rush Intro', lastEdited: '2 hours ago' },
   { id: 's2', title: 'Rock On - Special Guest Segment', lastEdited: '1 day ago' },
   { id: 's3', title: 'Weekend Countdown Opener', lastEdited: '3 days ago' },
 ];
 
-const mockNews = [
-  {
-    id: 'n1',
-    title: 'City Marathon Causes Road Closures',
-    source: 'City News Wire',
-    assignedTo: null,
-  },
-  {
-    id: 'n2',
-    title: 'Local Band "The Wanderers" Releases New Album',
-    source: 'Music Today',
-    assignedTo: 'RJ Riff',
-  },
-  {
-    id: 'n3',
-    title: 'Tech Expo 2024 happening this weekend',
-    source: 'Tech Chronicle',
-    assignedTo: null,
-  },
-];
+type NewsItem = {
+  article_id: string;
+  title: string;
+  link: string;
+  source_id: string;
+  source_url: string;
+  description: string | null;
+  pubDate: string;
+  assignedTo: string | null;
+};
 
 export default function CreativePage() {
-  const { users } = useAuth();
+  const { users, setAssignedNews } = useAuth();
   const rjs = users.filter(u => u.role === 'RJ');
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [isFetching, setIsFetching] = useState(false);
+  const { toast } = useToast();
+
+  const handleFetchNews = async () => {
+    setIsFetching(true);
+    try {
+      const response = await fetch("https://newsdata.io/api/1/latest?apikey=pub_86147e4c6763799e06ca8b0b19a28eafd574a&country=in&language=te,en&category=education,science,technology,top,breaking&image=0&removeduplicate=1");
+      const data = await response.json();
+      if (data.status === 'success' && data.results) {
+        setNews(data.results.map((item: any) => ({ ...item, assignedTo: null })));
+        toast({
+          title: "News Fetched",
+          description: `Successfully fetched ${data.results.length} new articles.`
+        });
+      } else {
+        throw new Error(data.message || 'Failed to fetch news.');
+      }
+    } catch (error: any) {
+      console.error('Error fetching news:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: error.message || 'Could not fetch news articles.',
+      });
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  const handleAssignNews = (articleId: string, rjName: string | null) => {
+    const updatedNews = news.map(item =>
+      item.article_id === articleId ? { ...item, assignedTo: rjName === 'unassigned' ? null : rjName } : item
+    );
+    setNews(updatedNews);
+    
+    // Update the shared state for the RJ dashboard
+    const newsForRj = updatedNews.filter(item => item.assignedTo);
+    const rjNewsItems = newsForRj.map(item => ({
+      id: item.article_id,
+      title: item.title,
+      summary: item.description || 'No summary available.',
+      source: item.source_id,
+    }));
+    setAssignedNews(rjNewsItems);
+  };
 
   return (
     <div className="space-y-6">
@@ -128,9 +166,9 @@ export default function CreativePage() {
                         Fetch the latest news and assign it to RJs.
                     </CardDescription>
                 </div>
-                <Button variant="outline">
-                    <RefreshCw className="mr-2 h-4 w-4" />
-                    Fetch News
+                <Button onClick={handleFetchNews} disabled={isFetching} variant="outline">
+                    <RefreshCw className={`mr-2 h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />
+                    {isFetching ? 'Fetching...' : 'Fetch News'}
                 </Button>
             </div>
           </CardHeader>
@@ -143,14 +181,17 @@ export default function CreativePage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockNews.map((item) => (
-                  <TableRow key={item.id}>
+                {news.length > 0 ? news.map((item) => (
+                  <TableRow key={item.article_id}>
                     <TableCell>
                       <p className="font-medium">{item.title}</p>
-                      <p className="text-xs text-muted-foreground">{item.source}</p>
+                      <p className="text-xs text-muted-foreground">{item.source_id}</p>
                     </TableCell>
                     <TableCell className="w-[180px]">
-                      <Select defaultValue={item.assignedTo || undefined}>
+                      <Select 
+                        defaultValue={item.assignedTo || "unassigned"}
+                        onValueChange={(value) => handleAssignNews(item.article_id, value)}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Assign to RJ..." />
                         </SelectTrigger>
@@ -163,7 +204,13 @@ export default function CreativePage() {
                       </Select>
                     </TableCell>
                   </TableRow>
-                ))}
+                )) : (
+                    <TableRow>
+                        <TableCell colSpan={2} className="h-24 text-center">
+                            No news fetched yet. Click "Fetch News" to get started.
+                        </TableCell>
+                    </TableRow>
+                )}
               </TableBody>
             </Table>
           </CardContent>

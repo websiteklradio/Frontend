@@ -33,6 +33,12 @@ const roleRedirects: Record<string, string> = {
   'Broadcasting': '/dashboard/broadcasting',
 };
 
+type AssignedNewsItem = {
+    id: string;
+    title: string;
+    summary: string;
+    source: string;
+}
 
 type AuthContextType = {
   user: User | null;
@@ -40,12 +46,15 @@ type AuthContextType = {
   login: (role: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   setUser: (user: User | null) => void;
+  assignedNews: AssignedNewsItem[];
+  setAssignedNews: (news: AssignedNewsItem[]) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [assignedNews, setAssignedNews] = useState<AssignedNewsItem[]>([]);
   const router = useRouter();
 
   const login = useCallback(async (roleToFind: string): Promise<{ success: boolean; error?: string }> => {
@@ -67,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [router]);
 
   return (
-    <AuthContext.Provider value={{ user, users, login, logout, setUser }}>
+    <AuthContext.Provider value={{ user, users, login, logout, setUser, assignedNews, setAssignedNews }}>
       {children}
     </AuthContext.Provider>
   );

@@ -12,6 +12,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Mic, Newspaper, Podcast, Megaphone } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/context/auth-context';
 
 const mockTodaysScript = {
   id: '1',
@@ -43,15 +44,6 @@ Chpey situation yeppud raledhu kani Annaya without you I’m nothing okavela ni 
 Nenu mi rj…….. signing off.`,
 };
 
-const mockTodaysNews = [
-    {
-        id: '1',
-        title: 'City Marathon This Weekend',
-        summary: 'The annual city marathon is happening this Sunday. Several roads will be closed from 6 AM to 12 PM. Plan your travel accordingly.',
-        source: 'City Traffic Dept.'
-    },
-];
-
 const initialMockPodcasts = [
     {
         id: '1',
@@ -79,6 +71,7 @@ const mockAnnouncements = [
 
 export default function RJWingPage() {
   const [podcasts, setPodcasts] = useState(initialMockPodcasts);
+  const { assignedNews } = useAuth();
 
   const handlePodcastCompletionChange = (podcastId: string) => {
     setPodcasts(currentPodcasts =>
@@ -134,14 +127,14 @@ export default function RJWingPage() {
                <CardContent>
                 <ScrollArea className="h-40">
                   <div className="space-y-4">
-                    {mockTodaysNews.map((item) => (
+                    {assignedNews.map((item) => (
                       <div key={item.id} className="p-4 border rounded-lg">
                           <h3 className="font-semibold">{item.title}</h3>
                           <p className="text-sm text-muted-foreground mt-1">{item.summary}</p>
                           <p className="text-xs text-muted-foreground/70 mt-2">Source: {item.source}</p>
                       </div>
                     ))}
-                     {mockTodaysNews.length === 0 && (
+                     {assignedNews.length === 0 && (
                         <p className="text-sm text-center text-muted-foreground py-10">No news assigned for today.</p>
                     )}
                   </div>
