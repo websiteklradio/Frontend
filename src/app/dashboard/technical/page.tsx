@@ -31,12 +31,18 @@ import {
   Shuffle,
   Repeat,
   Volume2,
+  Music2,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Slider } from '@/components/ui/slider';
+import { useAuth } from '@/context/auth-context';
+import { Checkbox } from '@/components/ui/checkbox';
+import type { SongSuggestion } from '@/lib/types';
+import { useToast } from '@/hooks/use-toast';
+
 
 // Mock Data
 const mockTodaysScript = {
@@ -53,7 +59,7 @@ Entha anandani bayataki natichina edho oka moment lo nak antu evaryna sibiling u
 
 But manakemo siblings leru kani chala mandhi okadanivey kadha chala happy ga undi untav , nikem siblings leru godavapadey valu undaru prasantaga undochu ani chala chepey vaalu but Unavalaki aa value eppatiki teliyadhu okavela adi manishyna …vastuvayna…
 
-mana manasuki ledha mana sheriraniki degaraga undapudu dani viluva asalu teliyadhu .. Konni days ki friends degara una sare oka teliyani loneliness vachesindi adi entha la impact chsindi anty edyna anipisty okari chpadama ledha Manalo maname dachukundama aney oka pedda question mark na mind lo raise ayindi?? Appati varaku una friends ye tarvatha ela mayamayaro teliyadhu oka certain time tarvatha nak antu evaru leru nak anandani echey amma, dairyam chpey nanna tappa..
+mana manasuki ledha mana sheriraniki degaraga undapudu dani viluva asalu teliyadhu .. Konni days ki friends degara una sare oka teliyani loneliness vachesindi adi entha la impact chsindi anty edyna anipisty okari chpadama ledha Manalo maname dachukundama aney oka pedda question mark na mind lo raise ayyindi?? Appati varaku una friends ye tarvatha ela mayamayaro teliyadhu oka certain time tarvatha nak antu evaru leru nak anandani echey amma, dairyam chpey nanna tappa..
 
 Konni sarlu narakam ela untadi anty anni untay kani share chskovali anukunapudu oka correct person manatho undaru amma,nanna ki enni chpukuna inka muta matalu dachukuney dani..Ela chala badhaga , koncham anandanga gadustuna na chinni jindagi loki oka eddari manushulani aa devudu varam ga pampadu..Valley na pranamga anukuntuna ma annayalu ..
 
@@ -76,6 +82,9 @@ export default function TechnicalPage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [songProgress, setSongProgress] = useState(0);
   const [volume, setVolume] = useState(50);
+  const { songSuggestions, setSongSuggestions } = useAuth();
+  const { toast } = useToast();
+
 
   const toggleLive = () => {
     setIsLive(!isLive);
@@ -107,6 +116,24 @@ export default function TechnicalPage() {
     const seconds = currentSeconds % 60;
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }
+  
+  const togglePlayedStatus = (id: string) => {
+    setSongSuggestions(
+      songSuggestions.map(suggestion => {
+        if (suggestion.id === id) {
+            const newStatus = suggestion.status === 'Played' ? 'Pending' : 'Played';
+            if (suggestion.status !== 'Rejected') {
+                toast({
+                    title: 'Status Updated',
+                    description: `Song suggestion status changed to ${newStatus}.`,
+                });
+                return { ...suggestion, status: newStatus };
+            }
+        }
+        return suggestion;
+      })
+    );
+  };
 
 
   return (
@@ -228,6 +255,57 @@ export default function TechnicalPage() {
                   <h3 className="font-semibold text-base">{mockTodaysScript.title}</h3>
                   <p className="text-sm text-muted-foreground mt-1">{mockTodaysScript.content}</p>
                 </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <Music2 className="h-6 w-6" />
+                <div>
+                  <CardTitle>Song Suggestions</CardTitle>
+                  <CardDescription>Incoming requests from listeners.</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-48">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Song</TableHead>
+                      <TableHead>Played</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {songSuggestions.length > 0 ? (
+                      songSuggestions.map((suggestion) => (
+                        <TableRow key={suggestion.id}>
+                          <TableCell>
+                            <p className="font-medium">{suggestion.songTitle}</p>
+                            <p className="text-xs text-muted-foreground">{suggestion.artist}</p>
+                          </TableCell>
+                          <TableCell>
+                            {suggestion.status === 'Rejected' ? (
+                              <Badge variant="destructive">Rejected</Badge>
+                            ) : (
+                              <Checkbox
+                                checked={suggestion.status === 'Played'}
+                                onCheckedChange={() => togglePlayedStatus(suggestion.id)}
+                              />
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={2} className="h-24 text-center">
+                          No song suggestions yet.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
               </ScrollArea>
             </CardContent>
           </Card>
