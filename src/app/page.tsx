@@ -135,7 +135,7 @@ function HomeComponent() {
     <div className="flex min-h-screen flex-col">
       <NavbarKL />
       <main className="flex-1">
-        <section className="relative w-full py-20 md:py-32 lg:py-40">
+        <section className="relative w-full pt-32 md:py-32 lg:py-40">
           <div className="container mx-auto max-w-5xl px-4 text-center">
              <h1 className="font-headline text-5xl font-extrabold tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl">
                 The Voice of Klians
