@@ -71,8 +71,8 @@ function LoginComponent() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
       <div className="mb-8 flex items-center space-x-2 text-primary">
-        <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={40} height={40} className="h-10 w-10" />
-        <span className="font-headline text-3xl font-bold">KL Radio</span>
+        <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={60} height={60} className="h-14 w-14" />
+        <span className="font-headline text-4xl font-bold">KL Radio</span>
       </div>
       <Card className="w-full max-w-sm">
         <CardHeader>

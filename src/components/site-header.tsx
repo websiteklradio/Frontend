@@ -12,9 +12,9 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 max-w-screen-2xl items-center">
+      <div className="container flex h-16 max-w-screen-2xl items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={28} height={28} className="h-7 w-7" />
+          <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={32} height={32} className="h-8 w-8" />
           <span className="font-bold sm:inline-block">KL Radio</span>
         </Link>
         <nav className="flex items-center gap-4 text-sm lg:gap-6">
