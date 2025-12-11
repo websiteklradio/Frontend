@@ -9,7 +9,7 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, Upload, RefreshCw, Pen, Trash } from 'lucide-react';
+import { PlusCircle, Upload, RefreshCw, Pen, Trash, Save } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -87,9 +87,7 @@ export default function CreativePage() {
     setNews(updatedNews);
   };
   
-  useEffect(() => {
-    // This effect will run whenever the news list or assignments change.
-    // It filters for assigned news and updates the shared context.
+  const handleSaveAssignments = () => {
     const newsForRj = news.filter(item => item.assignedTo);
     const rjNewsItems = newsForRj.map(item => ({
       id: item.article_id,
@@ -98,7 +96,11 @@ export default function CreativePage() {
       source: item.source_id,
     }));
     setAssignedNews(rjNewsItems);
-  }, [news, setAssignedNews]);
+    toast({
+        title: "Assignments Saved",
+        description: "News assignments have been saved and sent to the RJ dashboard."
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -169,10 +171,16 @@ export default function CreativePage() {
                         Fetch the latest news and assign it to RJs.
                     </CardDescription>
                 </div>
-                <Button onClick={handleFetchNews} disabled={isFetching} variant="outline">
-                    <RefreshCw className={`mr-2 h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />
-                    {isFetching ? 'Fetching...' : 'Fetch News'}
-                </Button>
+                <div className="flex gap-2">
+                    <Button onClick={handleFetchNews} disabled={isFetching} variant="outline">
+                        <RefreshCw className={`mr-2 h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />
+                        {isFetching ? 'Fetching...' : 'Fetch News'}
+                    </Button>
+                    <Button onClick={handleSaveAssignments}>
+                        <Save className="mr-2 h-4 w-4" />
+                        Save
+                    </Button>
+                </div>
             </div>
           </CardHeader>
           <CardContent>
