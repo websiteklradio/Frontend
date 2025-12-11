@@ -32,7 +32,7 @@ const generateAnnouncementDraftPrompt = ai.definePrompt({
   prompt: `You are an expert announcement writer for KL Radio.
 
   Based on the following prompt, generate a draft announcement:
-  {{prompt}}`,
+  {{{prompt}}}`,
 });
 
 const generateAnnouncementDraftFlow = ai.defineFlow(
