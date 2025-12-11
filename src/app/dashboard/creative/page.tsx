@@ -66,8 +66,9 @@ export default function CreativePage() {
   const [isFetching, setIsFetching] = useState(false);
   const [scripts, setScripts] = useState<Script[]>([]);
   const [isScriptDialogOpen, setIsScriptDialogOpen] = useState(false);
-  const [newScriptTitle, setNewScriptTitle] = useState('');
-  const [newScriptContent, setNewScriptContent] = useState('');
+  const [scriptTitle, setScriptTitle] = useState('');
+  const [scriptContent, setScriptContent] = useState('');
+  const [editingScript, setEditingScript] = useState<Script | null>(null);
   const { toast } = useToast();
 
   const handleFetchNews = async () => {
@@ -129,8 +130,22 @@ export default function CreativePage() {
     });
   };
 
+  const openNewScriptDialog = () => {
+    setEditingScript(null);
+    setScriptTitle('');
+    setScriptContent('');
+    setIsScriptDialogOpen(true);
+  };
+
+  const openEditScriptDialog = (script: Script) => {
+    setEditingScript(script);
+    setScriptTitle(script.title);
+    setScriptContent(script.content);
+    setIsScriptDialogOpen(true);
+  };
+
   const handleSaveScript = () => {
-    if (!newScriptTitle || !newScriptContent) {
+    if (!scriptTitle || !scriptContent) {
       toast({
         variant: 'destructive',
         title: 'Missing Fields',
@@ -139,20 +154,35 @@ export default function CreativePage() {
       return;
     }
 
-    const newScript: Script = {
-      id: `s${scripts.length + 1}`,
-      title: newScriptTitle,
-      content: newScriptContent,
-      lastEdited: new Date().toLocaleDateString(),
-    };
+    if (editingScript) {
+      // Update existing script
+      setScripts(prev => prev.map(s => 
+        s.id === editingScript.id 
+          ? { ...s, title: scriptTitle, content: scriptContent, lastEdited: new Date().toLocaleDateString() } 
+          : s
+      ));
+      toast({
+        title: 'Script Updated',
+        description: `"${scriptTitle}" has been updated.`,
+      });
+    } else {
+      // Create new script
+      const newScript: Script = {
+        id: `s${scripts.length + 1}`,
+        title: scriptTitle,
+        content: scriptContent,
+        lastEdited: new Date().toLocaleDateString(),
+      };
+      setScripts(prev => [...prev, newScript]);
+      toast({
+        title: 'Script Saved',
+        description: `"${scriptTitle}" has been added.`,
+      });
+    }
 
-    setScripts(prev => [...prev, newScript]);
-    toast({
-      title: 'Script Saved',
-      description: `"${newScriptTitle}" has been added.`,
-    });
-    setNewScriptTitle('');
-    setNewScriptContent('');
+    setScriptTitle('');
+    setScriptContent('');
+    setEditingScript(null);
     setIsScriptDialogOpen(false);
   };
 
@@ -179,9 +209,9 @@ export default function CreativePage() {
       <Dialog open={isScriptDialogOpen} onOpenChange={setIsScriptDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Write a New Script</DialogTitle>
+            <DialogTitle>{editingScript ? 'Edit Script' : 'Write a New Script'}</DialogTitle>
             <DialogDescription>
-              Create a new script for an upcoming show.
+              {editingScript ? 'Modify the details of your script below.' : 'Create a new script for an upcoming show.'}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -191,8 +221,8 @@ export default function CreativePage() {
               </Label>
               <Input
                 id="script-title"
-                value={newScriptTitle}
-                onChange={(e) => setNewScriptTitle(e.target.value)}
+                value={scriptTitle}
+                onChange={(e) => setScriptTitle(e.target.value)}
                 className="col-span-3"
               />
             </div>
@@ -202,8 +232,8 @@ export default function CreativePage() {
               </Label>
               <Textarea
                 id="script-content"
-                value={newScriptContent}
-                onChange={(e) => setNewScriptContent(e.target.value)}
+                value={scriptContent}
+                onChange={(e) => setScriptContent(e.target.value)}
                 className="col-span-3"
                 rows={10}
               />
@@ -213,7 +243,7 @@ export default function CreativePage() {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button onClick={handleSaveScript}>Save Script</Button>
+            <Button onClick={handleSaveScript}>{editingScript ? 'Save Changes' : 'Save Script'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -242,7 +272,7 @@ export default function CreativePage() {
                     <TableCell className="font-medium">{script.title}</TableCell>
                     <TableCell>{script.lastEdited}</TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Button onClick={() => openEditScriptDialog(script)} variant="ghost" size="icon" className="h-8 w-8">
                         <Pen className="h-4 w-4" />
                       </Button>
                       <Button onClick={() => handleDeleteScript(script.id)} variant="ghost" size="icon" className="h-8 w-8 text-destructive/80 hover:text-destructive">
@@ -265,7 +295,7 @@ export default function CreativePage() {
               <Upload className="mr-2 h-4 w-4" />
               Upload Script
             </Button>
-            <Button onClick={() => setIsScriptDialogOpen(true)}>
+            <Button onClick={openNewScriptDialog}>
               <PlusCircle className="mr-2 h-4 w-4" />
               Write Script
             </Button>
