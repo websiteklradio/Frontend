@@ -1,9 +1,12 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import type { SongSuggestion } from "@/lib/types";
+'use client';
 
-const suggestions: SongSuggestion[] = [];
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/context/auth-context";
+import { SuggestionsTable } from "./components/suggestions-table";
 
 export default function SuggestionsPage() {
+  const { songSuggestions, setSongSuggestions } = useAuth();
+  
   return (
     <div className="space-y-6">
        <div>
@@ -21,9 +24,13 @@ export default function SuggestionsPage() {
             <CardDescription>A list of song suggestions submitted by your listeners.</CardDescription>
         </CardHeader>
         <CardContent>
-            <p className="text-sm text-muted-foreground text-center p-8">
-              The song suggestions feature is currently being rebuilt.
-            </p>
+           {songSuggestions.length > 0 ? (
+              <SuggestionsTable suggestions={songSuggestions} setSuggestions={setSongSuggestions} />
+           ) : (
+             <p className="text-sm text-muted-foreground text-center p-8">
+               No song suggestions have been submitted yet.
+             </p>
+           )}
         </CardContent>
       </Card>
 

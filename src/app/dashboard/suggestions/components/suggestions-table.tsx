@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import type { SongSuggestion } from '@/lib/types';
 import {
   Table,
@@ -27,15 +26,15 @@ import { useToast } from '@/hooks/use-toast';
 
 interface SuggestionsTableProps {
   suggestions: SongSuggestion[];
+  setSuggestions: (suggestions: SongSuggestion[]) => void;
 }
 
-export function SuggestionsTable({ suggestions: initialSuggestions }: SuggestionsTableProps) {
-  const [suggestions, setSuggestions] = useState<SongSuggestion[]>(initialSuggestions);
+export function SuggestionsTable({ suggestions, setSuggestions }: SuggestionsTableProps) {
   const { toast } = useToast();
 
   const handleStatusChange = (id: string, newStatus: SongSuggestion['status']) => {
-    setSuggestions(currentSuggestions =>
-      currentSuggestions.map(suggestion =>
+    setSuggestions(
+      suggestions.map(suggestion =>
         suggestion.id === id ? { ...suggestion, status: newStatus } : suggestion
       )
     );

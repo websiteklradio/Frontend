@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { Megaphone, Music, Send } from 'lucide-react';
 import { SiteHeader } from '@/components/site-header';
@@ -13,6 +15,10 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { AuthProvider, useAuth } from '@/context/auth-context';
+import { useToast } from '@/hooks/use-toast';
+import React, { useState } from 'react';
+
 
 // Mock data for announcements
 const announcements = [
@@ -58,8 +64,73 @@ const Waveform = (props: React.SVGProps<SVGSVGElement>) => (
       <rect x="136" y="4" width="4" height="24" rx="2" fill="currentColor" />
     </svg>
   );
+  
+function SuggestionForm() {
+  const { addSongSuggestion } = useAuth();
+  const { toast } = useToast();
+  const [name, setName] = useState('');
+  const [songTitle, setSongTitle] = useState('');
+  const [artist, setArtist] = useState('');
 
-export default function Home() {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !songTitle || !artist) {
+      toast({
+        variant: 'destructive',
+        title: 'Missing information',
+        description: 'Please fill out all fields to suggest a song.',
+      });
+      return;
+    }
+    addSongSuggestion({ name, songTitle, artist });
+    toast({
+      title: 'Suggestion received!',
+      description: "Thanks for the recommendation. We'll check it out!",
+    });
+    setName('');
+    setSongTitle('');
+    setArtist('');
+  };
+  
+  return (
+    <div id="suggestions" className="space-y-6">
+      <div className="flex items-center gap-3">
+          <Music className="h-7 w-7 text-primary" />
+          <h2 className="font-headline text-3xl font-semibold">Suggest a Song</h2>
+      </div>
+      <Card>
+          <form onSubmit={handleSubmit}>
+          <CardHeader>
+              <CardTitle>Heard a new banger?</CardTitle>
+              <CardDescription>Let us know what you want to hear on KL Radio.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+              <div className="space-y-2">
+              <Label htmlFor="name">Your Name</Label>
+              <Input id="name" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+              <Label htmlFor="song">Song Title</Label>
+              <Input id="song" placeholder="e.g., Blinding Lights" value={songTitle} onChange={(e) => setSongTitle(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+              <Label htmlFor="artist">Artist</Label>
+              <Input id="artist" placeholder="e.g., The Weeknd" value={artist} onChange={(e) => setArtist(e.target.value)} />
+              </div>
+          </CardContent>
+          <CardFooter>
+              <Button type="submit" className="w-full" variant="default">
+              <Send className="mr-2 h-4 w-4" />
+              Submit Suggestion
+              </Button>
+          </CardFooter>
+          </form>
+      </Card>
+    </div>
+  )
+}
+
+function HomeComponent() {
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
@@ -111,45 +182,20 @@ export default function Home() {
                     ))}
                 </div>
                 </div>
-
-                <div id="suggestions" className="space-y-6">
-                <div className="flex items-center gap-3">
-                    <Music className="h-7 w-7 text-primary" />
-                    <h2 className="font-headline text-3xl font-semibold">Suggest a Song</h2>
-                </div>
-                <Card>
-                    <form>
-                    <CardHeader>
-                        <CardTitle>Heard a new banger?</CardTitle>
-                        <CardDescription>Let us know what you want to hear on KL Radio.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="space-y-2">
-                        <Label htmlFor="name">Your Name</Label>
-                        <Input id="name" placeholder="Enter your name" />
-                        </div>
-                        <div className="space-y-2">
-                        <Label htmlFor="song">Song Title</Label>
-                        <Input id="song" placeholder="e.g., Blinding Lights" />
-                        </div>
-                        <div className="space-y-2">
-                        <Label htmlFor="artist">Artist</Label>
-                        <Input id="artist" placeholder="e.g., The Weeknd" />
-                        </div>
-                    </CardContent>
-                    <CardFooter>
-                        <Button type="submit" className="w-full" variant="default">
-                        <Send className="mr-2 h-4 w-4" />
-                        Submit Suggestion
-                        </Button>
-                    </CardFooter>
-                    </form>
-                </Card>
-                </div>
+                <SuggestionForm />
             </div>
         </section>
       </main>
       <SiteFooter />
     </div>
   );
+}
+
+
+export default function Home() {
+  return (
+    <AuthProvider>
+      <HomeComponent />
+    </AuthProvider>
+  )
 }

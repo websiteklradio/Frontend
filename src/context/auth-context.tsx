@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import type { SongSuggestion } from '@/lib/types';
 
 type User = {
   id: string;
@@ -48,6 +49,9 @@ type AuthContextType = {
   setUser: (user: User | null) => void;
   assignedNews: AssignedNewsItem[];
   setAssignedNews: (news: AssignedNewsItem[]) => void;
+  songSuggestions: SongSuggestion[];
+  addSongSuggestion: (suggestion: Omit<SongSuggestion, 'id' | 'submittedAt' | 'status'>) => void;
+  setSongSuggestions: (suggestions: SongSuggestion[]) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -55,6 +59,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [assignedNews, setAssignedNews] = useState<AssignedNewsItem[]>([]);
+  const [songSuggestions, setSongSuggestions] = useState<SongSuggestion[]>([]);
   const router = useRouter();
 
   const login = useCallback(async (roleToFind: string): Promise<{ success: boolean; error?: string }> => {
@@ -74,9 +79,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     router.push('/login');
   }, [router]);
+  
+  const addSongSuggestion = useCallback((suggestion: Omit<SongSuggestion, 'id' | 'submittedAt' | 'status'>) => {
+    const newSuggestion: SongSuggestion = {
+      ...suggestion,
+      id: `sugg-${Date.now()}`,
+      submittedAt: new Date().toISOString(),
+      status: 'Pending',
+    };
+    setSongSuggestions(prev => [newSuggestion, ...prev]);
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, users, login, logout, setUser, assignedNews, setAssignedNews }}>
+    <AuthContext.Provider value={{ 
+        user, 
+        users, 
+        login, 
+        logout, 
+        setUser, 
+        assignedNews, 
+        setAssignedNews,
+        songSuggestions,
+        addSongSuggestion,
+        setSongSuggestions
+    }}>
       {children}
     </AuthContext.Provider>
   );
