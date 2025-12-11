@@ -21,7 +21,7 @@ export function DashboardHeader() {
           href="/dashboard"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={48} height={48} className="h-12 w-12" />
+          <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={48} height={48} className="h-12 w-12 rounded-full" />
           <span className="sr-only">KL Radio</span>
         </Link>
         <MainNav />
@@ -43,7 +43,7 @@ export function DashboardHeader() {
               href="/dashboard"
               className="flex items-center gap-2 text-lg font-semibold"
             >
-              <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={48} height={48} className="h-12 w-12" />
+              <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={48} height={48} className="h-12 w-12 rounded-full" />
               <span className="sr-only">KL Radio</span>
             </Link>
             <MainNav isMobile={true} />
