@@ -89,13 +89,24 @@ export default function CreativePage() {
   
   const handleSaveAssignments = () => {
     const newsForRj = news.filter(item => item.assignedTo);
+    if (newsForRj.length === 0) {
+        toast({
+            variant: "destructive",
+            title: "No assignments to save",
+            description: "Please assign at least one news item to an RJ.",
+        });
+        return;
+    }
+
     const rjNewsItems = newsForRj.map(item => ({
       id: item.article_id,
       title: item.title,
       summary: item.description || 'No summary available.',
       source: item.source_id,
     }));
+    
     setAssignedNews(rjNewsItems);
+
     toast({
         title: "Assignments Saved",
         description: "News assignments have been saved and sent to the RJ dashboard."
