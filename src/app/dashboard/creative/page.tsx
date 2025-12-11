@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useAuth } from '@/context/auth-context';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 // Mock Data for scripts
@@ -85,9 +85,12 @@ export default function CreativePage() {
       item.article_id === articleId ? { ...item, assignedTo: rjName === 'unassigned' ? null : rjName } : item
     );
     setNews(updatedNews);
-    
-    // Update the shared state for the RJ dashboard
-    const newsForRj = updatedNews.filter(item => item.assignedTo);
+  };
+  
+  useEffect(() => {
+    // This effect will run whenever the news list or assignments change.
+    // It filters for assigned news and updates the shared context.
+    const newsForRj = news.filter(item => item.assignedTo);
     const rjNewsItems = newsForRj.map(item => ({
       id: item.article_id,
       title: item.title,
@@ -95,7 +98,7 @@ export default function CreativePage() {
       source: item.source_id,
     }));
     setAssignedNews(rjNewsItems);
-  };
+  }, [news, setAssignedNews]);
 
   return (
     <div className="space-y-6">
