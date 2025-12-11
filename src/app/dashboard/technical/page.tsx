@@ -69,27 +69,6 @@ Chpey situation yeppud raledhu kani Annaya without you I’m nothing okavela ni 
 Nenu mi rj…….. signing off.`,
 };
 
-const mockSuggestions = [
-  {
-    id: '1',
-    songTitle: 'Stairway to Heaven',
-    artist: 'Led Zeppelin',
-    status: 'Pending',
-  },
-  {
-    id: '2',
-    songTitle: 'Bohemian Rhapsody',
-    artist: 'Queen',
-    status: 'Played',
-  },
-  {
-    id: '3',
-    songTitle: 'Hotel California',
-    artist: 'Eagles',
-    status: 'Pending',
-  },
-];
-
 export default function TechnicalPage() {
   const [isLive, setIsLive] = useState(false);
   const [streamStatus, setStreamStatus] = useState('Offline');
@@ -252,39 +231,6 @@ export default function TechnicalPage() {
               </ScrollArea>
             </CardContent>
           </Card>
-           <Card>
-            <CardHeader>
-                <CardTitle>Song Suggestions</CardTitle>
-                <CardDescription>View listener song requests.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <ScrollArea className="h-48">
-                    <Table>
-                        <TableHeader>
-                        <TableRow>
-                            <TableHead>Song</TableHead>
-                            <TableHead>Status</TableHead>
-                        </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                        {mockSuggestions.map((suggestion) => (
-                            <TableRow key={suggestion.id}>
-                            <TableCell>
-                                <p className="font-medium">{suggestion.songTitle}</p>
-                                <p className="text-xs text-muted-foreground">{suggestion.artist}</p>
-                            </TableCell>
-                            <TableCell>
-                                <Badge variant={suggestion.status === 'Played' ? 'default' : suggestion.status === 'Pending' ? 'secondary' : 'destructive'}>
-                                {suggestion.status}
-                                </Badge>
-                            </TableCell>
-                            </TableRow>
-                        ))}
-                        </TableBody>
-                    </Table>
-                </ScrollArea>
-            </CardContent>
-           </Card>
         </div>
       </div>
     </div>
