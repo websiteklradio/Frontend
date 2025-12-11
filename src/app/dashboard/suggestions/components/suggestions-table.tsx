@@ -91,7 +91,7 @@ export function SuggestionsTable({ suggestions: initialSuggestions }: Suggestion
             <TableCell>{formatDistanceToNow(new Date(suggestion.submittedAt), { addSuffix: true })}</TableCell>
             <TableCell>
               {suggestion.status === 'Rejected' ? (
-                <Badge variant="destructive" className="text-xs font-semibold">
+                <Badge variant="destructive" className="cursor-default">
                   {suggestion.status}
                 </Badge>
               ) : (
@@ -100,7 +100,7 @@ export function SuggestionsTable({ suggestions: initialSuggestions }: Suggestion
                   size="sm"
                   className={cn(
                     'h-auto px-2.5 py-0.5 text-xs font-semibold',
-                     suggestion.status === 'Played' && 'bg-red-600 hover:bg-red-600/80',
+                     suggestion.status === 'Played' && 'bg-primary hover:bg-primary/80',
                   )}
                   onClick={() => toggleStatus(suggestion.id, suggestion.status)}
                 >
