@@ -53,16 +53,14 @@ export function SuggestionsTable({ suggestions: initialSuggestions }: Suggestion
     }
   };
   
-  const getBadgeVariant = (status: SongSuggestion['status']) => {
+  const getBadgeVariant = (status: SongSuggestion['status']): 'default' | 'secondary' => {
     switch (status) {
       case 'Played':
         return 'default';
       case 'Pending':
         return 'secondary';
-      case 'Rejected':
-        return 'destructive';
       default:
-        return 'outline';
+        return 'secondary';
     }
   };
 
