@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { MoreHorizontal } from 'lucide-react';
 import {
   DropdownMenu,
@@ -23,7 +24,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { formatDistanceToNow } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
 
 interface SuggestionsTableProps {
   suggestions: SongSuggestion[];
@@ -45,26 +45,12 @@ export function SuggestionsTable({ suggestions: initialSuggestions }: Suggestion
     });
   };
 
-  const toggleStatus = (id: string, currentStatus: SongSuggestion['status']) => {
-    if (currentStatus === 'Pending') {
-      handleStatusChange(id, 'Played');
-    } else if (currentStatus === 'Played') {
-      handleStatusChange(id, 'Pending');
-    }
+  const togglePlayedStatus = (id: string, currentStatus: SongSuggestion['status']) => {
+    if (currentStatus === 'Rejected') return;
+    const newStatus = currentStatus === 'Played' ? 'Pending' : 'Played';
+    handleStatusChange(id, newStatus);
   };
   
-  const getBadgeVariant = (status: SongSuggestion['status']): 'default' | 'secondary' => {
-    switch (status) {
-      case 'Played':
-        return 'default';
-      case 'Pending':
-        return 'secondary';
-      default:
-        return 'secondary';
-    }
-  };
-
-
   return (
     <Table>
       <TableHeader>
@@ -88,20 +74,21 @@ export function SuggestionsTable({ suggestions: initialSuggestions }: Suggestion
             <TableCell>{formatDistanceToNow(new Date(suggestion.submittedAt), { addSuffix: true })}</TableCell>
             <TableCell>
               {suggestion.status === 'Rejected' ? (
-                <Badge variant="destructive" className="cursor-default">
-                  {suggestion.status}
-                </Badge>
+                <Badge variant="destructive">Rejected</Badge>
               ) : (
-                <Button
-                  variant={getBadgeVariant(suggestion.status)}
-                  size="sm"
-                  className={cn(
-                    'h-auto px-2.5 py-0.5 text-xs font-semibold'
-                  )}
-                  onClick={() => toggleStatus(suggestion.id, suggestion.status)}
-                >
-                  {suggestion.status}
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`played-${suggestion.id}`}
+                    checked={suggestion.status === 'Played'}
+                    onCheckedChange={() => togglePlayedStatus(suggestion.id, suggestion.status)}
+                  />
+                  <label
+                    htmlFor={`played-${suggestion.id}`}
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {suggestion.status}
+                  </label>
+                </div>
               )}
             </TableCell>
             <TableCell>
