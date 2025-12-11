@@ -1,4 +1,6 @@
+'use client';
 
+import { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -8,6 +10,8 @@ import {
 } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Mic, Newspaper, Podcast } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 const mockTodaysScripts = [
   {
@@ -33,16 +37,27 @@ const mockTodaysNews = [
     },
 ];
 
-const mockPodcasts = [
+const initialMockPodcasts = [
     {
         id: '1',
         title: 'The Rock Chronicles - Episode 4',
         topic: 'Interview with "The Wanderers"',
-        status: 'Recording Pending'
+        status: 'Recording Pending',
+        completed: false
     }
 ];
 
 export default function RJWingPage() {
+  const [podcasts, setPodcasts] = useState(initialMockPodcasts);
+
+  const handlePodcastCompletionChange = (podcastId: string) => {
+    setPodcasts(currentPodcasts =>
+      currentPodcasts.map(podcast =>
+        podcast.id === podcastId ? { ...podcast, completed: !podcast.completed, status: !podcast.completed ? 'Recording Complete' : 'Recording Pending' } : podcast
+      )
+    );
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -124,15 +139,25 @@ export default function RJWingPage() {
           </div>
         </CardHeader>
         <CardContent>
-          {mockPodcasts.length > 0 ? (
+          {podcasts.length > 0 ? (
             <div className="space-y-4">
-              {mockPodcasts.map((podcast) => (
+              {podcasts.map((podcast) => (
                 <div key={podcast.id} className="p-4 border rounded-lg flex justify-between items-center">
                   <div>
                     <h3 className="font-semibold">{podcast.title}</h3>
                     <p className="text-sm text-muted-foreground mt-1">Topic: {podcast.topic}</p>
+                    <p className="text-sm font-medium text-primary mt-2">{podcast.status}</p>
                   </div>
-                  <p className="text-sm font-medium text-primary">{podcast.status}</p>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`completed-${podcast.id}`}
+                      checked={podcast.completed}
+                      onCheckedChange={() => handlePodcastCompletionChange(podcast.id)}
+                    />
+                    <Label htmlFor={`completed-${podcast.id}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      Mark as Complete
+                    </Label>
+                  </div>
                 </div>
               ))}
             </div>
