@@ -51,7 +51,6 @@ export function SuggestionsTable({ suggestions: initialSuggestions }: Suggestion
     } else if (currentStatus === 'Played') {
       handleStatusChange(id, 'Pending');
     }
-    // "Rejected" status is not toggled by direct click
   };
   
   const getBadgeVariant = (status: SongSuggestion['status']) => {
@@ -96,11 +95,10 @@ export function SuggestionsTable({ suggestions: initialSuggestions }: Suggestion
                 </Badge>
               ) : (
                 <Button
-                  variant={suggestion.status === 'Played' ? 'default' : 'secondary'}
+                  variant={getBadgeVariant(suggestion.status)}
                   size="sm"
                   className={cn(
-                    'h-auto px-2.5 py-0.5 text-xs font-semibold',
-                     suggestion.status === 'Played' && 'bg-primary hover:bg-primary/80',
+                    'h-auto px-2.5 py-0.5 text-xs font-semibold'
                   )}
                   onClick={() => toggleStatus(suggestion.id, suggestion.status)}
                 >
