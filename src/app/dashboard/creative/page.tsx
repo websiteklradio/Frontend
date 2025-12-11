@@ -28,13 +28,25 @@ import {
 import { useAuth } from '@/context/auth-context';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 
-// Mock Data for scripts
-const mockScripts = [
-  { id: 's1', title: 'Morning Rush Intro', lastEdited: '2 hours ago' },
-  { id: 's2', title: 'Rock On - Special Guest Segment', lastEdited: '1 day ago' },
-  { id: 's3', title: 'Weekend Countdown Opener', lastEdited: '3 days ago' },
-];
+type Script = {
+  id: string;
+  title: string;
+  content: string;
+  lastEdited: string;
+};
 
 type NewsItem = {
   article_id: string;
@@ -52,6 +64,10 @@ export default function CreativePage() {
   const rjs = users.filter(u => u.role === 'RJ');
   const [news, setNews] = useState<NewsItem[]>([]);
   const [isFetching, setIsFetching] = useState(false);
+  const [scripts, setScripts] = useState<Script[]>([]);
+  const [isScriptDialogOpen, setIsScriptDialogOpen] = useState(false);
+  const [newScriptTitle, setNewScriptTitle] = useState('');
+  const [newScriptContent, setNewScriptContent] = useState('');
   const { toast } = useToast();
 
   const handleFetchNews = async () => {
@@ -113,6 +129,42 @@ export default function CreativePage() {
     });
   };
 
+  const handleSaveScript = () => {
+    if (!newScriptTitle || !newScriptContent) {
+      toast({
+        variant: 'destructive',
+        title: 'Missing Fields',
+        description: 'Please provide a title and content for the script.',
+      });
+      return;
+    }
+
+    const newScript: Script = {
+      id: `s${scripts.length + 1}`,
+      title: newScriptTitle,
+      content: newScriptContent,
+      lastEdited: new Date().toLocaleDateString(),
+    };
+
+    setScripts(prev => [...prev, newScript]);
+    toast({
+      title: 'Script Saved',
+      description: `"${newScriptTitle}" has been added.`,
+    });
+    setNewScriptTitle('');
+    setNewScriptContent('');
+    setIsScriptDialogOpen(false);
+  };
+
+  const handleDeleteScript = (scriptId: string) => {
+    setScripts(prev => prev.filter(script => script.id !== scriptId));
+    toast({
+      title: 'Script Deleted',
+      description: 'The script has been removed.',
+    });
+  };
+
+
   return (
     <div className="space-y-6">
       <div>
@@ -123,6 +175,48 @@ export default function CreativePage() {
           Write scripts, fetch news, and assign tasks to RJs.
         </p>
       </div>
+
+      <Dialog open={isScriptDialogOpen} onOpenChange={setIsScriptDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Write a New Script</DialogTitle>
+            <DialogDescription>
+              Create a new script for an upcoming show.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="script-title" className="text-right">
+                Title
+              </Label>
+              <Input
+                id="script-title"
+                value={newScriptTitle}
+                onChange={(e) => setNewScriptTitle(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="script-content" className="text-right">
+                Content
+              </Label>
+              <Textarea
+                id="script-content"
+                value={newScriptContent}
+                onChange={(e) => setNewScriptContent(e.target.value)}
+                className="col-span-3"
+                rows={10}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button onClick={handleSaveScript}>Save Script</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Scripts Management */}
@@ -143,7 +237,7 @@ export default function CreativePage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockScripts.map((script) => (
+                {scripts.length > 0 ? scripts.map((script) => (
                   <TableRow key={script.id}>
                     <TableCell className="font-medium">{script.title}</TableCell>
                     <TableCell>{script.lastEdited}</TableCell>
@@ -151,12 +245,18 @@ export default function CreativePage() {
                       <Button variant="ghost" size="icon" className="h-8 w-8">
                         <Pen className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/80 hover:text-destructive">
+                      <Button onClick={() => handleDeleteScript(script.id)} variant="ghost" size="icon" className="h-8 w-8 text-destructive/80 hover:text-destructive">
                         <Trash className="h-4 w-4" />
                       </Button>
                     </TableCell>
                   </TableRow>
-                ))}
+                )) : (
+                  <TableRow>
+                    <TableCell colSpan={3} className="h-24 text-center">
+                      No scripts created yet.
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </CardContent>
@@ -165,7 +265,7 @@ export default function CreativePage() {
               <Upload className="mr-2 h-4 w-4" />
               Upload Script
             </Button>
-            <Button>
+            <Button onClick={() => setIsScriptDialogOpen(true)}>
               <PlusCircle className="mr-2 h-4 w-4" />
               Write Script
             </Button>
