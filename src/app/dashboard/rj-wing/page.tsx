@@ -9,10 +9,9 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Mic, Newspaper, Podcast } from 'lucide-react';
+import { Mic, Newspaper, Podcast, Megaphone } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 
 const mockTodaysScript = {
   id: '1',
@@ -63,6 +62,21 @@ const initialMockPodcasts = [
     }
 ];
 
+const mockAnnouncements = [
+  {
+    id: 1,
+    title: 'New Primetime Show: "Midnight Grooves"',
+    date: 'July 25, 2024',
+    content: 'Tune in every weekday at 10 PM for the smoothest jazz and R&B tracks to wind down your day. Hosted by DJ Alex.',
+  },
+  {
+    id: 2,
+    title: 'Annual KL Radio Fest Announced!',
+    date: 'July 22, 2024',
+    content: 'Get ready for the biggest music event of the year! The KL Radio Fest is back with an amazing lineup. Tickets go on sale August 1st.',
+  }
+];
+
 export default function RJWingPage() {
   const [podcasts, setPodcasts] = useState(initialMockPodcasts);
 
@@ -97,7 +111,7 @@ export default function RJWingPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-72">
+            <ScrollArea className="h-96">
               <div className="space-y-4 pr-4 whitespace-pre-wrap">
                   <h3 className="font-semibold text-base">{mockTodaysScript.title}</h3>
                   <p className="text-sm text-muted-foreground mt-1">{mockTodaysScript.content}</p>
@@ -106,33 +120,59 @@ export default function RJWingPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-3">
-                <Newspaper className="h-6 w-6" />
-                <div>
-                    <CardTitle>Today's News</CardTitle>
-                    <CardDescription>News items to cover in your segments.</CardDescription>
+        <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                    <Newspaper className="h-6 w-6" />
+                    <div>
+                        <CardTitle>Today's News</CardTitle>
+                        <CardDescription>News items to cover in your segments.</CardDescription>
+                    </div>
                 </div>
-            </div>
-          </CardHeader>
-           <CardContent>
-            <ScrollArea className="h-72">
-              <div className="space-y-4">
-                {mockTodaysNews.map((item) => (
-                  <div key={item.id} className="p-4 border rounded-lg">
-                      <h3 className="font-semibold">{item.title}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">{item.summary}</p>
-                      <p className="text-xs text-muted-foreground/70 mt-2">Source: {item.source}</p>
+              </CardHeader>
+               <CardContent>
+                <ScrollArea className="h-40">
+                  <div className="space-y-4">
+                    {mockTodaysNews.map((item) => (
+                      <div key={item.id} className="p-4 border rounded-lg">
+                          <h3 className="font-semibold">{item.title}</h3>
+                          <p className="text-sm text-muted-foreground mt-1">{item.summary}</p>
+                          <p className="text-xs text-muted-foreground/70 mt-2">Source: {item.source}</p>
+                      </div>
+                    ))}
+                     {mockTodaysNews.length === 0 && (
+                        <p className="text-sm text-center text-muted-foreground py-10">No news assigned for today.</p>
+                    )}
                   </div>
-                ))}
-                 {mockTodaysNews.length === 0 && (
-                    <p className="text-sm text-center text-muted-foreground py-10">No news assigned for today.</p>
-                )}
-              </div>
-            </ScrollArea>
-          </CardContent>
-        </Card>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <div className="flex items-center gap-3">
+                        <Megaphone className="h-6 w-6" />
+                        <div>
+                            <CardTitle>Recent Announcements</CardTitle>
+                            <CardDescription>Latest station announcements.</CardDescription>
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <ScrollArea className="h-40">
+                        <div className="space-y-4">
+                            {mockAnnouncements.map((announcement) => (
+                                <div key={announcement.id} className="p-4 border rounded-lg">
+                                    <h3 className="font-semibold">{announcement.title}</h3>
+                                    <p className="text-xs text-muted-foreground mt-1">{announcement.date}</p>
+                                    <p className="text-sm text-muted-foreground mt-2">{announcement.content}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </ScrollArea>
+                </CardContent>
+            </Card>
+        </div>
       </div>
       
       <Card>
