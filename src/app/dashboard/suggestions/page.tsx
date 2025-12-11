@@ -1,14 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { SuggestionsTable } from "./components/suggestions-table";
 import type { SongSuggestion } from "@/lib/types";
 
-const suggestions: SongSuggestion[] = [
-    { id: '1', name: 'Alice', songTitle: 'Stairway to Heaven', artist: 'Led Zeppelin', submittedAt: '2024-07-26T10:00:00Z', status: 'Pending' },
-    { id: '2', name: 'Bob', songTitle: 'Bohemian Rhapsody', artist: 'Queen', submittedAt: '2024-07-26T09:30:00Z', status: 'Played' },
-    { id: '3', name: 'Charlie', songTitle: 'Hotel California', artist: 'Eagles', submittedAt: '2024-07-25T18:45:00Z', status: 'Pending' },
-    { id: '4', name: 'Diana', songTitle: 'Shape of You', artist: 'Ed Sheeran', submittedAt: '2024-07-25T15:20:00Z', status: 'Rejected' },
-    { id: '5', name: 'Ethan', songTitle: 'Billie Jean', artist: 'Michael Jackson', submittedAt: '2024-07-24T12:00:00Z', status: 'Played' },
-];
+const suggestions: SongSuggestion[] = [];
 
 export default function SuggestionsPage() {
   return (
@@ -28,7 +21,9 @@ export default function SuggestionsPage() {
             <CardDescription>A list of song suggestions submitted by your listeners.</CardDescription>
         </CardHeader>
         <CardContent>
-            <SuggestionsTable suggestions={suggestions} />
+            <p className="text-sm text-muted-foreground text-center p-8">
+              The song suggestions feature is currently being rebuilt.
+            </p>
         </CardContent>
       </Card>
 
