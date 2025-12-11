@@ -21,7 +21,7 @@ export function DashboardHeader() {
           href="/dashboard"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={64} height={64} className="h-16 w-16 rounded-full" />
+          <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={120} height={120} className="h-32 w-32 rounded-full" />
           <span className="sr-only">KL Radio</span>
         </Link>
         <MainNav />
@@ -38,13 +38,13 @@ export function DashboardHeader() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left">
-          <nav className="grid gap-6 text-lg font-medium">
+          <nav className="flex flex-col gap-6 text-lg font-medium">
             <Link
               href="/dashboard"
               className="flex items-center gap-2 text-lg font-semibold"
             >
-              <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={64} height={64} className="h-16 w-16 rounded-full" />
-              <span className="sr-only">KL Radio</span>
+              <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={120} height={120} className="h-32 w-32 rounded-full" />
+              <span>KL Radio</span>
             </Link>
             <MainNav isMobile={true} />
           </nav>
