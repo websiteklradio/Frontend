@@ -22,8 +22,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   PlayCircle,
   Mic,
-  Music,
-  List,
   RefreshCw,
   PauseCircle,
   Rewind,
@@ -40,7 +38,6 @@ import { Progress } from '@/components/ui/progress';
 import { Slider } from '@/components/ui/slider';
 import { useAuth } from '@/context/auth-context';
 import { Checkbox } from '@/components/ui/checkbox';
-import type { SongSuggestion } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 
 
@@ -59,7 +56,7 @@ Entha anandani bayataki natichina edho oka moment lo nak antu evaryna sibiling u
 
 But manakemo siblings leru kani chala mandhi okadanivey kadha chala happy ga undi untav , nikem siblings leru godavapadey valu undaru prasantaga undochu ani chala chepey vaalu but Unavalaki aa value eppatiki teliyadhu okavela adi manishyna …vastuvayna…
 
-mana manasuki ledha mana sheriraniki degaraga undapudu dani viluva asalu teliyadhu .. Konni days ki friends degara una sare oka teliyani loneliness vachesindi adi entha la impact chsindi anty edyna anipisty okari chpadama ledha Manalo maname dachukundama aney oka pedda question mark na mind lo raise ayyindi?? Appati varaku una friends ye tarvatha ela mayamayaro teliyadhu oka certain time tarvatha nak antu evaru leru nak anandani echey amma, dairyam chpey nanna tappa..
+mana manasuki ledha mana sheriraniki degaraga undapudu dani viluva asalu teliyadhu .. Konni days ki friends degara una sare oka teliyani loneliness vachesindi adi entha la impact chsindi anty edyna anipisty okari chpadama ledha Manalo maname dachukundama aney oka pedda question mark na mind lo raise ayindi?? Appati varaku una friends ye tarvatha ela mayamayaro teliyadhu oka certain time tarvatha nak antu evaru leru nak anandani echey amma, dairyam chpey nanna tappa..
 
 Konni sarlu narakam ela untadi anty anni untay kani share chskovali anukunapudu oka correct person manatho undaru amma,nanna ki enni chpukuna inka muta matalu dachukuney dani..Ela chala badhaga , koncham anandanga gadustuna na chinni jindagi loki oka eddari manushulani aa devudu varam ga pampadu..Valley na pranamga anukuntuna ma annayalu ..
 
@@ -75,39 +72,68 @@ Chpey situation yeppud raledhu kani Annaya without you I’m nothing okavela ni 
 Nenu mi rj…….. signing off.`,
 };
 
+const mockPlaylist = [
+    { title: 'Blinding Lights', artist: 'The Weeknd' },
+    { title: 'As It Was', artist: 'Harry Styles' },
+    { title: 'Levitating', artist: 'Dua Lipa' },
+    { title: 'Save Your Tears', artist: 'The Weeknd' },
+    { title: 'good 4 u', artist: 'Olivia Rodrigo' },
+];
+
 export default function TechnicalPage() {
   const [isLive, setIsLive] = useState(false);
   const [streamStatus, setStreamStatus] = useState('Offline');
-  const [currentSong, setCurrentSong] = useState({ title: 'Awaiting Song', artist: 'Playlist' });
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [songProgress, setSongProgress] = useState(0);
   const [volume, setVolume] = useState(50);
   const { songSuggestions, setSongSuggestions } = useAuth();
   const { toast } = useToast();
 
+  const currentSong = isLive ? mockPlaylist[currentSongIndex] : { title: 'Awaiting Song', artist: 'Playlist' };
 
   const toggleLive = () => {
     setIsLive(!isLive);
     setStreamStatus(isLive ? 'Offline' : 'Online - Stable');
+    if (isLive) {
+      setIsPlaying(false);
+      setSongProgress(0);
+    }
   };
   
   const togglePlay = () => {
     if (!isLive) return;
     setIsPlaying(!isPlaying);
-    if (!isPlaying && currentSong.title === 'Awaiting Song') {
-        setCurrentSong({ title: 'Blinding Lights', artist: 'The Weeknd' });
-    }
   };
+
+  const handleNextSong = () => {
+    if (!isLive) return;
+    setCurrentSongIndex((prevIndex) => (prevIndex + 1) % mockPlaylist.length);
+    setSongProgress(0);
+  };
+
+  const handlePreviousSong = () => {
+    if (!isLive) return;
+    setCurrentSongIndex((prevIndex) => (prevIndex - 1 + mockPlaylist.length) % mockPlaylist.length);
+    setSongProgress(0);
+  };
+
 
   useEffect(() => {
     let progressInterval: NodeJS.Timeout;
-    if (isPlaying) {
+    if (isPlaying && isLive) {
       progressInterval = setInterval(() => {
-        setSongProgress(prev => (prev >= 100 ? 0 : prev + 1));
+        setSongProgress(prev => {
+          if (prev >= 100) {
+            handleNextSong();
+            return 0;
+          }
+          return prev + 1;
+        });
       }, 1000);
     }
     return () => clearInterval(progressInterval);
-  }, [isPlaying]);
+  }, [isPlaying, isLive]);
 
   const formatTime = (percentage: number) => {
     const totalSeconds = 240; // Example song length: 4 minutes
@@ -214,13 +240,13 @@ export default function TechnicalPage() {
                     <Shuffle className="h-5 w-5"/>
                 </Button>
                 <div className="flex justify-center gap-1">
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" onClick={handlePreviousSong} disabled={!isLive}>
                         <Rewind className="h-6 w-6" />
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={togglePlay}>
+                    <Button variant="ghost" size="icon" onClick={togglePlay} disabled={!isLive}>
                         {isPlaying ? <PauseCircle className="h-8 w-8" /> : <PlayCircle className="h-8 w-8" />}
                     </Button>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" onClick={handleNextSong} disabled={!isLive}>
                         <FastForward className="h-6 w-6" />
                     </Button>
                 </div>
@@ -235,6 +261,7 @@ export default function TechnicalPage() {
                   max={100} 
                   step={1} 
                   onValueChange={(value) => setVolume(value[0])}
+                  disabled={!isLive}
                 />
               </div>
 
