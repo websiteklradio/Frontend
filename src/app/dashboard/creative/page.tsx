@@ -9,7 +9,7 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, Upload, RefreshCw, Pen, Trash, Save } from 'lucide-react';
+import { PlusCircle, RefreshCw, Pen, Trash, Save } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -291,10 +291,6 @@ export default function CreativePage() {
             </Table>
           </CardContent>
           <CardFooter className="flex justify-end gap-2">
-            <Button variant="outline">
-              <Upload className="mr-2 h-4 w-4" />
-              Upload Script
-            </Button>
             <Button onClick={openNewScriptDialog}>
               <PlusCircle className="mr-2 h-4 w-4" />
               Write Script
