@@ -1,4 +1,3 @@
-import { AnnouncementGenerator } from './components/announcement-generator';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function AnnouncementsPage() {
@@ -17,11 +16,13 @@ export default function AnnouncementsPage() {
         <CardHeader>
           <CardTitle>Smart Announcement Generator</CardTitle>
           <CardDescription>
-            Use AI to generate a draft for your next announcement. Just provide a prompt with the key details.
+            This section is under construction. The AI generator will be available soon.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <AnnouncementGenerator />
+          <p className="text-sm text-muted-foreground text-center p-8">
+            The announcement generator is being worked on. Please use the Creative Wing to manage announcements for now.
+          </p>
         </CardContent>
       </Card>
     </div>

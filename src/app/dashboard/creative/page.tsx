@@ -9,7 +9,7 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, RefreshCw, Pen, Trash, Save } from 'lucide-react';
+import { PlusCircle, RefreshCw, Pen, Trash, Save, Megaphone } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -48,6 +48,14 @@ type Script = {
   lastEdited: string;
 };
 
+type Announcement = {
+  id: string;
+  title: string;
+  content: string;
+  lastEdited: string;
+};
+
+
 type NewsItem = {
   article_id: string;
   title: string;
@@ -64,12 +72,21 @@ export default function CreativePage() {
   const rjs = users.filter(u => u.role === 'RJ');
   const [news, setNews] = useState<NewsItem[]>([]);
   const [isFetching, setIsFetching] = useState(false);
+  const { toast } = useToast();
+  
+  // Scripts state
   const [scripts, setScripts] = useState<Script[]>([]);
   const [isScriptDialogOpen, setIsScriptDialogOpen] = useState(false);
   const [scriptTitle, setScriptTitle] = useState('');
   const [scriptContent, setScriptContent] = useState('');
   const [editingScript, setEditingScript] = useState<Script | null>(null);
-  const { toast } = useToast();
+  
+  // Announcements state
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [isAnnouncementDialogOpen, setIsAnnouncementDialogOpen] = useState(false);
+  const [announcementTitle, setAnnouncementTitle] = useState('');
+  const [announcementContent, setAnnouncementContent] = useState('');
+  const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
 
   const handleFetchNews = async () => {
     setIsFetching(true);
@@ -130,6 +147,7 @@ export default function CreativePage() {
     });
   };
 
+  // --- Script Management ---
   const openNewScriptDialog = () => {
     setEditingScript(null);
     setScriptTitle('');
@@ -155,7 +173,6 @@ export default function CreativePage() {
     }
 
     if (editingScript) {
-      // Update existing script
       setScripts(prev => prev.map(s => 
         s.id === editingScript.id 
           ? { ...s, title: scriptTitle, content: scriptContent, lastEdited: new Date().toLocaleString() } 
@@ -166,9 +183,8 @@ export default function CreativePage() {
         description: `"${scriptTitle}" has been updated.`,
       });
     } else {
-      // Create new script
       const newScript: Script = {
-        id: `s${scripts.length + 1}`,
+        id: `s${Date.now()}`,
         title: scriptTitle,
         content: scriptContent,
         lastEdited: new Date().toLocaleString(),
@@ -179,10 +195,6 @@ export default function CreativePage() {
         description: `"${scriptTitle}" has been added.`,
       });
     }
-
-    setScriptTitle('');
-    setScriptContent('');
-    setEditingScript(null);
     setIsScriptDialogOpen(false);
   };
 
@@ -191,6 +203,65 @@ export default function CreativePage() {
     toast({
       title: 'Script Deleted',
       description: 'The script has been removed.',
+    });
+  };
+
+  // --- Announcement Management ---
+  const openNewAnnouncementDialog = () => {
+    setEditingAnnouncement(null);
+    setAnnouncementTitle('');
+    setAnnouncementContent('');
+    setIsAnnouncementDialogOpen(true);
+  };
+
+  const openEditAnnouncementDialog = (announcement: Announcement) => {
+    setEditingAnnouncement(announcement);
+    setAnnouncementTitle(announcement.title);
+    setAnnouncementContent(announcement.content);
+    setIsAnnouncementDialogOpen(true);
+  };
+
+  const handleSaveAnnouncement = () => {
+    if (!announcementTitle || !announcementContent) {
+      toast({
+        variant: 'destructive',
+        title: 'Missing Fields',
+        description: 'Please provide a title and content for the announcement.',
+      });
+      return;
+    }
+
+    if (editingAnnouncement) {
+      setAnnouncements(prev => prev.map(a => 
+        a.id === editingAnnouncement.id 
+          ? { ...a, title: announcementTitle, content: announcementContent, lastEdited: new Date().toLocaleString() } 
+          : a
+      ));
+      toast({
+        title: 'Announcement Updated',
+        description: `"${announcementTitle}" has been updated.`,
+      });
+    } else {
+      const newAnnouncement: Announcement = {
+        id: `a${Date.now()}`,
+        title: announcementTitle,
+        content: announcementContent,
+        lastEdited: new Date().toLocaleString(),
+      };
+      setAnnouncements(prev => [...prev, newAnnouncement]);
+      toast({
+        title: 'Announcement Saved',
+        description: `"${announcementTitle}" has been added.`,
+      });
+    }
+    setIsAnnouncementDialogOpen(false);
+  };
+
+  const handleDeleteAnnouncement = (announcementId: string) => {
+    setAnnouncements(prev => prev.filter(announcement => announcement.id !== announcementId));
+    toast({
+      title: 'Announcement Deleted',
+      description: 'The announcement has been removed.',
     });
   };
 
@@ -206,6 +277,7 @@ export default function CreativePage() {
         </p>
       </div>
 
+      {/* Script Dialog */}
       <Dialog open={isScriptDialogOpen} onOpenChange={setIsScriptDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -247,6 +319,49 @@ export default function CreativePage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      
+      {/* Announcement Dialog */}
+      <Dialog open={isAnnouncementDialogOpen} onOpenChange={setIsAnnouncementDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editingAnnouncement ? 'Edit Announcement' : 'Create a New Announcement'}</DialogTitle>
+            <DialogDescription>
+              {editingAnnouncement ? 'Modify the details of your announcement below.' : 'Draft a new announcement for the station.'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="announcement-title" className="text-right">
+                Title
+              </Label>
+              <Input
+                id="announcement-title"
+                value={announcementTitle}
+                onChange={(e) => setAnnouncementTitle(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="announcement-content" className="text-right">
+                Content
+              </Label>
+              <Textarea
+                id="announcement-content"
+                value={announcementContent}
+                onChange={(e) => setAnnouncementContent(e.target.value)}
+                className="col-span-3"
+                rows={10}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button onClick={handleSaveAnnouncement}>{editingAnnouncement ? 'Save Changes' : 'Save Announcement'}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Scripts Management */}
@@ -254,7 +369,7 @@ export default function CreativePage() {
           <CardHeader>
             <CardTitle>Scripts</CardTitle>
             <CardDescription>
-              Write, upload, and edit scripts for the shows.
+              Write and edit scripts for the shows.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -297,9 +412,59 @@ export default function CreativePage() {
             </Button>
           </CardFooter>
         </Card>
+        
+        {/* Announcements Management */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Announcements</CardTitle>
+            <CardDescription>
+              Create and manage station announcements.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Last Edited</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {announcements.length > 0 ? announcements.map((announcement) => (
+                  <TableRow key={announcement.id}>
+                    <TableCell className="font-medium">{announcement.title}</TableCell>
+                    <TableCell>{announcement.lastEdited}</TableCell>
+                    <TableCell className="text-right">
+                      <Button onClick={() => openEditAnnouncementDialog(announcement)} variant="ghost" size="icon" className="h-8 w-8">
+                        <Pen className="h-4 w-4" />
+                      </Button>
+                      <Button onClick={() => handleDeleteAnnouncement(announcement.id)} variant="ghost" size="icon" className="h-8 w-8 text-destructive/80 hover:text-destructive">
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                )) : (
+                  <TableRow>
+                    <TableCell colSpan={3} className="h-24 text-center">
+                      No announcements created yet.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+          <CardFooter className="flex justify-end gap-2">
+            <Button onClick={openNewAnnouncementDialog}>
+              <Megaphone className="mr-2 h-4 w-4" />
+              Create Announcement
+            </Button>
+          </CardFooter>
+        </Card>
+
 
         {/* News Fetching and Assignment */}
-        <Card>
+        <Card className="lg:col-span-2">
           <CardHeader>
             <div className="flex justify-between items-start">
                 <div>
