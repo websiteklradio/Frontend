@@ -12,21 +12,32 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Mic, Newspaper, Podcast } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
 
-const mockTodaysScripts = [
-  {
-    id: '1',
-    show: 'Morning Rush',
-    title: 'Intro Segment',
-    content: 'Good morning, Klians! Welcome to the Morning Rush with RJ Riff. We\'ve got a great show for you today, packed with the latest hits and some classic rock anthems...',
-  },
-  {
-    id: '2',
-    show: 'Morning Rush',
-    title: 'Weather Update',
-    content: 'Time for a quick look at the weather. Expect clear skies today with a high of 32 degrees. Perfect weather to be out and about, but don\'t forget your sunscreen!',
-  },
-];
+const mockTodaysScript = {
+  id: '1',
+  show: 'Morning Rush',
+  segments: [
+    {
+      id: 's1',
+      title: 'Intro Segment',
+      content:
+        "Good morning, Klians! Welcome to the Morning Rush with RJ Riff. We've got a great show for you today, packed with the latest hits and some classic rock anthems...",
+    },
+    {
+      id: 's2',
+      title: 'Weather Update',
+      content:
+        "Time for a quick look at the weather. Expect clear skies today with a high of 32 degrees. Perfect weather to be out and about, but don't forget your sunscreen!",
+    },
+    {
+        id: 's3',
+        title: 'Traffic Report',
+        content:
+          "Heads up for all you commuters. There's a bit of a jam on the main highway heading into the city due to the marathon preparations. Consider taking the scenic route!",
+    }
+  ],
+};
 
 const mockTodaysNews = [
     {
@@ -75,24 +86,20 @@ export default function RJWingPage() {
             <div className="flex items-center gap-3">
               <Mic className="h-6 w-6" />
               <div>
-                <CardTitle>Today's Live Scripts</CardTitle>
-                <CardDescription>Scripts for your shows today.</CardDescription>
+                <CardTitle>Today's Live Script: {mockTodaysScript.show}</CardTitle>
+                <CardDescription>All segments for your show today.</CardDescription>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-72">
-              <div className="space-y-4">
-                {mockTodaysScripts.map((script) => (
-                  <Card key={script.id}>
-                    <CardHeader className="p-4">
-                      <CardTitle className="text-base">{script.title}</CardTitle>
-                      <CardDescription>{script.show}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-4 pt-0">
-                      <p className="text-sm text-muted-foreground">{script.content}</p>
-                    </CardContent>
-                  </Card>
+              <div className="space-y-4 pr-4">
+                {mockTodaysScript.segments.map((segment, index) => (
+                  <div key={segment.id}>
+                    <h3 className="font-semibold text-base">{segment.title}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">{segment.content}</p>
+                    {index < mockTodaysScript.segments.length - 1 && <Separator className="my-4" />}
+                  </div>
                 ))}
               </div>
             </ScrollArea>
