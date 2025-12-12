@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useRef } from 'react';
@@ -104,6 +105,11 @@ export function StickyScrollSection() {
     }
 
     function updateCardWidth(progress: number) {
+        const isMobile = window.innerWidth < 1000;
+        if (isMobile) {
+            gsap.set(cardContainer, { width: '100%' });
+            return;
+        }
       if (progress <= 0.35) {
         const widthPercentage = gsap.utils.mapRange(0, 0.35, 75, 60, progress);
         gsap.set(cardContainer, { width: `${widthPercentage}%` });
@@ -136,34 +142,23 @@ export function StickyScrollSection() {
       ScrollTrigger.getAll().forEach((t) => t.kill());
       setDefaults();
 
-      const mm = gsap.matchMedia(component.current!);
-
-      mm.add('(max-width: 999px)', () => {
-        setDefaults();
-        return () => {};
+      const st = ScrollTrigger.create({
+        trigger: '.sticky',
+        start: 'top top',
+        end: `+=${window.innerHeight * 4}px`,
+        scrub: 1,
+        pin: true,
+        pinSpacing: true,
+        onUpdate(self) {
+          const progress = self.progress;
+          updateHeader(progress);
+          updateCardWidth(progress);
+          handleGapAnimation(progress);
+          handleFlipAnimation(progress);
+        },
       });
 
-      mm.add('(min-width: 1000px)', () => {
-        const st = ScrollTrigger.create({
-          trigger: '.sticky',
-          start: 'top top',
-          end: `+=${window.innerHeight * 4}px`,
-          scrub: 1,
-          pin: true,
-          pinSpacing: true,
-          onUpdate(self) {
-            const progress = self.progress;
-            updateHeader(progress);
-            updateCardWidth(progress);
-            handleGapAnimation(progress);
-            handleFlipAnimation(progress);
-          },
-        });
-
-        return () => st.kill();
-      });
-
-      return () => mm.revert();
+      return () => st.kill();
     }
 
     let revert: (() => void) | undefined;
@@ -233,13 +228,15 @@ export function StickyScrollSection() {
           display: flex;
           justify-content: center;
           align-items: center;
+          flex-direction: column;
         }
 
         .sticky-scroll-section-container .sticky-header {
           position: absolute;
-          top: 20%;
+          top: 15%;
           left: 50%;
           transform: translate(-50%, -50%);
+          width: 90%;
         }
 
         .sticky-scroll-section-container .sticky-header h1 {
@@ -291,7 +288,7 @@ export function StickyScrollSection() {
         }
 
         .sticky-scroll-section-container .card-front h2 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 500;
         }
 
@@ -344,47 +341,37 @@ export function StickyScrollSection() {
 
         @media (max-width: 1000px) {
           .sticky-scroll-section-container h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
           }
 
           .sticky-scroll-section-container .sticky {
-            height: max-content;
-            padding: 4rem 2rem;
-            flex-direction: column;
+            padding: 4rem 1rem;
+            justify-content: flex-start;
           }
-
+          
           .sticky-scroll-section-container .sticky-header {
-            position: relative;
-            top: 0;
-            left: 0;
-            transform: none;
-            margin-bottom: 4rem;
+             position: relative;
+             top: 0;
+             left: 0;
+             transform: none;
+             margin-bottom: 2rem;
           }
 
-          .sticky-scroll-section-container .sticky-header h1 {
-            opacity: 1;
-            transform: none;
-          }
-
-          .sticky-scrollsection-container .card-container {
+          .sticky-scroll-section-container .card-container {
             width: 100%;
-            flex-direction: column;
-            gap: 2rem;
             transform: none;
           }
-
-          .sticky-scroll-section-container .card {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-            border-radius: 20px !important;
+          
+          .sticky-scroll-section-container .card-front h2 {
+            font-size: 1rem;
           }
 
-          .sticky-scroll-section-container #card-1,
-          .sticky-scroll-section-container #card-2,
-          .sticky-scroll-section-container #card-3,
           .sticky-scroll-section-container .card-back {
-            transform: none;
+            font-size: 0.8rem;
+          }
+
+          .sticky-scroll-section-container .card-back span {
+            font-size: 1.5rem;
           }
         }
       `}</style>
