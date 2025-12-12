@@ -420,7 +420,7 @@ export function StickyScrollSection() {
         </section>
 
         <section className="outro text-center content-center">
-          <h1>Every transition leaves a trace</h1>
+          <h1>Stay tuned to KL Radio.</h1>
         </section>
       </div>
     </div>
