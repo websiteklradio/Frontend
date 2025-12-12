@@ -6,7 +6,7 @@ export function HeroSection() {
     <section className="relative w-full pt-24 md:py-32 lg:py-40">
       <div className="container mx-auto max-w-5xl px-4 text-center">
         <GlitchText
-          speed={0.5}
+          speed={0.2}
           enableShadows={true}
           enableOnHover={false}
           className="font-headline tracking-tighter"
