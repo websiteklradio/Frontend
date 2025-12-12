@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useEffect, useRef } from 'react';
@@ -252,7 +253,7 @@ export function StickyScrollSection() {
           width: 75%;
           display: flex;
           perspective: 1000px;
-          transform: translateY(40px);
+          transform: translateY(100px);
           will-change: width;
         }
 
