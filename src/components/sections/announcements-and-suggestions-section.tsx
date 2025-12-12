@@ -1,6 +1,6 @@
 'use client';
 
-import { Megaphone, Music, Send } from 'lucide-react';
+import { Music, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -15,31 +15,6 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/use-toast';
 import React, { useState } from 'react';
-
-// Mock data for announcements
-const announcements = [
-  {
-    id: 1,
-    title: 'New Primetime Show: "Midnight Grooves"',
-    date: 'July 25, 2024',
-    content:
-      'Tune in every weekday at 10 PM for the smoothest jazz and R&B tracks to wind down your day. Hosted by DJ Alex.',
-  },
-  {
-    id: 2,
-    title: 'Annual KL Radio Fest Announced!',
-    date: 'July 22, 2024',
-    content:
-      'Get ready for the biggest music event of the year! The KL Radio Fest is back with an amazing lineup. Tickets go on sale August 1st.',
-  },
-  {
-    id: 3,
-    title: 'Technical Maintenance Scheduled',
-    date: 'July 20, 2024',
-    content:
-      'Our services will be temporarily unavailable on July 28th from 2 AM to 4 AM for scheduled maintenance. We apologize for any inconvenience.',
-  },
-];
 
 function SuggestionForm() {
   const { addSongSuggestion } = useAuth();
@@ -126,32 +101,7 @@ function SuggestionForm() {
 export function AnnouncementsAndSuggestionsSection() {
   return (
     <section className="bg-muted/50 py-20 md:py-28">
-      <div className="container mx-auto grid max-w-5xl gap-16 px-4 md:grid-cols-2 md:gap-12">
-        <div id="announcements" className="space-y-6">
-          <div className="flex items-center gap-3">
-            <Megaphone className="h-7 w-7 text-primary" />
-            <h2 className="font-headline text-3xl font-semibold">
-              Announcements
-            </h2>
-          </div>
-          <div className="space-y-4">
-            {announcements.map((announcement) => (
-              <Card key={announcement.id}>
-                <CardHeader>
-                  <CardTitle className="text-lg">
-                    {announcement.title}
-                  </CardTitle>
-                  <CardDescription>{announcement.date}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    {announcement.content}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
+      <div className="container mx-auto grid max-w-md gap-16 px-4">
         <SuggestionForm />
       </div>
     </section>
