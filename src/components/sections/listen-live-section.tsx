@@ -8,27 +8,50 @@ import { AudioWave } from '../ui/audio-wave';
 
 // --- UPDATED WAVEFORM COMPONENT ---
 const Waveform = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 140 32" width="140" height="32" {...props}>
-    {/* Removed rx="2" from all rect elements for sharp edges */}
-    <rect x="0" y="10" width="4" height="12" fill="currentColor" />
-    <rect x="8" y="4" width="4" height="24" fill="currentColor" />
-    <rect x="16" y="12" width="4" height="8" fill="currentColor" />
-    <rect x="24" y="0" width="4" height="32" fill="currentColor" />
-    <rect x="32" y="8" width="4" height="16" fill="currentColor" />
-    <rect x="40" y="12" width="4" height="8" fill="currentColor" />
-    <rect x="48" y="6" width="4" height="20" fill="currentColor" />
-    <rect x="56" y="10" width="4" height="12" fill="currentColor" />
-    <rect x="64" y="2" width="4" height="28" fill="currentColor" />
-    <rect x="72" y="8" width="4" height="16" fill="currentColor" />
-    <rect x="80" y="12" width="4" height="8" fill="currentColor" />
-    <rect x="88" y="4" width="4" height="24" fill="currentColor" />
-    <rect x="96" y="10" width="4" height="12" fill="currentColor" />
-    <rect x="104" y="6" width="4" height="20" fill="currentColor" />
-    <rect x="112" y="12" width="4" height="8" fill="currentColor" />
-    <rect x="120" y="2" width="4" height="28" fill="currentColor" />
-    <rect x="128" y="10" width="4" height="12" fill="currentColor" />
-    <rect x="136" y="4" width="4" height="24" fill="currentColor" />
-  </svg>
+  <svg width="240" height="60" viewBox="0 0 240 60" fill="none" {...props}>
+    <g>
+      <rect x="0" y="22.5" width="3" height="15" fill="currentColor" rx="1.5" />
+      <rect x="6" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
+      <rect x="12" y="17.5" width="3" height="25" fill="currentColor" rx="1.5" />
+      <rect x="18" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
+      <rect x="24" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
+      <rect x="30" y="22.5" width="3" height="15" fill="currentColor" rx="1.5" />
+      <rect x="36" y="15" width="3" height="30" fill="currentColor" rx="1.5" />
+      <rect x="42" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
+      <rect x="48" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
+      <rect x="54" y="12.5" width="3" height="35" fill="currentColor" rx="1.5" />
+      <rect x="60" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
+      <rect x="66" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
+      <rect x="72" y="22.5" width="3" height="15" fill="currentColor" rx="1.5" />
+      <rect x="78" y="10" width="3" height="40" fill="currentColor" rx="1.5" />
+      <rect x="84" y="5" width="3" height="50" fill="currentColor" rx="1.5" />
+      <rect x="90" y="15" width="3" height="30" fill="currentColor" rx="1.5" />
+      <rect x="96" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
+      <rect x="102" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
+      <rect x="108" y="0" width="3" height="60" fill="currentColor" rx="1.5" />
+      <rect x="114" y="10" width="3" height="40" fill="currentColor" rx="1.5" />
+      <rect x="120" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
+      <rect x="126" y="15" width="3" height="30" fill="currentColor" rx="1.5" />
+      <rect x="132" y="0" width="3" height="60" fill="currentColor" rx="1.5" />
+      <rect x="138" y="10" width="3" height="40" fill="currentColor" rx="1.5" />
+      <rect x="144" y="5" width="3" height="50" fill="currentColor" rx="1.5" />
+      <rect x="150" y="15" width="3" height="30" fill="currentColor" rx="1.5" />
+      <rect x="156" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
+      <rect x="162" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
+      <rect x="168" y="12.5" width="3" height="35" fill="currentColor" rx="1.5" />
+      <rect x="174" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
+      <rect x="180" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
+      <rect x="186" y="22.5" width="3" height="15" fill="currentColor" rx="1.5" />
+      <rect x="192" y="10" width="3" height="40" fill="currentColor" rx="1.5" />
+      <rect x="198" y="15" width="3" height="30" fill="currentColor" rx="1.5" />
+      <rect x="204" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
+      <rect x="210" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
+      <rect x="216" y="17.5" width="3" height="25" fill="currentColor" rx="1.5" />
+      <rect x="222" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
+      <rect x="228" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
+      <rect x="234" y="22.5" width="3" height="15" fill="currentColor" rx="1.5" />
+    </g>
+  </svg>
 );
 // ------------------------------------
 
@@ -52,7 +75,7 @@ export function ListenLiveSection() {
             <p className="mt-2 max-w-md text-primary-foreground/80">
               {isPlaying ? 'KL Radio - The Voice of Klians' : "Stream KL Radio. Don't miss a beat of the KL's sound."}
             </p>
-            <div className="my-8 h-[32px] w-[140px] flex items-center justify-center">
+            <div className="my-8 h-[60px] w-[240px] flex items-center justify-center">
               {isPlaying ? <AudioWave /> : <Waveform className="text-primary-foreground/50" />}
             </div>
             <Button
