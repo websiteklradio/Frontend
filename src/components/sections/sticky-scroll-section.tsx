@@ -5,6 +5,30 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from '@studio-freight/lenis';
 
+const announcements = [
+  {
+    id: 1,
+    title: 'New Primetime Show: "Midnight Grooves"',
+    date: 'July 25, 2024',
+    content:
+      'Tune in every weekday at 10 PM for the smoothest jazz and R&B tracks to wind down your day. Hosted by DJ Alex.',
+  },
+  {
+    id: 2,
+    title: 'Annual KL Radio Fest Announced!',
+    date: 'July 22, 2024',
+    content:
+      'Get ready for the biggest music event of the year! The KL Radio Fest is back with an amazing lineup. Tickets go on sale August 1st.',
+  },
+  {
+    id: 3,
+    title: 'Technical Maintenance Scheduled',
+    date: 'July 20, 2024',
+    content:
+      'Our services will be temporarily unavailable on July 28th from 2 AM to 4 AM for scheduled maintenance. We apologize for any inconvenience.',
+  },
+];
+
 export function StickyScrollSection() {
   const component = useRef<HTMLDivElement>(null);
 
@@ -188,9 +212,8 @@ export function StickyScrollSection() {
         }
 
         .sticky-scroll-section-container p {
-          font-size: 2rem;
-          font-weight: 500;
-          line-height: 1;
+          font-size: 1.25rem;
+          line-height: 1.4;
         }
 
         .sticky-scroll-section-container section {
@@ -260,16 +283,21 @@ export function StickyScrollSection() {
           backface-visibility: hidden;
           border-radius: inherit;
           overflow: hidden;
-        }
-
-        .sticky-scroll-section-container .card-back {
           display: flex;
           justify-content: center;
           align-items: center;
           text-align: center;
-          transform: rotateY(180deg);
           padding: 2rem;
-          border-radius: 3.59281% / 2.58621%;
+        }
+
+        .sticky-scroll-section-container .card-front h2 {
+            font-size: 2rem;
+            font-weight: 500;
+        }
+
+        .sticky-scroll-section-container .card-back {
+          transform: rotateY(180deg);
+          font-size: 1rem;
         }
 
         .sticky-scroll-section-container .card-back span {
@@ -279,6 +307,18 @@ export function StickyScrollSection() {
           opacity: 0.4;
           font-size: 2rem;
         }
+        
+        .sticky-scroll-section-container #card-1 .card-front {
+            background: var(--card-1);
+            color: var(--bg);
+        }
+        .sticky-scroll-section-container #card-2 .card-front {
+            background: var(--card-2);
+        }
+        .sticky-scroll-section-container #card-3 .card-front {
+            background: var(--card-3);
+        }
+
 
         .sticky-scroll-section-container #card-1 .card-back {
           background: linear-gradient(
@@ -326,7 +366,7 @@ export function StickyScrollSection() {
             transform: none;
           }
 
-          .sticky-scroll-section-container .card-container {
+          .sticky-scrollsection-container .card-container {
             width: 100%;
             flex-direction: column;
             gap: 2rem;
@@ -351,46 +391,37 @@ export function StickyScrollSection() {
       <div className="sticky-scroll-section-container font-serif bg-[#0f0f0f]">
         <section className="sticky" id="sticky">
           <div className="sticky-header">
-            <h1>Three pillars with one purpose</h1>
+            <h1>Announcements</h1>
           </div>
 
           <div className="card-container">
             <div className="card" id="card-1">
               <div className="card-front">
-                <img
-                  src="https://i.ibb.co/wShfg0B/image-part-001.jpg"
-                  alt="image part 001"
-                />
+                <h2>{announcements[0].title}</h2>
               </div>
               <div className="card-back">
                 <span>01</span>
-                <p>Interactive Web Experiences</p>
+                <p>{announcements[0].content}</p>
               </div>
             </div>
 
             <div className="card" id="card-2">
               <div className="card-front">
-                <img
-                  src="https://i.ibb.co/Y4MSmLXB/image-part-002.jpg"
-                  alt="image part 002"
-                />
+                <h2>{announcements[1].title}</h2>
               </div>
               <div className="card-back">
                 <span>02</span>
-                <p>Thoughtful Design Language</p>
+                <p>{announcements[1].content}</p>
               </div>
             </div>
 
             <div className="card" id="card-3">
               <div className="card-front">
-                <img
-                  src="https://i.ibb.co/NkrBdsq/image-part-003.jpg"
-                  alt="image part 003"
-                />
+                <h2>{announcements[2].title}</h2>
               </div>
               <div className="card-back">
                 <span>03</span>
-                <p>Visual Design Systems</p>
+                <p>{announcements[2].content}</p>
               </div>
             </div>
           </div>
