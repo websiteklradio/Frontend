@@ -49,7 +49,7 @@ function SuggestionForm() {
         <Music className="h-8 w-8 text-primary" />
         <h2 className="font-headline text-4xl font-semibold">Suggest a Song</h2>
       </div>
-      <Card>
+      <Card className="shadow-[0_0_15px_2px_hsl(var(--primary)/0.5)]">
         <form onSubmit={handleSubmit}>
           <CardHeader>
             <CardTitle>Drop the new banger?</CardTitle>
