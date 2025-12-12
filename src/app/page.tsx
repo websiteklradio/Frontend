@@ -2,7 +2,7 @@
 
 import { AuthProvider } from '@/context/auth-context';
 import { HeroSection } from '@/components/sections/hero-section';
-import { ListenLiveSection } from '@/components/sections/listen-live-section';
+import { StickyScrollSection } from '@/components/sections/sticky-scroll-section';
 import { AnnouncementsAndSuggestionsSection } from '@/components/sections/announcements-and-suggestions-section';
 import { NavbarKL } from '@/components/ui/navbar-kl';
 import { SiteFooter } from '@/components/site-footer';
@@ -15,7 +15,7 @@ function HomeComponent() {
         <NavbarKL />
         <main className="flex-1">
           <HeroSection />
-          <ListenLiveSection />
+          <StickyScrollSection />
           <AnnouncementsAndSuggestionsSection />
         </main>
         <SiteFooter />
