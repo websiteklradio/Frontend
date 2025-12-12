@@ -25,31 +25,55 @@ export function SoundWave() {
                         </feMerge>
                     </filter>
                 </defs>
-                <g opacity="0.7" filter="url(#glow)">
-                    <path
-                        d="M0 40 
-                           C 100 120, 100 -40, 200 40
-                           S 300 120, 400 40
-                           S 500 120, 600 40
-                           S 700 120, 800 40
-                           S 900 120, 1000 40
-                           S 1100 120, 1200 40"
-                        stroke="currentColor"
-                        fill="none"
-                        strokeWidth="1.5"
-                    />
-                    <path
-                        d="M0 40
-                           C 100 -40, 100 120, 200 40
-                           S 300 -40, 400 40
-                           S 500 -40, 600 40
-                           S 700 -40, 800 40
-                           S 900 -40, 1000 40
-                           S 1100 -40, 1200 40"
-                        stroke="currentColor"
-                        fill="none"
-                        strokeWidth="1.5"
-                    />
+                <g opacity="0.7" filter="url(#glow)" fill="currentColor">
+                    <rect x="0" y="30" width="15" height="20" rx="3" />
+                    <rect x="25" y="25" width="15" height="30" rx="3" />
+                    <rect x="50" y="20" width="15" height="40" rx="3" />
+                    <rect x="75" y="10" width="15" height="60" rx="3" />
+                    <rect x="100" y="20" width="15" height="40" rx="3" />
+                    <rect x="125" y="25" width="15" height="30" rx="3" />
+                    <rect x="150" y="30" width="15" height="20" rx="3" />
+                    <rect x="175" y="35" width="15" height="10" rx="3" />
+                    <rect x="200" y="30" width="15" height="20" rx="3" />
+                    <rect x="225" y="25" width="15" height="30" rx="3" />
+                    <rect x="250" y="20" width="15" height="40" rx="3" />
+                    <rect x="275" y="15" width="15" height="50" rx="3" />
+                    <rect x="300" y="5" width="15" height="70" rx="3" />
+                    <rect x="325" y="15" width="15" height="50" rx="3" />
+                    <rect x="350" y="20" width="15" height="40" rx="3" />
+                    <rect x="375" y="25" width="15" height="30" rx="3" />
+                    <rect x="400" y="30" width="15" height="20" rx="3" />
+                    <rect x="425" y="35" width="15" height="10" rx="3" />
+                    <rect x="450" y="30" width="15" height="20" rx="3" />
+                    <rect x="475" y="20" width="15" height="40" rx="3" />
+                    <rect x="500" y="10" width="15" height="60" rx="3" />
+                    <rect x="525" y="0" width="15" height="80" rx="3" />
+                    <rect x="550" y="10" width="15" height="60" rx="3" />
+                    <rect x="575" y="20" width="15" height="40" rx="3" />
+                    <rect x="600" y="30" width="15" height="20" rx="3" />
+                    <rect x="625" y="20" width="15" height="40" rx="3" />
+                    <rect x="650" y="10" width="15" height="60" rx="3" />
+                    <rect x="675" y="0" width="15" height="80" rx="3" />
+                    <rect x="700" y="10" width="15" height="60" rx="3" />
+                    <rect x="725" y="20" width="15" height="40" rx="3" />
+                    <rect x="750" y="30" width="15" height="20" rx="3" />
+                    <rect x="775" y="35" width="15" height="10" rx="3" />
+                    <rect x="800" y="30" width="15" height="20" rx="3" />
+                    <rect x="825" y="25" width="15" height="30" rx="3" />
+                    <rect x="850" y="20" width="15" height="40" rx="3" />
+                    <rect x="875" y="15" width="15" height="50" rx="3" />
+                    <rect x="900" y="5" width="15" height="70" rx="3" />
+                    <rect x="925" y="15" width="15" height="50" rx="3" />
+                    <rect x="950" y="20" width="15" height="40" rx="3" />
+                    <rect x="975" y="25" width="15" height="30" rx="3" />
+                    <rect x="1000" y="30" width="15" height="20" rx="3" />
+                    <rect x="1025" y="35" width="15" height="10" rx="3" />
+                    <rect x="1050" y="30" width="15" height="20" rx="3" />
+                    <rect x="1075" y="25" width="15" height="30" rx="3" />
+                    <rect x="1100" y="20" width="15" height="40" rx="3" />
+                    <rect x="1125" y="10" width="15" height="60" rx="3" />
+                    <rect x="1150" y="20" width="15" height="40" rx="3" />
+                    <rect x="1175" y="25" width="15" height="30" rx="3" />
                 </g>
             </svg>
         </div>
