@@ -1,4 +1,4 @@
-import { Instagram } from 'lucide-react';
+import { Instagram, Youtube } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -22,10 +22,16 @@ export function SiteFooter() {
           <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">
             Privacy Policy
           </Link>
-          <Link href="https://www.instagram.com/kl__radio?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">
-            <Instagram className="h-5 w-5" />
-            <span className="sr-only">Instagram</span>
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="https://www.instagram.com/kl__radio?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">
+              <Instagram className="h-5 w-5" />
+              <span className="sr-only">Instagram</span>
+            </Link>
+            <Link href="https://www.youtube.com/@klradio9994" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">
+              <Youtube className="h-5 w-5" />
+              <span className="sr-only">YouTube</span>
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
