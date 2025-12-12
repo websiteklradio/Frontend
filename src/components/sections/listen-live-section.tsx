@@ -41,7 +41,7 @@ export function ListenLiveSection() {
     >
       <div className="relative">
         <SoundWave />
-        <Card className="relative overflow-hidden bg-primary text-primary-foreground shadow-2xl backdrop-blur-sm mt-8">
+        <Card className="relative overflow-hidden bg-primary text-primary-foreground shadow-2xl backdrop-blur-sm">
           <CardContent className="flex flex-col items-center justify-center p-10 text-center md:p-16">
             <h2 className="font-serif italic text-5xl font-bold">
               {isPlaying ? 'Now Playing' : 'Listen Live'}

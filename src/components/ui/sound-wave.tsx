@@ -3,7 +3,7 @@
 export function SoundWave() {
     return (
         <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-20 opacity-30"
+            className="relative -top-8 left-1/2 -translate-x-1/2 w-[200%] h-20 opacity-30"
             style={{
                 background:
                     'radial-gradient(50% 50% at 50% 50%, hsl(var(--primary)) 0%, rgba(219, 44, 44, 0) 100%)',
