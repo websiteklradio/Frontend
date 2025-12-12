@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -52,25 +51,20 @@ const NavbarKL = () => {
               </Link>
             </div>
 
-            <motion.button
+            <button
               className="md:hidden block"
               onClick={toggle}
-              whileTap={{ scale: 0.9 }}
             >
               <Menu className="w-6 h-6 text-white" />
-            </motion.button>
+            </button>
           </div>
         </header>
       </div>
 
-      <AnimatePresence>
+      
         {open && (
-          <motion.div
+          <div
             className="fixed inset-0 bg-black text-white pt-24 px-6 z-40 md:hidden"
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "spring", stiffness: 260, damping: 30 }}
           >
             <button
               className="absolute top-6 right-6 p-2"
@@ -91,9 +85,8 @@ const NavbarKL = () => {
                 Member Login
               </Link>
             </div>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </>
   )
 }

@@ -10,12 +10,11 @@ import {
 } from '@/components/ui/sheet';
 import Image from 'next/image';
 import { Button } from '../ui/button';
-import { LogOut, PanelLeft, Menu } from 'lucide-react';
+import { LogOut, PanelLeft, Menu, X } from 'lucide-react';
 import { UserNav } from './user-nav';
 import { MainNav } from './main-nav';
 import { useAuth } from '@/context/auth-context';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export function DashboardHeader() {
   const { logout } = useAuth();
@@ -51,30 +50,24 @@ export function DashboardHeader() {
           </div>
           
 
-          <motion.button
+          <button
             className="md:hidden block"
             onClick={toggle}
-            whileTap={{ scale: 0.9 }}
           >
             <Menu className="w-6 h-6 text-white" />
-          </motion.button>
+          </button>
         </div>
       </header>
     </div>
-    <AnimatePresence>
       {open && (
-        <motion.div
+        <div
           className="fixed inset-0 bg-black text-white pt-24 px-6 z-40 md:hidden"
-          initial={{ opacity: 0, x: '100%' }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: '100%' }}
-          transition={{ type: 'spring', stiffness: 260, damping: 30 }}
         >
           <button
             className="absolute top-6 right-6 p-2"
             onClick={toggle}
           >
-            <LogOut className="w-6 h-6 text-white" />
+            <X className="w-6 h-6 text-white" />
           </button>
 
           <div className="flex flex-col space-y-6 text-lg">
@@ -91,9 +84,8 @@ export function DashboardHeader() {
                 Logout
             </Button>
           </div>
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
     </>
   );
 }
