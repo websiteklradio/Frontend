@@ -32,7 +32,9 @@ export function MainNav({ isMobile = false }: { isMobile?: boolean }) {
 
   const userRole = user?.role || 'Guest';
 
-  const accessibleNavItems = navItems.filter(item => item.roles.includes(userRole));
+  const accessibleNavItems = userRole === 'Station Head'
+    ? navItems
+    : navItems.filter(item => item.roles.includes(userRole));
 
   if (isMobile) {
     return (
