@@ -12,11 +12,16 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
+<<<<<<< HEAD
+  { href: '/dashboard', label: 'Dashboard', roles: ['Station Head', 'Creative', 'Technical', 'PR', 'RJ', 'Broadcasting', 'Designing', 'Video Editing'] },
+  { href: '/dashboard/announcements', label: 'Announcements', roles: ['Station Head', 'PR', 'Creative'] },
+=======
   { href: '/dashboard', label: 'Dashboard', roles: ['Station Head', 'Creative', 'Technical', 'PR', 'Designing', 'Video Editing', 'RJ', 'Broadcasting'] },
   { href: '/dashboard/announcements', label: 'Announcements', roles: ['Station Head', 'PR'] },
+>>>>>>> 48958ff3bcb8715212702bfb2eca9c4da11c302f
   { href: '/dashboard/suggestions', label: 'Suggestions', roles: ['Station Head', 'RJ', 'Technical'] },
   { href: '/dashboard/rj-wing', label: 'RJ Wing', roles: ['Station Head', 'RJ'] },
-  { href: '/dashboard/broadcasting', label: 'Broadcasting', roles: ['Station Head', 'RJ', 'Technical', 'Broadcasting'] },
+  { href: '/dashboard/broadcasting', label: 'Broadcasting', roles: ['Station Head', 'Technical', 'Broadcasting'] },
   { href: '/dashboard/creative', label: 'Creative', roles: ['Station Head', 'Creative'] },
   { href: '/dashboard/designing', label: 'Designing', roles: ['Station Head', 'Designing'] },
   { href: '/dashboard/pr', label: 'PR', roles: ['Station Head', 'PR'] },
@@ -32,9 +37,7 @@ export function MainNav({ isMobile = false }: { isMobile?: boolean }) {
 
   const userRole = user?.role || 'Guest';
 
-  const accessibleNavItems = userRole === 'Station Head'
-    ? navItems
-    : navItems.filter(item => item.roles.includes(userRole));
+  const accessibleNavItems = navItems.filter(item => item.roles.includes(userRole));
 
   if (isMobile) {
     return (
@@ -62,7 +65,7 @@ export function MainNav({ isMobile = false }: { isMobile?: boolean }) {
           key={item.href}
           href={item.href}
           className={cn(
-            "text-muted-foreground transition-colors hover:text-foreground",
+            "text-sm text-muted-foreground transition-colors hover:text-foreground",
             pathname === item.href && "text-foreground font-semibold"
           )}
         >

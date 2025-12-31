@@ -1,46 +1,38 @@
-
-
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Lenis from '@studio-freight/lenis';
+import api from '@/lib/api';
 
-const announcements = [
-  {
-    id: 1,
-    title: 'New Primetime Show: "Midnight Grooves"',
-    date: 'July 25, 2024',
-    content:
-      'Tune in every weekday at 10 PM for the smoothest jazz and R&B tracks to wind down your day. Hosted by DJ Alex.',
-  },
-  {
-    id: 2,
-    title: 'Annual KL Radio Fest Announced!',
-    date: 'July 22, 2024',
-    content:
-      'Get ready for the biggest music event of the year! The KL Radio Fest is back with an amazing lineup. Tickets go on sale August 1st.',
-  },
-  {
-    id: 3,
-    title: 'Technical Maintenance Scheduled',
-    date: 'July 20, 2024',
-    content:
-      'Our services will be temporarily unavailable on July 28th from 2 AM to 4 AM for scheduled maintenance. We apologize for any inconvenience.',
-  },
-];
+type Announcement = {
+  id: number;
+  title: string;
+  content: string;
+  date: string;
+};
 
 export function StickyScrollSection() {
   const component = useRef<HTMLDivElement>(null);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
+    const fetchAnnouncements = async () => {
+      try {
+        const response = await api.get('/public/announcements');
+        // Get the 3 most recent announcements
+        setAnnouncements(response.data.slice(0, 3));
+      } catch (error) {
+        console.error('Failed to fetch public announcements', error);
+      }
+    };
+    fetchAnnouncements();
+  }, []);
 
-    const lenis = new Lenis();
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
+  useEffect(() => {
+    if (announcements.length < 3) return;
+
+    gsap.registerPlugin(ScrollTrigger);
 
     const cardContainer = component.current!.querySelector('.card-container');
     const stickyHeader = component.current!.querySelector('.sticky-header h1');
@@ -177,11 +169,17 @@ export function StickyScrollSection() {
       clearTimeout(timeout);
       revert?.();
       resizeObserver.disconnect();
-      gsap.ticker.remove((time) => lenis.raf(time * 1000));
-      lenis.destroy();
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
-  }, []);
+  }, [announcements]);
+  
+  if (announcements.length < 3) {
+    return (
+      <div className="bg-[#0f0f0f] text-white text-center py-20">
+        Loading announcements...
+      </div>
+    );
+  }
 
   return (
     <div ref={component}>
@@ -345,7 +343,7 @@ export function StickyScrollSection() {
             font-size: 2.5rem;
           }
 
-          .sticky-scroll-section-container .sticky {
+          .sticky-scrollsection-container .sticky {
             padding: 4rem 1rem;
             justify-content: flex-start;
           }

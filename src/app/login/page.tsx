@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -23,28 +22,34 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select"
+
 
 function LoginComponent() {
-  const { login, loading } = useAuth();
+  const { login, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
+  const [formLoading, setFormLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<string>('');
+  
+  const uniqueRoles = ['Station Head', 'Creative', 'Technical', 'PR', 'RJ', 'Broadcasting', 'Designing', 'Video Editing'];
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormLoading(true);
     
-    if (!username || !password || !role) {
+    if (!selectedRole || !username || !password) {
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: 'Please enter username, password, and select a role.',
+        description: 'Please fill in all fields.',
       });
+      setFormLoading(false);
       return;
     }
 
-    const result = await login(username, password, role);
+    const result = await login(selectedRole, username, password);
 
     if (!result.success) {
       toast({
@@ -54,7 +59,11 @@ function LoginComponent() {
       });
     }
     // On success, the context handles redirection.
+
+    setFormLoading(false);
   };
+
+  const isLoading = formLoading || authLoading;
 
   return (
     <>
@@ -93,27 +102,22 @@ function LoginComponent() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="role">Role</Label>
-              <Select onValueChange={setRole} value={role}>
-                <SelectTrigger id="role">
-                  <SelectValue placeholder="Select your role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Station Head">Station Head</SelectItem>
-                  <SelectItem value="Creative">Creative</SelectItem>
-                  <SelectItem value="Technical">Technical</SelectItem>
-                  <SelectItem value="PR">PR</SelectItem>
-                  <SelectItem value="Designing">Designing</SelectItem>
-                  <SelectItem value="Video Editing">Video Editing</SelectItem>
-                  <SelectItem value="RJ">RJ</SelectItem>
-                  <SelectItem value="Broadcasting">Broadcasting</SelectItem>
-                </SelectContent>
-              </Select>
+             <div className="grid gap-2">
+                <Label htmlFor="role">Select Your Role</Label>
+                <Select onValueChange={setSelectedRole} value={selectedRole}>
+                    <SelectTrigger id="role">
+                        <SelectValue placeholder="Login as..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {uniqueRoles.map((role) => (
+                        <SelectItem key={role} value={role}>{role}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
             </div>
             
-            <Button type="submit" className="w-full mt-2" disabled={loading}>
-              {loading ? 'Logging in...' : 'Login'}
+            <Button type="submit" className="w-full mt-2" disabled={isLoading}>
+              {isLoading ? 'Logging in...' : 'Login'}
             </Button>
           </form>
         </CardContent>
