@@ -1,18 +1,20 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import type { SongSuggestion } from '@/lib/types';
+import api, { setAuthToken } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
 
 type User = {
   id: string;
   name: string;
   email: string;
-  role: 'Station Head' | 'Creative' | 'Technical' | 'PR' | 'Design' | 'Video' | 'RJ' | 'Guest' | 'Broadcasting' | 'Designing' | 'Video Editing';
+  role: 'Station Head' | 'Creative' | 'Technical' | 'PR' | 'RJ' | 'Broadcasting' | 'Designing' | 'Video Editing' | 'Guest';
   avatarId: string;
 };
 
-const users: User[] = [
+const mockUsers: User[] = [
   { id: '1', name: 'Station Head', email: 'stationhead@gmail.com', role: 'Station Head', avatarId: '1' },
   { id: '2', name: 'RJ Riff', email: 'rj@gmail.com', role: 'RJ', avatarId: '1' },
   { id: '3', name: 'Creative Carla', email: 'creative@gmail.com', role: 'Creative', avatarId: '1' },
@@ -44,7 +46,8 @@ type AssignedNewsItem = {
 type AuthContextType = {
   user: User | null;
   users: User[];
-  login: (role: string) => Promise<{ success: boolean; error?: string }>;
+  loading: boolean;
+  login: (role: string, username: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   setUser: (user: User | null) => void;
   assignedNews: AssignedNewsItem[];
@@ -60,40 +63,111 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [assignedNews, setAssignedNews] = useState<AssignedNewsItem[]>([]);
   const [songSuggestions, setSongSuggestions] = useState<SongSuggestion[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
+  const { toast } = useToast();
 
-  const login = useCallback(async (roleToFind: string): Promise<{ success: boolean; error?: string }> => {
-    const foundUser = users.find((u) => u.role === roleToFind);
-    
-    if (foundUser) {
-      setUser(foundUser);
-      const redirectPath = roleRedirects[foundUser.role] || '/dashboard';
-      router.push(redirectPath);
-      return { success: true };
-    } else {
-      return { success: false, error: 'No user found for that role.' };
-    }
+  const handleLoginSuccess = useCallback((userData: User, token: string) => {
+    localStorage.setItem('token', token);
+    setAuthToken(token);
+    setUser(userData);
+    const redirectPath = roleRedirects[userData.role] || '/dashboard';
+    router.push(redirectPath);
   }, [router]);
+  
+  useEffect(() => {
+    const initializeApp = async () => {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      if (token) {
+        setAuthToken(token);
+        try {
+          const response = await api.get('/auth/me');
+          if (response.data) {
+            setUser(response.data.user);
+            const currentPath = pathname;
+            const isAuthPage = currentPath === '/login';
+            if (isAuthPage) {
+              const redirectPath = roleRedirects[response.data.user.role] || '/dashboard';
+              router.push(redirectPath);
+            }
+          } else {
+            localStorage.removeItem('token');
+            setAuthToken(null);
+            if (!['/', '/login'].includes(pathname)) {
+              router.push('/login');
+            }
+          }
+        } catch (error) {
+          console.error('Session verification failed', error);
+          localStorage.removeItem('token');
+          setAuthToken(null);
+          if (!['/', '/login'].includes(pathname)) {
+            router.push('/login');
+          }
+        }
+      } else {
+        const isDashboard = pathname.startsWith('/dashboard');
+        if (isDashboard) {
+            router.push('/login');
+        }
+      }
+      
+      // We will integrate this in the next step.
+      // For now, it remains commented out.
+      /* try {
+        const response = await api.get('/public/song-suggestions');
+        setSongSuggestions(response.data);
+      } catch (error) {
+        console.error("Could not fetch song suggestions. The backend might be offline.", error);
+      } */
 
+      setLoading(false);
+    };
+    initializeApp();
+  }, [pathname, router]);
+  
+  const login = useCallback(async (role: string, username: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      // The password is sent as 'password' for now, as per your backend docs.
+      const response = await api.post('/auth/login', { username, role, password: 'password' }); 
+      const { user: userData, token } = response.data;
+      handleLoginSuccess(userData, token);
+      return { success: true };
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
+      return { success: false, error: errorMessage };
+    }
+  }, [handleLoginSuccess]);
+  
   const logout = useCallback(() => {
     setUser(null);
+    localStorage.removeItem('token');
+    setAuthToken(null);
     router.push('/login');
   }, [router]);
   
-  const addSongSuggestion = useCallback((suggestion: Omit<SongSuggestion, 'id' | 'submittedAt' | 'status'>) => {
-    const newSuggestion: SongSuggestion = {
-      ...suggestion,
-      id: `sugg-${Date.now()}`,
-      submittedAt: new Date().toISOString(),
-      status: 'Pending',
-    };
-    setSongSuggestions(prev => [newSuggestion, ...prev]);
-  }, []);
+  const addSongSuggestion = useCallback(async (suggestion: Omit<SongSuggestion, 'id' | 'submittedAt' | 'status'>) => {
+     try {
+      const response = await api.post('/public/song-suggestions', suggestion);
+      // Assuming the backend returns the newly created suggestion
+      setSongSuggestions(prev => [response.data, ...prev]);
+    } catch (error) {
+      console.error('Failed to submit song suggestion:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Submission Failed',
+        description: 'Could not submit your song suggestion. Please try again later.',
+      });
+    }
+  }, [toast]);
 
   return (
     <AuthContext.Provider value={{ 
         user, 
-        users, 
+        users: mockUsers, 
+        loading,
         login, 
         logout, 
         setUser, 

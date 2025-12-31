@@ -23,37 +23,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { NavbarKL } from '@/components/ui/navbar-kl';
 
 
 function LoginComponent() {
   const router = useRouter();
-  const { users, login } = useAuth();
+  const { users, login, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState(''); // Password is for UI purposes for now
-  const [loading, setLoading] = useState(false);
+  const [password, setPassword] = useState('');
+  const [formLoading, setFormLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string>('');
 
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setFormLoading(true);
     
-    if (!selectedRole) {
+    if (!selectedRole || !username || !password) {
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: 'Please select a role to log in.',
+        description: 'Please fill in all fields.',
       });
-      setLoading(false);
+      setFormLoading(false);
       return;
     }
 
-    // Pass the selected role to the login function.
-    // The auth context's login function is now expecting the role.
-    const result = await login(selectedRole);
+    const result = await login(selectedRole, username);
 
     if (!result.success) {
       toast({
@@ -64,10 +61,12 @@ function LoginComponent() {
     }
     // On success, the context handles redirection.
 
-    setLoading(false);
+    setFormLoading(false);
   };
   
   const uniqueRoles = Array.from(new Set(users.map(u => u.role))).filter(role => role !== 'Guest');
+
+  const isLoading = formLoading || authLoading;
 
   return (
     <>
@@ -85,19 +84,6 @@ function LoginComponent() {
         <CardContent>
           <form onSubmit={handleLogin} className="grid gap-4">
             <div className="grid gap-2">
-                <Label htmlFor="role">Select Your Role</Label>
-                <Select onValueChange={setSelectedRole} value={selectedRole}>
-                    <SelectTrigger id="role">
-                        <SelectValue placeholder="Login as..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {uniqueRoles.map((role) => (
-                        <SelectItem key={role} value={role}>{role}</SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="grid gap-2">
               <Label htmlFor="username">Username</Label>
                <Input
                 id="username"
@@ -113,14 +99,28 @@ function LoginComponent() {
                <Input
                 id="password"
                 type="password"
+                placeholder="Enter your password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+             <div className="grid gap-2">
+                <Label htmlFor="role">Select Your Role</Label>
+                <Select onValueChange={setSelectedRole} value={selectedRole}>
+                    <SelectTrigger id="role">
+                        <SelectValue placeholder="Login as..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {uniqueRoles.map((role) => (
+                        <SelectItem key={role} value={role}>{role}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
             
-            <Button type="submit" className="w-full mt-2" disabled={loading}>
-              {loading ? 'Logging in...' : 'Login'}
+            <Button type="submit" className="w-full mt-2" disabled={isLoading}>
+              {isLoading ? 'Logging in...' : 'Login'}
             </Button>
           </form>
         </CardContent>
