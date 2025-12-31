@@ -25,7 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useAuth } from '@/context/auth-context';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -66,21 +65,25 @@ type PodcastScript = {
   lastEdited: string;
 };
 
-
 type NewsItem = {
-  article_id: string;
-  title: string;
-  link: string;
-  source_id: string;
-  source_url: string;
-  description: string | null;
-  pubDate: string;
-  assignedTo: string | null;
+    article_id: string;
+    title: string;
+    link: string;
+    source_id: string;
+    description: string;
+    pubDate: string;
+    assignedTo: string | null;
 };
 
+type User = {
+  id: string;
+  name: string;
+  role: string;
+};
+
+
 export default function CreativePage() {
-  const { users, setAssignedNews: setGlobalAssignedNews } = useAuth();
-  const rjs = users.filter(u => u.role === 'RJ');
+  const [rjs, setRjs] = useState<User[]>([]);
   const [news, setNews] = useState<NewsItem[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const { toast } = useToast();
@@ -110,14 +113,16 @@ export default function CreativePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [scriptsRes, announcementsRes, podcastsRes] = await Promise.all([
+        const [scriptsRes, announcementsRes, podcastsRes, usersRes] = await Promise.all([
           api.get('/creative/scripts'),
           api.get('/creative/announcements'),
           api.get('/creative/podcasts'),
+          api.get('/users'), // Assuming an endpoint to get users
         ]);
         setScripts(scriptsRes.data);
         setAnnouncements(announcementsRes.data);
         setPodcastScripts(podcastsRes.data);
+        setRjs(usersRes.data.filter((u: User) => u.role === 'rj'));
       } catch (error) {
         console.error("Failed to fetch creative data", error);
         toast({
@@ -197,7 +202,6 @@ export default function CreativePage() {
     }
   };
 
-  // --- Script Management ---
   const openNewScriptDialog = () => {
     setEditingScript(null);
     setScriptTitle('');
@@ -315,22 +319,12 @@ export default function CreativePage() {
     }
   };
 
-  // --- Podcast Script Management ---
   const openNewPodcastDialog = () => {
     setEditingPodcast(null);
     setPodcastTitle('');
     setPodcastTopic('');
     setPodcastContent('');
     setPodcastAssignedTo('');
-    setIsPodcastDialogOpen(true);
-  };
-
-  const openEditPodcastDialog = (podcast: PodcastScript) => {
-    setEditingPodcast(podcast);
-    setPodcastTitle(podcast.title);
-    setPodcastTopic(podcast.topic);
-    setPodcastContent(podcast.content);
-    setPodcastAssignedTo(podcast.assignedTo || '');
     setIsPodcastDialogOpen(true);
   };
 
@@ -354,10 +348,6 @@ export default function CreativePage() {
     }
   };
 
-  // Backend does not support deleting podcasts, so this is removed.
-  // const handleDeletePodcast = (podcastId: string) => {};
-
-
   return (
     <div className="space-y-6">
       <div>
@@ -365,11 +355,10 @@ export default function CreativePage() {
           Creative Wing
         </h1>
         <p className="text-muted-foreground">
-          Write scripts, fetch news, and assign tasks to RJs.
+          Write scripts, create announcements, and manage podcasts.
         </p>
       </div>
 
-      {/* Script Dialog */}
       <Dialog open={isScriptDialogOpen} onOpenChange={setIsScriptDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -380,86 +369,50 @@ export default function CreativePage() {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="script-title" className="text-right">
-                Title
-              </Label>
-              <Input
-                id="script-title"
-                value={scriptTitle}
-                onChange={(e) => setScriptTitle(e.target.value)}
-                className="col-span-3"
-              />
+              <Label htmlFor="script-title" className="text-right">Title</Label>
+              <Input id="script-title" value={scriptTitle} onChange={(e) => setScriptTitle(e.target.value)} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="script-content" className="text-right">
-                Content
-              </Label>
-              <Textarea
-                id="script-content"
-                value={scriptContent}
-                onChange={(e) => setScriptContent(e.target.value)}
-                className="col-span-3"
-                rows={10}
-              />
+              <Label htmlFor="script-content" className="text-right">Content</Label>
+              <Textarea id="script-content" value={scriptContent} onChange={(e) => setScriptContent(e.target.value)} className="col-span-3" rows={10} />
             </div>
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
+            <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
             <Button onClick={handleSaveScript}>{editingScript ? 'Save Changes' : 'Save Script'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
       
-      {/* Announcement Dialog */}
       <Dialog open={isAnnouncementDialogOpen} onOpenChange={setIsAnnouncementDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingAnnouncement ? 'Edit Announcement' : 'Create a New Announcement'}</DialogTitle>
+            <DialogTitle>{editingAnnouncement ? 'Edit Announcement' : 'Create an Announcement'}</DialogTitle>
             <DialogDescription>
-              {editingAnnouncement ? 'Modify the details of your announcement below.' : 'Draft a new announcement for the station.'}
+              {editingAnnouncement ? 'Modify the details of your announcement.' : 'Draft a new announcement.'}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="announcement-title" className="text-right">
-                Title
-              </Label>
-              <Input
-                id="announcement-title"
-                value={announcementTitle}
-                onChange={(e) => setAnnouncementTitle(e.target.value)}
-                className="col-span-3"
-              />
+              <Label htmlFor="announcement-title" className="text-right">Title</Label>
+              <Input id="announcement-title" value={announcementTitle} onChange={(e) => setAnnouncementTitle(e.target.value)} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="announcement-content" className="text-right">
-                Content
-              </Label>
-              <Textarea
-                id="announcement-content"
-                value={announcementContent}
-                onChange={(e) => setAnnouncementContent(e.target.value)}
-                className="col-span-3"
-                rows={10}
-              />
+              <Label htmlFor="announcement-content" className="text-right">Content</Label>
+              <Textarea id="announcement-content" value={announcementContent} onChange={(e) => setAnnouncementContent(e.target.value)} className="col-span-3" rows={10} />
             </div>
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
+            <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
             <Button onClick={handleSaveAnnouncement}>{editingAnnouncement ? 'Save Changes' : 'Save Announcement'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
       
-      {/* Podcast Script Dialog */}
       <Dialog open={isPodcastDialogOpen} onOpenChange={setIsPodcastDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingPodcast ? 'Edit Podcast Script' : 'Create a New Podcast Script'}</DialogTitle>
+            <DialogTitle>{editingPodcast ? 'Edit Podcast Script' : 'New Podcast Script'}</DialogTitle>
             <DialogDescription>
               {editingPodcast ? 'This action is not supported by the backend.' : 'Draft a new script and assign it to an RJ.'}
             </DialogDescription>
@@ -498,9 +451,7 @@ export default function CreativePage() {
         </DialogContent>
       </Dialog>
 
-
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Scripts Management */}
         <Card>
           <CardHeader>
             <CardTitle>Scripts</CardTitle>
@@ -529,12 +480,8 @@ export default function CreativePage() {
                     <TableCell className="font-medium">{script.title}</TableCell>
                     <TableCell>{new Date(script.lastEdited).toLocaleString()}</TableCell>
                     <TableCell className="text-right">
-                      <Button onClick={() => openEditScriptDialog(script)} variant="ghost" size="icon" className="h-8 w-8">
-                        <Pen className="h-4 w-4" />
-                      </Button>
-                      <Button onClick={() => handleDeleteScript(script.id)} variant="ghost" size="icon" className="h-8 w-8 text-destructive/80 hover:text-destructive">
-                        <Trash className="h-4 w-4" />
-                      </Button>
+                      <Button onClick={() => openEditScriptDialog(script)} variant="ghost" size="icon" className="h-8 w-8"><Pen className="h-4 w-4" /></Button>
+                      <Button onClick={() => handleDeleteScript(script.id)} variant="ghost" size="icon" className="h-8 w-8 text-destructive/80 hover:text-destructive"><Trash className="h-4 w-4" /></Button>
                     </TableCell>
                   </TableRow>
                 )) : (
@@ -548,20 +495,14 @@ export default function CreativePage() {
             </Table>
           </CardContent>
           <CardFooter className="flex justify-end gap-2">
-            <Button onClick={openNewScriptDialog}>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Write Script
-            </Button>
+            <Button onClick={openNewScriptDialog}><PlusCircle className="mr-2 h-4 w-4" />Write Script</Button>
           </CardFooter>
         </Card>
         
-        {/* Announcements Management */}
         <Card>
           <CardHeader>
             <CardTitle>Announcements</CardTitle>
-            <CardDescription>
-              Create and manage station announcements.
-            </CardDescription>
+            <CardDescription>Create and manage station announcements.</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
@@ -578,39 +519,25 @@ export default function CreativePage() {
                     <TableCell className="font-medium">{announcement.title}</TableCell>
                     <TableCell>{new Date(announcement.lastEdited).toLocaleString()}</TableCell>
                     <TableCell className="text-right">
-                      <Button onClick={() => openEditAnnouncementDialog(announcement)} variant="ghost" size="icon" className="h-8 w-8">
-                        <Pen className="h-4 w-4" />
-                      </Button>
-                      <Button onClick={() => handleDeleteAnnouncement(announcement.id)} variant="ghost" size="icon" className="h-8 w-8 text-destructive/80 hover:text-destructive">
-                        <Trash className="h-4 w-4" />
-                      </Button>
+                      <Button onClick={() => openEditAnnouncementDialog(announcement)} variant="ghost" size="icon" className="h-8 w-8"><Pen className="h-4 w-4" /></Button>
+                      <Button onClick={() => handleDeleteAnnouncement(announcement.id)} variant="ghost" size="icon" className="h-8 w-8 text-destructive/80 hover:text-destructive"><Trash className="h-4 w-4" /></Button>
                     </TableCell>
                   </TableRow>
                 )) : (
-                  <TableRow>
-                    <TableCell colSpan={3} className="h-24 text-center">
-                      No announcements created yet.
-                    </TableCell>
-                  </TableRow>
+                  <TableRow><TableCell colSpan={3} className="h-24 text-center">No announcements created yet.</TableCell></TableRow>
                 )}
               </TableBody>
             </Table>
           </CardContent>
           <CardFooter className="flex justify-end gap-2">
-            <Button onClick={openNewAnnouncementDialog}>
-              <Megaphone className="mr-2 h-4 w-4" />
-              Create Announcement
-            </Button>
+            <Button onClick={openNewAnnouncementDialog}><Megaphone className="mr-2 h-4 w-4" />Create Announcement</Button>
           </CardFooter>
         </Card>
         
-        {/* Podcast Scripts Management */}
         <Card>
           <CardHeader>
             <CardTitle>Podcast Scripts</CardTitle>
-            <CardDescription>
-              Draft and manage scripts for podcast episodes.
-            </CardDescription>
+            <CardDescription>Draft and manage scripts for podcast episodes.</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
@@ -631,26 +558,17 @@ export default function CreativePage() {
                     <TableCell>{new Date(podcast.lastEdited).toLocaleString()}</TableCell>
                   </TableRow>
                 )) : (
-                  <TableRow>
-                    <TableCell colSpan={4} className="h-24 text-center">
-                      No podcast scripts created yet.
-                    </TableCell>
-                  </TableRow>
+                  <TableRow><TableCell colSpan={4} className="h-24 text-center">No podcast scripts created yet.</TableCell></TableRow>
                 )}
               </TableBody>
             </Table>
           </CardContent>
           <CardFooter className="flex justify-end gap-2">
-            <Button onClick={openNewPodcastDialog}>
-              <Podcast className="mr-2 h-4 w-4" />
-              Create Podcast Script
-            </Button>
+            <Button onClick={openNewPodcastDialog}><Podcast className="mr-2 h-4 w-4" />Create Podcast Script</Button>
           </CardFooter>
         </Card>
 
-
-        {/* News Fetching and Assignment */}
-        <Card className="lg:col-span-2">
+        <Card>
           <CardHeader>
             <div className="flex justify-between items-start">
                 <div>

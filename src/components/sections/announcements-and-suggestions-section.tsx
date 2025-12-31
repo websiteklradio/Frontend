@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/use-toast';
 import React, { useState } from 'react';
 import api from '@/lib/api';
@@ -37,8 +36,8 @@ function SuggestionForm() {
     try {
         await api.post('/public/song-suggestion', { listenerName, songTitle, movie });
         toast({
-        title: 'Suggestion received!',
-        description: "Thanks for the recommendation. We'll check it out!",
+          title: 'Suggestion received!',
+          description: "Thanks for the recommendation. We'll check it out!",
         });
         setListenerName('');
         setSongTitle('');
@@ -90,7 +89,7 @@ function SuggestionForm() {
               <Label htmlFor="movie">Movie</Label>
               <Input
                 id="movie"
-                placeholder="e.g., Starboy"
+                placeholder="e.g., After Hours"
                 value={movie}
                 onChange={(e) => setMovie(e.target.value)}
               />

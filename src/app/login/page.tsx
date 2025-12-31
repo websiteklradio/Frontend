@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -16,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AuthProvider, useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/use-toast';
+import { NavbarKL } from '@/components/ui/navbar-kl';
 import {
   Select,
   SelectContent,
@@ -23,18 +23,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { NavbarKL } from '@/components/ui/navbar-kl';
 
 
 function LoginComponent() {
-  const router = useRouter();
-  const { users, login, loading: authLoading } = useAuth();
+  const { login, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [formLoading, setFormLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string>('');
-
+  
+  const uniqueRoles = ['Station Head', 'Creative', 'Technical', 'PR', 'RJ', 'Broadcasting', 'Designing', 'Video Editing'];
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,8 +62,6 @@ function LoginComponent() {
 
     setFormLoading(false);
   };
-  
-  const uniqueRoles = Array.from(new Set(users.map(u => u.role))).filter(role => role !== 'Guest');
 
   const isLoading = formLoading || authLoading;
 
@@ -79,7 +76,7 @@ function LoginComponent() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Member Login</CardTitle>
-          <CardDescription>Select your role and enter your credentials.</CardDescription>
+          <CardDescription>Enter your credentials to access your dashboard.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="grid gap-4">
@@ -137,7 +134,6 @@ function LoginComponent() {
     </>
   );
 }
-
 
 export default function LoginPage() {
   return (

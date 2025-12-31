@@ -9,23 +9,12 @@ import { useToast } from '@/hooks/use-toast';
 type User = {
   id: string;
   name: string;
-  email: string;
-  role: 'Station Head' | 'Creative' | 'Technical' | 'PR' | 'RJ' | 'Broadcasting' | 'Designing' | 'Video Editing' | 'Guest';
+  username: string;
+  role: 'Station Head' | 'Creative' | 'Technical' | 'PR' | 'Designing' | 'Video Editing' | 'RJ' | 'Broadcasting' | 'Guest';
   avatarId: string;
 };
 
-const mockUsers: User[] = [
-  { id: '1', name: 'Station Head', email: 'stationhead@gmail.com', role: 'Station Head', avatarId: '1' },
-  { id: '2', name: 'RJ Riff', email: 'rj@gmail.com', role: 'RJ', avatarId: '1' },
-  { id: '3', name: 'Creative Carla', email: 'creative@gmail.com', role: 'Creative', avatarId: '1' },
-  { id: '4', name: 'Techie Tom', email: 'technical@gmail.com', role: 'Technical', avatarId: '1' },
-  { id: '5', name: 'PR Penelope', email: 'pr@gmail.com', role: 'PR', avatarId: '1' },
-  { id: '6', name: 'Designer Dan', email: 'designing@gmail.com', role: 'Designing', avatarId: '1' },
-  { id: '7', 'name': 'Video Vince', email: 'videoediting@gmail.com', role: 'Video Editing', avatarId: '1' },
-  { id: '8', name: 'Broadcast Barry', email: 'broadcasting@gmail.com', role: 'Broadcasting', avatarId: '1' },
-];
-
-const roleRedirects: Record<string, string> = {
+const roleRedirects: { [key: string]: string } = {
   'station_head': '/dashboard',
   'rj': '/dashboard/rj-wing',
   'creative': '/dashboard/creative',
@@ -62,26 +51,23 @@ type AuthContextType = {
   loading: boolean;
   login: (role: string, username: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
-  setUser: (user: User | null) => void;
-  assignedNews: AssignedNewsItem[];
-  setAssignedNews: (news: AssignedNewsItem[]) => void;
   songSuggestions: SongSuggestion[];
-  addSongSuggestion: (suggestion: Omit<SongSuggestion, 'id' | 'submittedAt' | 'status' | 'artist'>) => void;
+  addSongSuggestion: (suggestion: Omit<SongSuggestion, 'id' | 'submittedAt' | 'status'>) => void;
   setSongSuggestions: (suggestions: SongSuggestion[]) => void;
+  assignedNews: AssignedNewsItem[];
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [assignedNews, setAssignedNews] = useState<AssignedNewsItem[]>([]);
-  const [songSuggestions, setSongSuggestions] = useState<SongSuggestion[]>([]);
   const [loading, setLoading] = useState(true);
+  const [songSuggestions, setSongSuggestions] = useState<SongSuggestion[]>([]);
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useToast();
 
-  const handleLoginSuccess = useCallback((userData: User, token: string) => {
+  const handleLoginSuccess = useCallback((userData: any, token: string) => {
     localStorage.setItem('token', token);
     setAuthToken(token);
     setUser(userData);
@@ -167,19 +153,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [toast]);
 
+  useEffect(() => {
+    if (!loading && !user && !['/login', '/'].includes(pathname) && !pathname.startsWith('/_next')) {
+        router.push('/login');
+    }
+  }, [user, loading, pathname, router]);
+
   return (
     <AuthContext.Provider value={{ 
         user, 
-        users: mockUsers, 
+        users: [], 
         loading,
         login, 
         logout, 
-        setUser, 
-        assignedNews, 
-        setAssignedNews,
         songSuggestions,
         addSongSuggestion,
-        setSongSuggestions
+        setSongSuggestions,
+        assignedNews: []
     }}>
       {children}
     </AuthContext.Provider>
