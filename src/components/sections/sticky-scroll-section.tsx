@@ -15,15 +15,22 @@ type Announcement = {
 export function StickyScrollSection() {
   const component = useRef<HTMLDivElement>(null);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
         const response = await api.get('/public/announcements');
         // Get the 3 most recent announcements
-        setAnnouncements(response.data.slice(0, 3));
+        const data = response.data || [];
+        if (data.length > 0) {
+            setAnnouncements(data.slice(0, 3));
+        } else {
+            setError(true);
+        }
       } catch (error) {
         console.error('Failed to fetch public announcements', error);
+        setError(true);
       }
     };
     fetchAnnouncements();
@@ -172,6 +179,10 @@ export function StickyScrollSection() {
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, [announcements]);
+  
+  if (error) {
+    return null;
+  }
   
   if (announcements.length < 3) {
     return (
