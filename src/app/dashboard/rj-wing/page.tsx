@@ -62,8 +62,8 @@ export default function RJWingPage() {
       try {
         const [scriptRes, newsRes, announcementsRes, podcastsRes] = await Promise.all([
           api.get('/rj/live-script'),
-          api.get('/creative/news'), // Corrected API endpoint
-          api.get('/creative/announcements'), // Corrected API endpoint
+          api.get('/public/news'),
+          api.get('/public/announcements'),
           api.get('/rj/podcasts'),
         ]);
         setLiveScript(scriptRes.data);
