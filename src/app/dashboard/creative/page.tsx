@@ -111,7 +111,6 @@ export default function CreativePage() {
   const [newsTitle, setNewsTitle] = useState('');
   const [newsContent, setNewsContent] = useState('');
   const [newsSource, setNewsSource] = useState('');
-  const [newsAssignedTo, setNewsAssignedTo] = useState<string | null>(null);
   const [editingNews, setEditingNews] = useState<NewsItem | null>(null);
 
 
@@ -297,7 +296,6 @@ export default function CreativePage() {
     setNewsTitle('');
     setNewsContent('');
     setNewsSource('');
-    setNewsAssignedTo(null);
     setIsNewsDialogOpen(true);
   };
 
@@ -306,7 +304,6 @@ export default function CreativePage() {
     setNewsTitle(newsItem.title);
     setNewsContent(newsItem.content);
     setNewsSource(newsItem.source);
-    setNewsAssignedTo(newsItem.assignedTo);
     setIsNewsDialogOpen(true);
   };
 
@@ -316,7 +313,7 @@ export default function CreativePage() {
       return;
     }
 
-    const payload = { title: newsTitle, content: newsContent, source: newsSource, assignedTo: newsAssignedTo };
+    const payload = { title: newsTitle, content: newsContent, source: newsSource, assignedTo: null };
 
     try {
       if (editingNews) {
@@ -468,20 +465,6 @@ export default function CreativePage() {
               <Label htmlFor="news-source" className="text-right">Source</Label>
               <Input id="news-source" value={newsSource} onChange={(e) => setNewsSource(e.target.value)} className="col-span-3" />
             </div>
-             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="news-assign" className="text-right">Assign To</Label>
-              <Select onValueChange={(value) => setNewsAssignedTo(value === 'unassigned' ? null : value)} value={newsAssignedTo || 'unassigned'}>
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select an RJ" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="unassigned">Unassigned</SelectItem>
-                  {rjs.map(rj => (
-                    <SelectItem key={rj.id} value={rj.id}>{rj.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="news-content" className="text-right">Content</Label>
               <Textarea id="news-content" value={newsContent} onChange={(e) => setNewsContent(e.target.value)} className="col-span-3" rows={8} />
@@ -617,7 +600,6 @@ export default function CreativePage() {
                 <TableRow>
                   <TableHead>Title</TableHead>
                   <TableHead>Source</TableHead>
-                  <TableHead>Assigned To</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -626,7 +608,6 @@ export default function CreativePage() {
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">{item.title}</TableCell>
                     <TableCell>{item.source}</TableCell>
-                    <TableCell>{rjs.find(r => r.id === item.assignedTo)?.name || 'Unassigned'}</TableCell>
                     <TableCell className="text-right">
                        <Button onClick={() => openEditNewsDialog(item)} variant="ghost" size="icon" className="h-8 w-8"><Pen className="h-4 w-4" /></Button>
                       <Button onClick={() => handleDeleteNews(item.id)} variant="ghost" size="icon" className="h-8 w-8 text-destructive/80 hover:text-destructive"><Trash className="h-4 w-4" /></Button>
@@ -634,7 +615,7 @@ export default function CreativePage() {
                   </TableRow>
                 )) : (
                     <TableRow>
-                        <TableCell colSpan={4} className="h-24 text-center">
+                        <TableCell colSpan={3} className="h-24 text-center">
                             No news items created yet.
                         </TableCell>
                     </TableRow>
