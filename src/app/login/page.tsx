@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { roleDisplayName } from '@/lib/types';
 
 
 function LoginComponent() {
@@ -33,7 +34,7 @@ function LoginComponent() {
   const [formLoading, setFormLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string>('');
   
-  const uniqueRoles = ['Station Head', 'Creative', 'Technical', 'PR', 'RJ', 'Broadcasting', 'Designing', 'Video Editing'];
+  const uniqueRoles = ['station_head', 'creative', 'technical', 'pr', 'rj', 'broadcasting', 'designing', 'video_editing'];
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,7 +111,7 @@ function LoginComponent() {
                     </SelectTrigger>
                     <SelectContent>
                         {uniqueRoles.map((role) => (
-                        <SelectItem key={role} value={role}>{role}</SelectItem>
+                          <SelectItem key={role} value={role}>{roleDisplayName(role as any)}</SelectItem>
                         ))}
                     </SelectContent>
                 </Select>

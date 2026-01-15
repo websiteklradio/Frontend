@@ -2,11 +2,11 @@
 
 import { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import type { SongSuggestion, User } from '@/lib/types';
+import type { SongSuggestion, User, UserRole } from '@/lib/types';
 import api, { setAuthToken } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
-const roleRedirects: { [key: string]: string } = {
+const roleRedirects: { [key in UserRole]?: string } = {
   'station_head': '/dashboard',
   'rj': '/dashboard/rj-wing',
   'creative': '/dashboard/creative',
@@ -16,19 +16,6 @@ const roleRedirects: { [key: string]: string } = {
   'video_editing': '/dashboard/video-editing',
   'broadcasting': '/dashboard/broadcasting',
 };
-
-// Frontend roles to backend roles mapping
-const roleMapping: { [key: string]: string } = {
-  'Station Head': 'station_head',
-  'Creative': 'creative',
-  'Technical': 'technical',
-  'PR': 'pr',
-  'RJ': 'rj',
-  'Broadcasting': 'broadcasting',
-  'Designing': 'designing',
-  'Video Editing': 'video_editing',
-};
-
 
 type AssignedNewsItem = {
     id: string;
@@ -128,9 +115,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   
   const login = useCallback(async (role: string, username: string, password: string): Promise<{ success: boolean; error?: string }> => {
     setLoading(true);
-    const backendRole = roleMapping[role] || role;
     try {
-      const response = await api.post('/auth/login', { username, role: backendRole, password }); 
+      const response = await api.post('/auth/login', { username, role, password }); 
       const { user: userData, token } = response.data;
       handleLoginSuccess(userData, token);
       return { success: true };
