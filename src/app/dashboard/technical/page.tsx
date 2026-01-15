@@ -31,7 +31,7 @@ import {
   Volume2,
   Music2,
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
@@ -66,12 +66,34 @@ export default function TechnicalPage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [songProgress, setSongProgress] = useState(0);
   const [volume, setVolume] = useState(50);
+  const [isFetching, setIsFetching] = useState(false);
   
   const [liveScript, setLiveScript] = useState<LiveScript | null>(null);
   const [songSuggestions, setSongSuggestions] = useState<SongSuggestion[]>([]);
 
+  const fetchSuggestions = useCallback(async () => {
+    setIsFetching(true);
+    try {
+      const suggestionsRes = await api.get('/technical/song-suggestions');
+      setSongSuggestions(suggestionsRes.data);
+       toast({
+          title: 'Suggestions Refreshed',
+          description: 'The song suggestion list has been updated.',
+        });
+    } catch (error) {
+      console.error('Failed to fetch song suggestions', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Could not fetch song suggestions.'
+      });
+    } finally {
+        setIsFetching(false);
+    }
+  }, [toast]);
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchInitialData = async () => {
       try {
         const [scriptRes, suggestionsRes] = await Promise.all([
           api.get('/technical/live-script'),
@@ -88,7 +110,7 @@ export default function TechnicalPage() {
         });
       }
     };
-    fetchData();
+    fetchInitialData();
   }, [toast]);
 
 
@@ -293,12 +315,18 @@ export default function TechnicalPage() {
           </Card>
           <Card>
             <CardHeader>
-              <div className="flex items-center gap-3">
-                <Music2 className="h-6 w-6" />
-                <div>
-                  <CardTitle>Song Suggestions</CardTitle>
-                  <CardDescription>Incoming requests from listeners.</CardDescription>
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <Music2 className="h-6 w-6" />
+                  <div>
+                    <CardTitle>Song Suggestions</CardTitle>
+                    <CardDescription>Incoming requests from listeners.</CardDescription>
+                  </div>
                 </div>
+                <Button onClick={fetchSuggestions} disabled={isFetching} size="sm" variant="outline">
+                    <RefreshCw className={`mr-2 h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />
+                    {isFetching ? 'Refreshing' : 'Refresh'}
+                </Button>
               </div>
             </CardHeader>
             <CardContent>
