@@ -40,3 +40,11 @@ export type User = {
   role: UserRole;
   avatarId: string;
 };
+
+export type NewsItem = {
+    id: string;
+    title: string;
+    content: string;
+    source: string;
+    lastEdited: string;
+};

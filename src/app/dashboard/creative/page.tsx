@@ -72,7 +72,6 @@ type NewsItem = {
     title: string;
     content: string;
     source: string;
-    assignedTo: string | null;
     lastEdited: string;
 };
 
@@ -135,12 +134,12 @@ export default function CreativePage() {
         if (usersRes.data) {
           setRjs(usersRes.data.filter((u: User) => u.role === 'rj'));
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to fetch creative data", error);
         toast({
           variant: "destructive",
           title: "Error",
-          description: "Could not load data for the creative dashboard.",
+          description: error.response?.data?.message || "Could not load data for the creative dashboard.",
         });
       } finally {
         setIsLoading(false);
@@ -183,9 +182,9 @@ export default function CreativePage() {
         toast({ title: 'Script Saved', description: `"${scriptTitle}" has been added.` });
       }
       setIsScriptDialogOpen(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to save script", error);
-      toast({ variant: 'destructive', title: 'Save Failed', description: 'Could not save the script.' });
+      toast({ variant: 'destructive', title: 'Save Failed', description: error.response?.data?.message || 'Could not save the script.' });
     }
   };
 
@@ -195,10 +194,10 @@ export default function CreativePage() {
     try {
       await api.delete(`/creative/scripts/${scriptId}`);
       toast({ title: 'Script Deleted', description: 'The script has been removed.' });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to delete script", error);
       setScripts(originalScripts);
-      toast({ variant: 'destructive', title: 'Delete Failed', description: 'Could not delete the script.' });
+      toast({ variant: 'destructive', title: 'Delete Failed', description: error.response?.data?.message || 'Could not delete the script.' });
     }
   };
 
@@ -207,9 +206,9 @@ export default function CreativePage() {
       await api.patch(`/creative/scripts/${scriptId}/live`);
       setScripts(prev => prev.map(s => ({ ...s, isLive: s.id === scriptId })));
       toast({ title: 'Live Script Set', description: 'The script has been marked as live.' });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to set live script", error);
-      toast({ variant: 'destructive', title: 'Failed', description: 'Could not set the live script.' });
+      toast({ variant: 'destructive', title: 'Failed', description: error.response?.data?.message || 'Could not set the live script.' });
     }
   };
 
@@ -248,9 +247,9 @@ export default function CreativePage() {
         toast({ title: 'Announcement Saved', description: `"${announcementTitle}" has been added.` });
       }
       setIsAnnouncementDialogOpen(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to save announcement", error);
-      toast({ variant: 'destructive', title: 'Save Failed', description: 'Could not save the announcement.' });
+      toast({ variant: 'destructive', title: 'Save Failed', description: error.response?.data?.message || 'Could not save the announcement.' });
     }
   };
 
@@ -260,10 +259,10 @@ export default function CreativePage() {
     try {
       await api.delete(`/creative/announcements/${announcementId}`);
       toast({ title: 'Announcement Deleted', description: 'The announcement has been removed.' });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to delete announcement", error);
       setAnnouncements(originalAnnouncements);
-      toast({ variant: 'destructive', title: 'Delete Failed', description: 'Could not delete the announcement.' });
+      toast({ variant: 'destructive', title: 'Delete Failed', description: error.response?.data?.message || 'Could not delete the announcement.' });
     }
   };
 
@@ -291,9 +290,9 @@ export default function CreativePage() {
         setPodcastScripts(prev => [...prev, response.data]);
         toast({ title: 'Podcast Script Saved', description: `"${podcastTitle}" has been created and assigned.` });
         setIsPodcastDialogOpen(false);
-    } catch (error) {
+    } catch (error: any) {
         console.error("Failed to save podcast script", error);
-        toast({ variant: 'destructive', title: 'Save Failed', description: 'Could not save the podcast script.' });
+        toast({ variant: 'destructive', title: 'Save Failed', description: error.response?.data?.message || 'Could not save the podcast script.' });
     }
   };
 
@@ -320,7 +319,7 @@ export default function CreativePage() {
       return;
     }
 
-    const payload = { title: newsTitle, content: newsContent, source: newsSource, assignedTo: null };
+    const payload = { title: newsTitle, content: newsContent, source: newsSource };
 
     try {
       if (editingNews) {
@@ -333,9 +332,9 @@ export default function CreativePage() {
         toast({ title: 'News Item Saved', description: `"${newsTitle}" has been added.` });
       }
       setIsNewsDialogOpen(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to save news item", error);
-      toast({ variant: 'destructive', title: 'Save Failed', description: 'Could not save the news item.' });
+      toast({ variant: 'destructive', title: 'Save Failed', description: error.response?.data?.message || 'Could not save the news item.' });
     }
   };
 
@@ -345,10 +344,10 @@ export default function CreativePage() {
     try {
       await api.delete(`/creative/news/${newsId}`);
       toast({ title: 'News Item Deleted', description: 'The news item has been removed.' });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to delete news item", error);
       setNews(originalNews);
-      toast({ variant: 'destructive', title: 'Delete Failed', description: 'Could not delete the news item.' });
+      toast({ variant: 'destructive', title: 'Delete Failed', description: error.response?.data?.message || 'Could not delete the news item.' });
     }
   };
 
