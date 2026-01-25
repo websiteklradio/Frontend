@@ -42,8 +42,8 @@ const teamMembers = [
     avatarId: 'video-editing-head',
   },
   {
-    role: 'PR Head',
-    name: 'Chloe Davis',
+    role: 'PR & Marketing Head',
+    name: 'GALI BALA BHARATH',
     avatarId: 'pr-head',
   },
   {
