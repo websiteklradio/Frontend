@@ -149,7 +149,7 @@ export default function CreativePage() {
         toast({ variant: "destructive", title: "Fetch Error", description: "Could not load news items." });
       });
 
-      await Promise.all([
+      await Promise.allSettled([
         scriptsPromise,
         announcementsPromise,
         podcastsPromise,
