@@ -13,7 +13,7 @@ const teamMembers = [
   },
   {
     role: 'Deputy Station Head',
-    name: 'Mr. Benjamin Hayes',
+    name: 'G. Manitej Chowdary',
     avatarId: 'deputy-station-head',
   },
   {
