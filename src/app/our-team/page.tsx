@@ -80,7 +80,7 @@ export default function OurTeamPage() {
               items={galleryItems}
               bend={1}
               textColor="#ffffff"
-              font="bold 30px Lexend"
+              font='30px "California Handmade Regular"'
               borderRadius={0.05}
               scrollEase={0.05}
               scrollSpeed={2}
