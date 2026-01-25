@@ -43,7 +43,7 @@ const teamMembers = [
   },
   {
     role: 'PR & Marketing Head',
-    name: 'GALI BALA BHARATH',
+    name: 'Gali Bala Bharath',
     avatarId: 'pr-head',
   },
   {
