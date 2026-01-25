@@ -1,3 +1,4 @@
+
 'use client';
 
 import { NavbarKL } from '@/components/ui/navbar-kl';
@@ -78,7 +79,7 @@ export default function OurTeamPage() {
             <CircularGallery
               items={galleryItems}
               bend={1}
-              textColor="hsl(var(--foreground))"
+              textColor="#ffffff"
               font="bold 30px Lexend"
               borderRadius={0.05}
               scrollEase={0.05}
