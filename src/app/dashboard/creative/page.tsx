@@ -101,13 +101,7 @@ export default function CreativePage() {
   const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
 
   const [podcastScripts, setPodcastScripts] = useState<PodcastScript[]>([]);
-  const [isPodcastDialogOpen, setIsPodcastDialogOpen] = useState(false);
-  const [podcastTitle, setPodcastTitle] = useState('');
-  const [podcastTopic, setPodcastTopic] = useState('');
-  const [podcastContent, setPodcastContent] = useState('');
-  const [podcastAssignedTo, setPodcastAssignedTo] = useState('');
-  const [editingPodcast, setEditingPodcast] = useState<PodcastScript | null>(null);
-
+  
   const [news, setNews] = useState<NewsItem[]>([]);
   const [isNewsDialogOpen, setIsNewsDialogOpen] = useState(false);
   const [newsTitle, setNewsTitle] = useState('');
@@ -280,36 +274,6 @@ export default function CreativePage() {
     }
   };
 
-  // --- PODCAST SCRIPT MANAGEMENT ---
-  const openNewPodcastDialog = () => {
-    setEditingPodcast(null);
-    setPodcastTitle('');
-    setPodcastTopic('');
-    setPodcastContent('');
-    setPodcastAssignedTo('');
-    setIsPodcastDialogOpen(true);
-  };
-
-  const handleSavePodcast = async () => {
-    if (!podcastTitle || !podcastTopic || !podcastContent || !podcastAssignedTo) {
-      toast({ variant: 'destructive', title: 'Missing Fields', description: 'All fields are required.' });
-      return;
-    }
-
-    const payload = { title: podcastTitle, topic: podcastTopic, content: podcastContent, assignedTo: podcastAssignedTo };
-
-    try {
-        // NOTE: Backend does not support editing podcasts, so we only handle creation.
-        const response = await api.post('/creative/podcasts', payload);
-        setPodcastScripts(prev => [...prev, response.data]);
-        toast({ title: 'Podcast Script Saved', description: `"${podcastTitle}" has been created and assigned.` });
-        setIsPodcastDialogOpen(false);
-    } catch (error: any) {
-        console.error("Failed to save podcast script", error);
-        toast({ variant: 'destructive', title: 'Save Failed', description: error.response?.data?.message || 'Could not save the podcast script.' });
-    }
-  };
-
   // --- NEWS ITEM MANAGEMENT ---
   const openNewNewsDialog = () => {
     setNewsTitle('');
@@ -432,57 +396,6 @@ export default function CreativePage() {
           <DialogFooter>
             <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
             <Button onClick={handleSaveAnnouncement}>{editingAnnouncement ? 'Save Changes' : 'Save Announcement'}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      
-      <Dialog open={isPodcastDialogOpen} onOpenChange={(isOpen) => {
-          setIsPodcastDialogOpen(isOpen);
-          if (!isOpen) {
-            setEditingPodcast(null);
-            setPodcastTitle('');
-            setPodcastTopic('');
-            setPodcastContent('');
-            setPodcastAssignedTo('');
-          }
-      }}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{editingPodcast ? 'Edit Podcast Script' : 'New Podcast Script'}</DialogTitle>
-            <DialogDescription>
-              {editingPodcast ? 'This action is not supported by the backend.' : 'Draft a new script and assign it to an RJ.'}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="podcast-title" className="text-right">Title</Label>
-              <Input id="podcast-title" value={podcastTitle} onChange={(e) => setPodcastTitle(e.target.value)} className="col-span-3" disabled={!!editingPodcast} />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="podcast-topic" className="text-right">Topic</Label>
-              <Input id="podcast-topic" value={podcastTopic} onChange={(e) => setPodcastTopic(e.target.value)} className="col-span-3" disabled={!!editingPodcast} />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="podcast-assign" className="text-right">Assign To</Label>
-              <Select onValueChange={setPodcastAssignedTo} defaultValue={podcastAssignedTo} disabled={!!editingPodcast}>
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select an RJ" />
-                </SelectTrigger>
-                <SelectContent>
-                  {rjs.map(rj => (
-                    <SelectItem key={rj.id} value={rj.id}>{rj.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="podcast-content" className="text-right">Content</Label>
-              <Textarea id="podcast-content" value={podcastContent} onChange={(e) => setPodcastContent(e.target.value)} className="col-span-3" rows={8} disabled={!!editingPodcast} />
-            </div>
-          </div>
-          <DialogFooter>
-            <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
-            <Button onClick={handleSavePodcast} disabled={!!editingPodcast}>{editingPodcast ? 'Save Changes' : 'Save Script'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -647,7 +560,6 @@ export default function CreativePage() {
             }
           </CardContent>
           <CardFooter className="flex justify-end gap-2">
-            <Button onClick={openNewPodcastDialog}><Podcast className="mr-2 h-4 w-4" />Create Podcast Script</Button>
           </CardFooter>
         </Card>
 
