@@ -73,7 +73,7 @@ export default function RJWingPage() {
       }
 
       try {
-        const newsRes = await api.get('/public/news');
+        const newsRes = await api.get('/rj/news');
         setAssignedNews(newsRes.data);
       } catch (error) {
         console.error('Failed to fetch news', error);

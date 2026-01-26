@@ -101,6 +101,12 @@ export default function CreativePage() {
   const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
 
   const [podcastScripts, setPodcastScripts] = useState<PodcastScript[]>([]);
+  const [isPodcastDialogOpen, setIsPodcastDialogOpen] = useState(false);
+  const [editingPodcast, setEditingPodcast] = useState<PodcastScript | null>(null);
+  const [podcastTitle, setPodcastTitle] = useState('');
+  const [podcastTopic, setPodcastTopic] = useState('');
+  const [podcastContent, setPodcastContent] = useState('');
+  const [assignedRj, setAssignedRj] = useState<string | undefined>(undefined);
   
   const [news, setNews] = useState<NewsItem[]>([]);
   const [isNewsDialogOpen, setIsNewsDialogOpen] = useState(false);
@@ -273,6 +279,69 @@ export default function CreativePage() {
       toast({ variant: 'destructive', title: 'Delete Failed', description: error.response?.data?.message || 'Could not delete the announcement.' });
     }
   };
+  
+  // --- PODCAST SCRIPT MANAGEMENT ---
+  const openNewPodcastDialog = () => {
+    setEditingPodcast(null);
+    setPodcastTitle('');
+    setPodcastTopic('');
+    setPodcastContent('');
+    setAssignedRj(undefined);
+    setIsPodcastDialogOpen(true);
+  };
+
+  const openEditPodcastDialog = (podcast: PodcastScript) => {
+    setEditingPodcast(podcast);
+    setPodcastTitle(podcast.title);
+    setPodcastTopic(podcast.topic);
+    setPodcastContent(podcast.content);
+    setAssignedRj(podcast.assignedTo);
+    setIsPodcastDialogOpen(true);
+  };
+
+  const handleSavePodcast = async () => {
+    if (!podcastTitle || !podcastTopic || !podcastContent) {
+      toast({ variant: 'destructive', title: 'Missing Fields', description: 'Please provide a title, topic, and content.' });
+      return;
+    }
+
+    const payload = { 
+        title: podcastTitle, 
+        topic: podcastTopic,
+        content: podcastContent,
+        assignedTo: assignedRj === 'unassigned' ? undefined : assignedRj 
+    };
+
+    try {
+      if (editingPodcast) {
+        const response = await api.put(`/creative/podcasts/${editingPodcast.id}`, payload);
+        setPodcastScripts(prev => prev.map(p => p.id === editingPodcast.id ? response.data : p));
+        toast({ title: 'Podcast Script Updated', description: `"${podcastTitle}" has been updated.` });
+      } else {
+        const response = await api.post('/creative/podcasts', payload);
+        setPodcastScripts(prev => [...prev, response.data]);
+        toast({ title: 'Podcast Script Saved', description: `"${podcastTitle}" has been added.` });
+      }
+      setIsPodcastDialogOpen(false);
+    } catch (error: any) {
+      console.error("Failed to save podcast script", error);
+      toast({ variant: 'destructive', title: 'Save Failed', description: error.response?.data?.message || 'Could not save the podcast script.' });
+    }
+  };
+  
+  const handleDeletePodcast = async (podcastId: string) => {
+    const originalPodcasts = [...podcastScripts];
+    setPodcastScripts(prev => prev.filter(p => p.id !== podcastId));
+    try {
+      await api.delete(`/creative/podcasts/${podcastId}`);
+      toast({ title: 'Podcast Script Deleted', description: 'The script has been removed.' });
+    } catch (error: any) {
+      console.error("Failed to delete podcast script", error);
+      setPodcastScripts(originalPodcasts);
+      toast({ variant: 'destructive', title: 'Delete Failed', description: error.response?.data?.message || 'Could not delete the script.' });
+    }
+  };
+
 
   // --- NEWS ITEM MANAGEMENT ---
   const openNewNewsDialog = () => {
@@ -396,6 +465,58 @@ export default function CreativePage() {
           <DialogFooter>
             <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
             <Button onClick={handleSaveAnnouncement}>{editingAnnouncement ? 'Save Changes' : 'Save Announcement'}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isPodcastDialogOpen} onOpenChange={(isOpen) => {
+          setIsPodcastDialogOpen(isOpen);
+          if (!isOpen) {
+            setEditingPodcast(null);
+            setPodcastTitle('');
+            setPodcastTopic('');
+            setPodcastContent('');
+            setAssignedRj(undefined);
+          }
+      }}>
+        <DialogContent className="sm:max-w-[625px]">
+          <DialogHeader>
+            <DialogTitle>{editingPodcast ? 'Edit Podcast Script' : 'Create a Podcast Script'}</DialogTitle>
+            <DialogDescription>
+              {editingPodcast ? 'Modify the details of the podcast script.' : 'Draft a new script for a podcast episode.'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="podcast-title" className="text-right">Title</Label>
+              <Input id="podcast-title" value={podcastTitle} onChange={(e) => setPodcastTitle(e.target.value)} className="col-span-3" />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="podcast-topic" className="text-right">Topic</Label>
+              <Input id="podcast-topic" value={podcastTopic} onChange={(e) => setPodcastTopic(e.target.value)} className="col-span-3" />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="podcast-assign" className="text-right">Assign to RJ</Label>
+              <Select onValueChange={setAssignedRj} value={assignedRj}>
+                <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Select an RJ" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="unassigned">Unassigned</SelectItem>
+                    {rjs.map((rj) => (
+                      <SelectItem key={rj.id} value={rj.id}>{rj.name}</SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="podcast-content" className="text-right">Content</Label>
+              <Textarea id="podcast-content" value={podcastContent} onChange={(e) => setPodcastContent(e.target.value)} className="col-span-3" rows={8} />
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
+            <Button onClick={handleSavePodcast}>{editingPodcast ? 'Save Changes' : 'Save Script'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -544,6 +665,7 @@ export default function CreativePage() {
                 <TableRow>
                   <TableHead>Title</TableHead>
                   <TableHead>Assigned To</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -551,15 +673,20 @@ export default function CreativePage() {
                   <TableRow key={podcast.id}>
                     <TableCell className="font-medium">{podcast.title}</TableCell>
                     <TableCell>{rjs.find(r => r.id === podcast.assignedTo)?.name || 'Unassigned'}</TableCell>
+                    <TableCell className="text-right">
+                      <Button onClick={() => openEditPodcastDialog(podcast)} variant="ghost" size="icon" className="h-8 w-8"><Pen className="h-4 w-4" /></Button>
+                      <Button onClick={() => handleDeletePodcast(podcast.id)} variant="ghost" size="icon" className="h-8 w-8 text-destructive/80 hover:text-destructive"><Trash className="h-4 w-4" /></Button>
+                    </TableCell>
                   </TableRow>
                 )) : (
-                  <TableRow><TableCell colSpan={2} className="h-24 text-center">No podcast scripts created yet.</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={3} className="h-24 text-center">No podcast scripts created yet.</TableCell></TableRow>
                 )}
               </TableBody>
             </Table>
             }
           </CardContent>
           <CardFooter className="flex justify-end gap-2">
+             <Button onClick={openNewPodcastDialog}><Podcast className="mr-2 h-4 w-4" />Create Podcast Script</Button>
           </CardFooter>
         </Card>
 
