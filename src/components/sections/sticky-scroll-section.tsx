@@ -5,39 +5,45 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import api from '@/lib/api';
 
-type Announcement = {
-  id: number;
+type Item = {
   title: string;
   content: string;
-  date: string;
 };
 
-export function StickyScrollSection() {
+export function StickyScrollSection({ items, title = "Announcements" }: { items?: Item[], title?: string }) {
   const component = useRef<HTMLDivElement>(null);
-  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [displayItems, setDisplayItems] = useState<Item[]>([]);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const fetchAnnouncements = async () => {
-      try {
-        const response = await api.get('/public/announcements');
-        // Get the 3 most recent announcements
-        const data = response.data || [];
-        if (data.length > 0) {
-            setAnnouncements(data.slice(0, 3));
+    const fetchData = async () => {
+      if (items) {
+        if (items.length > 0) {
+            setDisplayItems(items.slice(0, 3));
         } else {
             setError(true);
         }
-      } catch (error) {
-        console.error('Failed to fetch public announcements', error);
-        setError(true);
+      } else {
+          try {
+            const response = await api.get('/public/announcements');
+            const data = response.data || [];
+            if (data.length > 0) {
+                const formattedData = data.map((item: any) => ({ title: item.title, content: item.content }));
+                setDisplayItems(formattedData.slice(0, 3));
+            } else {
+                setError(true);
+            }
+          } catch (error) {
+            console.error('Failed to fetch public announcements', error);
+            setError(true);
+          }
       }
     };
-    fetchAnnouncements();
-  }, []);
+    fetchData();
+  }, [items]);
 
   useEffect(() => {
-    if (announcements.length < 3) return;
+    if (displayItems.length < 3) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
@@ -178,16 +184,16 @@ export function StickyScrollSection() {
       resizeObserver.disconnect();
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
-  }, [announcements]);
+  }, [displayItems]);
   
   if (error) {
     return null;
   }
   
-  if (announcements.length < 3) {
+  if (displayItems.length < 3) {
     return (
       <div className="bg-[#0f0f0f] text-white text-center py-20">
-        Loading announcements...
+        Loading...
       </div>
     );
   }
@@ -392,37 +398,37 @@ export function StickyScrollSection() {
       <div className="sticky-scroll-section-container font-serif bg-[#0f0f0f]">
         <section className="sticky" id="sticky">
           <div className="sticky-header">
-            <h1>Announcements</h1>
+            <h1>{title}</h1>
           </div>
 
           <div className="card-container">
             <div className="card" id="card-1">
               <div className="card-front">
-                <h2>{announcements[0].title}</h2>
+                <h2>{displayItems[0].title}</h2>
               </div>
               <div className="card-back">
                 <span>01</span>
-                <p>{announcements[0].content}</p>
+                <p>{displayItems[0].content}</p>
               </div>
             </div>
 
             <div className="card" id="card-2">
               <div className="card-front">
-                <h2>{announcements[1].title}</h2>
+                <h2>{displayItems[1].title}</h2>
               </div>
               <div className="card-back">
                 <span>02</span>
-                <p>{announcements[1].content}</p>
+                <p>{displayItems[1].content}</p>
               </div>
             </div>
 
             <div className="card" id="card-3">
               <div className="card-front">
-                <h2>{announcements[2].title}</h2>
+                <h2>{displayItems[2].title}</h2>
               </div>
               <div className="card-back">
                 <span>03</span>
-                <p>{announcements[2].content}</p>
+                <p>{displayItems[2].content}</p>
               </div>
             </div>
           </div>

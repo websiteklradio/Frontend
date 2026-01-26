@@ -2,6 +2,7 @@ import { NavbarKL } from '@/components/ui/navbar-kl';
 import { SiteFooter } from '@/components/site-footer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Image from 'next/image';
+import { StickyScrollSection } from '@/components/sections/sticky-scroll-section';
 
 const pastEvents = [
   {
@@ -63,41 +64,51 @@ const pastEvents = [
 
 
 export default function EventsPage() {
+  const eventItems = pastEvents.map(event => ({
+    title: event.title,
+    content: event.description,
+  }));
+  
+  const featuredEvents = eventItems.slice(0, 3);
+  const otherEvents = pastEvents.slice(3);
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <NavbarKL />
-      <main className="flex-1 pt-32 pb-20">
-        <div className="container mx-auto max-w-6xl px-4">
-          <div className="text-center">
-            <h1 className="font-headline text-5xl font-bold tracking-tighter md:text-6xl">
-              Past Events
-            </h1>
-            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground md:text-lg">
-              A look back at some of the memorable events hosted by KL Radio.
-            </p>
+      <main className="flex-1">
+        <StickyScrollSection items={featuredEvents} title="Featured Events" />
+        
+        {otherEvents.length > 0 && (
+          <div className="bg-background py-20 md:py-28">
+            <div className="container mx-auto max-w-6xl px-4">
+              <div className="text-center mb-16">
+                <h2 className="font-headline text-4xl font-bold tracking-tighter md:text-5xl">
+                  More Events
+                </h2>
+              </div>
+              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {otherEvents.map((event) => (
+                    <Card key={event.title} className="overflow-hidden bg-card">
+                      <CardHeader className="p-0">
+                         <Image
+                            src={`https://picsum.photos/seed/${event.title.replace(/\s+/g, '-')}/600/400`}
+                            alt={event.title}
+                            width={600}
+                            height={400}
+                            className="w-full h-auto object-cover aspect-[3/2]"
+                            data-ai-hint={event.hint}
+                          />
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <CardTitle className="text-2xl mb-2">{event.title}</CardTitle>
+                        <CardDescription>{event.description}</CardDescription>
+                      </CardContent>
+                    </Card>
+                  ))}
+              </div>
+            </div>
           </div>
-
-          <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {pastEvents.map((event) => (
-                <Card key={event.title} className="overflow-hidden">
-                  <CardHeader className="p-0">
-                     <Image
-                        src={`https://picsum.photos/seed/${event.title.replace(/\s+/g, '-')}/600/400`}
-                        alt={event.title}
-                        width={600}
-                        height={400}
-                        className="w-full h-auto object-cover aspect-[3/2]"
-                        data-ai-hint={event.hint}
-                      />
-                  </CardHeader>
-                  <CardContent className="p-6">
-                    <CardTitle className="text-2xl mb-2">{event.title}</CardTitle>
-                    <CardDescription>{event.description}</CardDescription>
-                  </CardContent>
-                </Card>
-              ))}
-          </div>
-        </div>
+        )}
       </main>
       <SiteFooter />
     </div>
