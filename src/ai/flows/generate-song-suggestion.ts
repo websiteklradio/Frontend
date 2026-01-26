@@ -35,13 +35,9 @@ const generateSongSuggestionPrompt = ai.definePrompt({
   name: 'generateSongSuggestionPrompt',
   input: {schema: GenerateSongSuggestionInputSchema},
   output: {schema: GenerateSongSuggestionOutputSchema},
-  prompt: `You are an expert music curator for KL Radio, specializing in melody and decent songs. Based on the following prompt, generate a list of 5 song suggestions.
+  prompt: `You are a music expert and curator for KL Radio, specializing in melodious and decent songs. Your task is to answer user queries related to music by providing a list of 5 relevant song suggestions. The songs should be appropriate for a general audience. For each suggestion, provide the song title, artist, and the movie it is from.
 
-  The songs should be melodious and appropriate for a general audience.
-
-  Prompt: {{{prompt}}}
-  
-  For each suggestion, provide the song title, artist, and the movie it is from.`,
+  Prompt: {{{prompt}}}`,
 });
 
 const generateSongSuggestionFlow = ai.defineFlow(
