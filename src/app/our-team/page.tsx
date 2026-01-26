@@ -8,7 +8,7 @@ import CircularGallery from '@/components/ui/circular-gallery';
 const teamMembers = [
   {
     role: 'Station Head',
-    name: 'Dr. Emily Carter',
+    name: 'S.Satya Vamsi Achyuth Ram',
     avatarId: 'station-head',
   },
   {
