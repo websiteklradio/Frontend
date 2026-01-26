@@ -365,6 +365,7 @@ export default function TechnicalPage() {
                         <TableRow>
                           <TableHead>Song Title</TableHead>
                           <TableHead>Artist</TableHead>
+                          <TableHead>Movie</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -372,6 +373,7 @@ export default function TechnicalPage() {
                           <TableRow key={index}>
                             <TableCell className="font-medium">{song.title}</TableCell>
                             <TableCell>{song.artist}</TableCell>
+                            <TableCell>{song.movie}</TableCell>
                           </TableRow>
                         ))}
                       </TableBody>

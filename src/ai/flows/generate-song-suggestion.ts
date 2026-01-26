@@ -19,6 +19,7 @@ export type GenerateSongSuggestionInput = z.infer<typeof GenerateSongSuggestionI
 const SongSchema = z.object({
     title: z.string().describe('The title of the song.'),
     artist: z.string().describe('The artist of the song.'),
+    movie: z.string().describe('The movie the song is from.'),
 });
 
 const GenerateSongSuggestionOutputSchema = z.object({
@@ -34,11 +35,13 @@ const generateSongSuggestionPrompt = ai.definePrompt({
   name: 'generateSongSuggestionPrompt',
   input: {schema: GenerateSongSuggestionInputSchema},
   output: {schema: GenerateSongSuggestionOutputSchema},
-  prompt: `You are an expert music curator for KL Radio. Based on the following prompt, generate a list of 5 song suggestions.
+  prompt: `You are an expert music curator for KL Radio, specializing in melody and decent songs. Based on the following prompt, generate a list of 5 song suggestions.
+
+  The songs should be melodious and appropriate for a general audience.
 
   Prompt: {{{prompt}}}
   
-  Provide only the song title and artist for each suggestion.`,
+  For each suggestion, provide the song title, artist, and the movie it is from.`,
 });
 
 const generateSongSuggestionFlow = ai.defineFlow(
