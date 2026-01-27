@@ -57,10 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         avatarId: userData.avatarId || '1',
     };
     setUser(apiUser);
+    setLoading(false); // Explicitly set loading to false on success
     const redirectPath = roleRedirects[apiUser.role] || '/dashboard';
     router.push(redirectPath);
     router.refresh(); 
-  }, [router]);
+  }, [router, setLoading]);
   
   const verifyAuth = useCallback(async () => {
     const token = localStorage.getItem('token');
