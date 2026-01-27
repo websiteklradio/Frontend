@@ -18,21 +18,26 @@ export function ListenLiveSection() {
   const socketRef = useRef<WebSocket | null>(null);
 
   const cleanupConnection = useCallback(() => {
-    if (socketRef.current) {
-        if(socketRef.current.readyState === WebSocket.OPEN) {
-            socketRef.current.send(JSON.stringify({ type: 'listener_left', roomId: LIVE_STREAM_ROOM_ID }));
+    setStreamState(currentState => {
+        if (currentState === 'offline') return 'offline';
+
+        if (socketRef.current) {
+            if(socketRef.current.readyState === WebSocket.OPEN) {
+                socketRef.current.send(JSON.stringify({ type: 'listener_left', roomId: LIVE_STREAM_ROOM_ID }));
+            }
+            socketRef.current.onclose = null;
+            socketRef.current.close();
+            socketRef.current = null;
         }
-        socketRef.current.close();
-        socketRef.current = null;
-    }
-    if (peerConnectionRef.current) {
-        peerConnectionRef.current.close();
-        peerConnectionRef.current = null;
-    }
-    if (audioRef.current) {
-        audioRef.current.srcObject = null;
-    }
-    setStreamState('offline');
+        if (peerConnectionRef.current) {
+            peerConnectionRef.current.close();
+            peerConnectionRef.current = null;
+        }
+        if (audioRef.current) {
+            audioRef.current.srcObject = null;
+        }
+        return 'offline';
+    });
   }, []);
 
   const handleTuneIn = useCallback(() => {

@@ -69,6 +69,10 @@ export default function TechnicalPage() {
   const socketRef = useRef<WebSocket | null>(null);
   const animationFrameRef = useRef<number>();
 
+  // Visualizer refs
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+
   const fetchSuggestions = useCallback(async () => {
     setIsFetching(true);
     try {
@@ -111,42 +115,81 @@ export default function TechnicalPage() {
     fetchInitialData();
   }, [toast]);
 
-  const drawVisualizer = useCallback(() => {
-    // The visualizer logic remains the same
-    // ...
+  const stopBroadcast = useCallback(() => {
+    setStreamStatus(currentStatus => {
+        if (currentStatus === 'Offline') return 'Offline';
+
+        if (animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current);
+            animationFrameRef.current = undefined;
+        }
+        const canvas = canvasRef.current;
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        if (audioContextRef.current) {
+            audioContextRef.current.close().catch(console.error);
+            audioContextRef.current = null;
+        }
+        analyserRef.current = null;
+
+        if (localStreamRef.current) {
+            localStreamRef.current.getTracks().forEach(track => track.stop());
+            localStreamRef.current = null;
+        }
+
+        peerConnections.current.forEach(pc => pc.close());
+        peerConnections.current.clear();
+
+        if (socketRef.current) {
+            if (socketRef.current.readyState === WebSocket.OPEN) {
+                socketRef.current.send(JSON.stringify({ type: 'broadcast_end', roomId: LIVE_STREAM_ROOM_ID }));
+            }
+            socketRef.current.onclose = null;
+            socketRef.current.close();
+            socketRef.current = null;
+        }
+        
+        return 'Offline';
+    });
   }, []);
 
-  const stopBroadcast = useCallback(() => {
-    setStreamStatus('Offline');
+  const drawVisualizer = useCallback(() => {
+      if (!analyserRef.current || !canvasRef.current) return;
+      
+      const analyser = analyserRef.current;
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-    // Stop microphone stream
-    if (localStreamRef.current) {
-        localStreamRef.current.getTracks().forEach(track => track.stop());
-        localStreamRef.current = null;
-    }
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      analyser.getByteFrequencyData(dataArray);
 
-    // Close all peer connections
-    peerConnections.current.forEach(pc => pc.close());
-    peerConnections.current.clear();
+      const width = canvas.width;
+      const height = canvas.height;
+      
+      ctx.clearRect(0, 0, width, height);
 
-    // Close WebSocket connection
-    if (socketRef.current) {
-        if (socketRef.current.readyState === WebSocket.OPEN) {
-            socketRef.current.send(JSON.stringify({ type: 'broadcast_end', roomId: LIVE_STREAM_ROOM_ID }));
-        }
-        socketRef.current.close();
-        socketRef.current = null;
-    }
-    
-    // Stop visualizer
-    if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-    }
-    const canvas = canvasRef.current;
-    if (canvas) {
-        const ctx = canvas.getContext('2d');
-        if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+      const barWidth = (width / bufferLength);
+      let barHeight;
+      let x = 0;
+
+      const primaryHsl = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+      
+      for(let i = 0; i < bufferLength; i++) {
+          barHeight = dataArray[i] / 1.5;
+          const opacity = barHeight / 255 * 0.7 + 0.3;
+          
+          ctx.fillStyle = `hsla(${primaryHsl} / ${opacity})`;
+          ctx.fillRect(x, height - barHeight, barWidth, barHeight);
+          
+          x += barWidth + 1;
+      }
+
+      animationFrameRef.current = requestAnimationFrame(drawVisualizer);
   }, []);
 
   const startBroadcast = useCallback(async () => {
@@ -155,7 +198,14 @@ export default function TechnicalPage() {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         localStreamRef.current = stream;
 
-        // Visualizer setup would go here if needed...
+        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        audioContextRef.current = audioContext;
+        const source = audioContext.createMediaStreamSource(stream);
+        const analyser = audioContext.createAnalyser();
+        analyser.fftSize = 128;
+        source.connect(analyser);
+        analyserRef.current = analyser;
+        drawVisualizer();
 
         socketRef.current = new WebSocket(SIGNALING_URL);
 
@@ -224,6 +274,7 @@ export default function TechnicalPage() {
         };
 
         socketRef.current.onclose = () => {
+            toast({ variant: 'destructive', title: 'Connection Lost', description: 'Disconnected from signaling server.' });
             stopBroadcast();
         };
 
@@ -234,9 +285,9 @@ export default function TechnicalPage() {
             title: 'Microphone Error',
             description: 'Could not access your microphone. Please check permissions.',
         });
-        setStreamStatus('Offline');
+        stopBroadcast();
     }
-  }, [toast, stopBroadcast]);
+  }, [toast, stopBroadcast, drawVisualizer]);
 
   const toggleLive = () => {
     if (streamStatus !== 'Offline') {
@@ -375,7 +426,7 @@ export default function TechnicalPage() {
                {isBroadcasting && (
                 <div className="space-y-2 pt-2">
                   <Label htmlFor="mic-visualizer">Microphone Input</Label>
-                  <div className="rounded-lg border bg-muted p-3">
+                  <div className="rounded-lg border bg-background p-3">
                     <canvas ref={canvasRef} id="mic-visualizer" width="300" height="50" className="w-full h-[50px]"></canvas>
                   </div>
                 </div>
