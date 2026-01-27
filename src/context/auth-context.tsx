@@ -65,7 +65,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const verifyAuth = useCallback(async () => {
     const token = localStorage.getItem('token');
     const isAuthPage = pathname === '/login';
-    const isPublicPage = pathname === '/';
+    const publicPages = ['/', '/events', '/our-team'];
+    const isPublicPage = publicPages.includes(pathname);
 
     if (!token) {
         if (!isPublicPage && !isAuthPage) {
@@ -100,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('token');
         setAuthToken(null);
         setUser(null);
-        if (!isPublicPage) {
+        if (!isPublicPage && !isAuthPage) {
             router.push('/login');
         }
     } finally {
