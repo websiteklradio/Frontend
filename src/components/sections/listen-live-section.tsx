@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { SoundWave } from '../ui/sound-wave';
 import { AudioWave } from '../ui/audio-wave';
-import { SIGNALING_URL, STUN_SERVER, LIVE_STREAM_ROOM_ID } from '@/lib/webrtc';
+import { SIGNALING_URL, LIVE_STREAM_ROOM_ID, WEBRTC_CONFIG } from '@/lib/webrtc';
 import { useToast } from '@/hooks/use-toast';
 import 'webrtc-adapter';
 
@@ -17,8 +17,19 @@ export function ListenLiveSection() {
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
   const connectedRef = useRef(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const cleanupConnection = useCallback(() => {
+  const streamStateRef = useRef(streamState);
+  useEffect(() => {
+    streamStateRef.current = streamState;
+  }, [streamState]);
+
+  const cleanupConnection = useCallback((showErrorToast = false) => {
+    if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+    }
+
     if (socketRef.current) {
         socketRef.current.onclose = null;
         socketRef.current.close();
@@ -33,7 +44,14 @@ export function ListenLiveSection() {
     }
     connectedRef.current = false;
     setStreamState('offline');
-  }, []);
+    if (showErrorToast) {
+        toast({
+          variant: "destructive",
+          title: "Stream Unavailable",
+          description: "The live stream is currently offline or could not connect.",
+        });
+    }
+  }, [toast]);
 
   const handleTuneIn = useCallback(async () => {
     if (streamState !== 'offline') {
@@ -47,28 +65,34 @@ export function ListenLiveSection() {
 
     setStreamState('connecting');
     toast({ title: 'Connecting to Live Stream...', description: 'This may take a moment.' });
+    
+    timeoutRef.current = setTimeout(() => {
+        if (streamStateRef.current === 'connecting') {
+            cleanupConnection(true);
+        }
+    }, 15000);
 
     try {
-      const pc = new RTCPeerConnection({ iceServers: [{ urls: STUN_SERVER }] });
+      const pc = new RTCPeerConnection(WEBRTC_CONFIG);
       peerConnectionRef.current = pc;
 
       pc.ontrack = (event) => {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
         if (audioRef.current) {
           audioRef.current.srcObject = event.streams[0];
-          // The button click serves as the required user interaction for autoplay.
           audioRef.current.play().catch(error => {
             console.error("Audio playback failed:", error);
             toast({
               variant: "destructive",
               title: "Audio Playback Failed",
-              description: "Your browser may have blocked audio. Click anywhere on the page and try again.",
+              description: "Your browser may have blocked audio. Please click the button again.",
             });
           });
           setStreamState('live');
           toast({ title: "You're listening live!", description: 'Enjoy the show.' });
         }
       };
-
+      
       const ws = new WebSocket(SIGNALING_URL);
       socketRef.current = ws;
 
@@ -115,26 +139,31 @@ export function ListenLiveSection() {
 
       ws.onerror = (error) => {
         console.error('WebSocket Error:', error);
-        toast({ variant: 'destructive', title: 'Connection Failed', description: 'Could not connect to the live stream.' });
-        cleanupConnection();
+        cleanupConnection(true);
       };
       
       ws.onclose = () => {
-        if(connectedRef.current) {
-          cleanupConnection();
+        if (streamStateRef.current === 'live') {
+            toast({ title: "Stream disconnected", description: "Attempting to reconnect..." });
+            setTimeout(() => window.location.reload(), 3000);
+        } else if (streamStateRef.current === 'connecting') {
+            cleanupConnection(true);
+        } else if (connectedRef.current) {
+            cleanupConnection();
         }
       };
 
     } catch (err) {
         console.error('Failed to start listening', err);
-        toast({ variant: 'destructive', title: 'Error', description: 'An unexpected error occurred.' });
-        cleanupConnection();
+        cleanupConnection(true);
     }
   }, [cleanupConnection, toast, streamState]);
 
   useEffect(() => {
-    // Cleanup connection on component unmount
-    return () => cleanupConnection();
+    return () => {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        cleanupConnection();
+    };
   }, [cleanupConnection]);
 
   const getButtonText = () => {

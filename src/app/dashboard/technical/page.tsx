@@ -37,7 +37,7 @@ import type { SongSuggestion } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { generateSongSuggestion, type GenerateSongSuggestionOutput } from '@/ai/flows/generate-song-suggestion';
-import { SIGNALING_URL, STUN_SERVER, LIVE_STREAM_ROOM_ID } from '@/lib/webrtc';
+import { SIGNALING_URL, LIVE_STREAM_ROOM_ID, WEBRTC_CONFIG } from '@/lib/webrtc';
 import 'webrtc-adapter';
 
 
@@ -200,7 +200,13 @@ export default function TechnicalPage() {
 
     setStreamStatus('Connecting...');
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            audio: {
+                echoCancellation: true,
+                noiseSuppression: true,
+                autoGainControl: true,
+            } 
+        });
         localStreamRef.current = stream;
 
         const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -226,7 +232,7 @@ export default function TechnicalPage() {
             const { from: clientId } = data;
 
             if (data.type === 'request_offer' && clientId) {
-                const pc = new RTCPeerConnection({ iceServers: [{ urls: STUN_SERVER }] });
+                const pc = new RTCPeerConnection(WEBRTC_CONFIG);
                 peerConnections.current.set(clientId, pc);
 
                 localStreamRef.current?.getTracks().forEach(track => pc.addTrack(track, localStreamRef.current!));
