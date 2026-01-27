@@ -1,4 +1,3 @@
-
 'use client';
 
 import { AuthProvider, useAuth } from '@/context/auth-context';
@@ -10,9 +9,15 @@ function DashboardContent({ children }: { children: ReactNode }) {
 
   if (loading || !user) {
     return (
-      <div className="flex min-h-screen w-full flex-col items-center justify-center">
-        <div className="text-2xl font-semibold">Loading your dashboard...</div>
-        <p className="text-muted-foreground">Please wait while we verify your session.</p>
+      <div className="flex min-h-screen w-full flex-col items-center justify-center bg-background">
+        <video
+          src="https://ik.imagekit.io/bhanuteja110/Radio/LOADING.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full max-w-sm"
+        />
       </div>
     );
   }
