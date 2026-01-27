@@ -96,7 +96,7 @@ export const CreepyButton = ({
                   "flex items-center justify-center px-4 py-2",
                   coverClassName
               )}
-              animate={{ rotate: isHovered ? -12 : 0 }}
+              animate={{ rotate: isHovered ? -20 : 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
               {children}
