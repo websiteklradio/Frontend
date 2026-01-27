@@ -2,84 +2,123 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { SoundWave } from '../ui/sound-wave';
 import { AudioWave } from '../ui/audio-wave';
-
-// This component provides a static visual representation of a waveform.
-const Waveform = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg width="240" height="60" viewBox="0 0 240 60" fill="none" {...props}>
-    <g>
-      <rect x="0" y="22.5" width="3" height="15" fill="currentColor" rx="1.5" />
-      <rect x="6" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
-      <rect x="12" y="17.5" width="3" height="25" fill="currentColor" rx="1.5" />
-      <rect x="18" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
-      <rect x="24" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
-      <rect x="30" y="22.5" width="3" height="15" fill="currentColor" rx="1.5" />
-      <rect x="36" y="15" width="3" height="30" fill="currentColor" rx="1.5" />
-      <rect x="42" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
-      <rect x="48" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
-      <rect x="54" y="12.5" width="3" height="35" fill="currentColor" rx="1.5" />
-      <rect x="60" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
-      <rect x="66" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
-      <rect x="72" y="22.5" width="3" height="15" fill="currentColor" rx="1.5" />
-      <rect x="78" y="10" width="3" height="40" fill="currentColor" rx="1.5" />
-      <rect x="84" y="5" width="3" height="50" fill="currentColor" rx="1.5" />
-      <rect x="90" y="15" width="3" height="30" fill="currentColor" rx="1.5" />
-      <rect x="96" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
-      <rect x="102" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
-      <rect x="108" y="0" width="3" height="60" fill="currentColor" rx="1.5" />
-      <rect x="114" y="10" width="3" height="40" fill="currentColor" rx="1.5" />
-      <rect x="120" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
-      <rect x="126" y="15" width="3" height="30" fill="currentColor" rx="1.5" />
-      <rect x="132" y="0" width="3" height="60" fill="currentColor" rx="1.5" />
-      <rect x="138" y="10" width="3" height="40" fill="currentColor" rx="1.5" />
-      <rect x="144" y="5" width="3" height="50" fill="currentColor" rx="1.5" />
-      <rect x="150" y="15" width="3" height="30" fill="currentColor" rx="1.5" />
-      <rect x="156" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
-      <rect x="162" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
-      <rect x="168" y="12.5" width="3" height="35" fill="currentColor" rx="1.5" />
-      <rect x="174" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
-      <rect x="180" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
-      <rect x="186" y="22.5" width="3" height="15" fill="currentColor" rx="1.5" />
-      <rect x="192" y="10" width="3" height="40" fill="currentColor" rx="1.5" />
-      <rect x="198" y="15" width="3" height="30" fill="currentColor" rx="1.5" />
-      <rect x="204" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
-      <rect x="210" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
-      <rect x="216" y="17.5" width="3" height="25" fill="currentColor" rx="1.5" />
-      <rect x="222" y="20" width="3" height="20" fill="currentColor" rx="1.5" />
-      <rect x="228" y="25" width="3" height="10" fill="currentColor" rx="1.5" />
-      <rect x="234" y="22.5" width="3" height="15" fill="currentColor" rx="1.5" />
-    </g>
-  </svg>
-);
+import { SIGNALING_URL, STUN_SERVER, LIVE_STREAM_ROOM_ID } from '@/lib/webrtc';
+import { useToast } from '@/hooks/use-toast';
+import 'webrtc-adapter';
 
 export function ListenLiveSection() {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const { toast } = useToast();
+  const [streamState, setStreamState] = useState<'offline' | 'connecting' | 'live'>('offline');
+  
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
+  const socketRef = useRef<WebSocket | null>(null);
+
+  const cleanupConnection = useCallback(() => {
+    if (socketRef.current) {
+        if(socketRef.current.readyState === WebSocket.OPEN) {
+            socketRef.current.send(JSON.stringify({ type: 'listener_left', roomId: LIVE_STREAM_ROOM_ID }));
+        }
+        socketRef.current.close();
+        socketRef.current = null;
+    }
+    if (peerConnectionRef.current) {
+        peerConnectionRef.current.close();
+        peerConnectionRef.current = null;
+    }
+    if (audioRef.current) {
+        audioRef.current.srcObject = null;
+    }
+    setStreamState('offline');
+  }, []);
+
+  const handleTuneIn = useCallback(() => {
+    if (streamState !== 'offline') return;
+
+    setStreamState('connecting');
+    toast({ title: 'Connecting to Live Stream...', description: 'This may take a moment.' });
+
+    socketRef.current = new WebSocket(SIGNALING_URL);
+
+    socketRef.current.onopen = () => {
+        socketRef.current?.send(JSON.stringify({ type: 'request_offer', roomId: LIVE_STREAM_ROOM_ID }));
+    };
+
+    socketRef.current.onmessage = async (event) => {
+        const data = JSON.parse(event.data);
+
+        if (data.type === 'offer') {
+            const pc = new RTCPeerConnection({ iceServers: [{ urls: STUN_SERVER }] });
+            peerConnectionRef.current = pc;
+
+            pc.ontrack = (e) => {
+                if (audioRef.current) {
+                    audioRef.current.srcObject = e.streams[0];
+                    setStreamState('live');
+                    toast({ title: "You're listening live!", description: 'Enjoy the show.' });
+                }
+            };
+            
+            pc.onicecandidate = (e) => {
+                if (e.candidate && socketRef.current?.readyState === WebSocket.OPEN) {
+                    socketRef.current.send(JSON.stringify({
+                        type: 'candidate',
+                        candidate: e.candidate,
+                        roomId: LIVE_STREAM_ROOM_ID
+                    }));
+                }
+            };
+
+            await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+
+            if (socketRef.current?.readyState === WebSocket.OPEN) {
+                socketRef.current.send(JSON.stringify({
+                    type: 'answer',
+                    answer: pc.localDescription,
+                    roomId: LIVE_STREAM_ROOM_ID
+                }));
+            }
+        } else if (data.type === 'candidate') {
+            if (peerConnectionRef.current) {
+                await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(data.candidate));
+            }
+        } else if (data.type === 'broadcast_end') {
+            toast({ title: 'Broadcast has ended', description: 'Thanks for listening!' });
+            cleanupConnection();
+        }
+    };
+    
+    socketRef.current.onerror = (error) => {
+        console.error('WebSocket Error:', error);
+        toast({ variant: 'destructive', title: 'Connection Failed', description: 'Could not connect to the live stream.' });
+        cleanupConnection();
+    };
+
+    socketRef.current.onclose = () => {
+        cleanupConnection();
+    };
+  }, [streamState, cleanupConnection, toast]);
 
   useEffect(() => {
-    // Check the live status from localStorage when the component mounts.
-    const checkLiveStatus = () => {
-      const status = localStorage.getItem('kl-radio-live-status');
-      setIsPlaying(status === 'online');
-    };
+    return () => cleanupConnection();
+  }, [cleanupConnection]);
 
-    checkLiveStatus();
-
-    // Listen for changes in localStorage from other tabs.
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'kl-radio-live-status') {
-        setIsPlaying(event.newValue === 'online');
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    // Clean up the event listener when the component unmounts.
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
+  const getButtonText = () => {
+    switch (streamState) {
+      case 'live':
+        return 'Listening Live';
+      case 'connecting':
+        return 'Connecting...';
+      case 'offline':
+      default:
+        return 'Tune In to Live Stream';
+    }
+  };
 
   return (
     <section
@@ -91,22 +130,24 @@ export function ListenLiveSection() {
         <Card className="relative overflow-hidden bg-primary text-primary-foreground shadow-2xl backdrop-blur-sm">
           <CardContent className="flex flex-col items-center justify-center p-10 text-center md:p-16">
             <h2 className="font-headline text-5xl font-bold">
-              {isPlaying ? 'We Are Live!' : 'Listen Live'}
+              {streamState === 'live' ? 'We Are Live!' : 'Listen Live'}
             </h2>
             <p className="mt-2 max-w-md text-primary-foreground/80">
-              {isPlaying ? 'Tune in now to hear what\'s happening at KL Radio.' : "The stream is currently offline. Check back soon!"}
+              {streamState === 'live' ? "You're tuned in to KL Radio." : "The stream is currently offline. When we go live, you can tune in here!"}
             </p>
             <div className="my-8 h-[60px] w-[240px] flex items-center justify-center">
-              {isPlaying ? <AudioWave /> : <Waveform className="text-primary-foreground/50" />}
+              {streamState === 'live' ? <AudioWave /> : <div className="text-primary-foreground/50 text-sm">Stream Offline</div>}
             </div>
             <Button
               size="lg"
               variant="secondary"
               className="w-full max-w-xs text-lg font-bold shadow-lg transition-transform hover:scale-105 bg-background text-foreground hover:bg-background/80 rounded-full"
-              disabled={!isPlaying}
+              disabled={streamState !== 'offline'}
+              onClick={handleTuneIn}
             >
-              {isPlaying ? 'Now Playing' : 'Stream Offline'}
+              {getButtonText()}
             </Button>
+             <audio ref={audioRef} autoPlay playsInline />
           </CardContent>
         </Card>
       </div>
