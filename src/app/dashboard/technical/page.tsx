@@ -68,7 +68,6 @@ export default function TechnicalPage() {
   const peerConnections = useRef<Map<string, RTCPeerConnection>>(new Map());
   const socketRef = useRef<WebSocket | null>(null);
   const animationFrameRef = useRef<number>();
-  const connectedRef = useRef(false);
 
   // Visualizer refs
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -118,7 +117,7 @@ export default function TechnicalPage() {
 
   const stopBroadcast = useCallback(() => {
     setStreamStatus(currentStatus => {
-        if (currentStatus === 'Offline' && !connectedRef.current) return 'Offline';
+        if (currentStatus === 'Offline') return 'Offline';
 
         if (animationFrameRef.current) {
             cancelAnimationFrame(animationFrameRef.current);
@@ -153,7 +152,6 @@ export default function TechnicalPage() {
             socketRef.current = null;
         }
         
-        connectedRef.current = false;
         return 'Offline';
     });
   }, []);
@@ -195,8 +193,7 @@ export default function TechnicalPage() {
   }, []);
 
   const startBroadcast = useCallback(async () => {
-    if (connectedRef.current) return;
-    connectedRef.current = true;
+    if (socketRef.current) return;
 
     setStreamStatus('Connecting...');
     try {
@@ -218,32 +215,36 @@ export default function TechnicalPage() {
         analyserRef.current = analyser;
         drawVisualizer();
 
-        socketRef.current = new WebSocket(SIGNALING_URL);
+        const ws = new WebSocket(SIGNALING_URL);
+        socketRef.current = ws;
 
-        socketRef.current.onopen = () => {
+        ws.onopen = () => {
             setStreamStatus('Broadcasting...');
-            const message = { type: 'start_broadcast', roomId: LIVE_STREAM_ROOM_ID };
-            socketRef.current?.send(JSON.stringify(message));
-            toast({ title: "You are live!", description: "Broadcast started successfully." });
+            ws.send(JSON.stringify({
+                type: 'join',
+                roomId: LIVE_STREAM_ROOM_ID,
+                role: 'sender'
+            }));
+            toast({ title: "You are live!", description: "Broadcast started successfully. Waiting for listeners..." });
         };
 
-        socketRef.current.onmessage = async (event) => {
+        ws.onmessage = async (event) => {
             const data = JSON.parse(event.data);
-            const { from: clientId } = data;
+            const listenerId = data.listenerId;
 
-            if (data.type === 'request_offer' && clientId) {
+            if (data.type === 'listener_joined' && listenerId) {
                 const pc = new RTCPeerConnection(WEBRTC_CONFIG);
-                peerConnections.current.set(clientId, pc);
+                peerConnections.current.set(listenerId, pc);
 
                 localStreamRef.current?.getTracks().forEach(track => pc.addTrack(track, localStreamRef.current!));
 
                 pc.onicecandidate = (e) => {
-                    if (e.candidate && socketRef.current?.readyState === WebSocket.OPEN) {
-                        socketRef.current.send(JSON.stringify({
-                            to: clientId,
+                    if (e.candidate && ws.readyState === WebSocket.OPEN) {
+                        ws.send(JSON.stringify({
                             type: 'candidate',
                             candidate: e.candidate,
-                            roomId: LIVE_STREAM_ROOM_ID
+                            roomId: LIVE_STREAM_ROOM_ID,
+                            listenerId: listenerId
                         }));
                     }
                 };
@@ -251,40 +252,44 @@ export default function TechnicalPage() {
                 const offer = await pc.createOffer();
                 await pc.setLocalDescription(offer);
                 
-                if (socketRef.current?.readyState === WebSocket.OPEN) {
-                    socketRef.current.send(JSON.stringify({
-                        to: clientId,
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({
                         type: 'offer',
                         offer: pc.localDescription,
-                        roomId: LIVE_STREAM_ROOM_ID
+                        roomId: LIVE_STREAM_ROOM_ID,
+                        listenerId: listenerId
                     }));
                 }
-            } else if (data.type === 'answer' && clientId) {
-                const pc = peerConnections.current.get(clientId);
+            } else if (data.type === 'answer' && listenerId) {
+                const pc = peerConnections.current.get(listenerId);
                 if (pc && pc.signalingState !== 'closed') {
                    await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
                 }
-            } else if (data.type === 'candidate' && clientId) {
-                const pc = peerConnections.current.get(clientId);
-                if (pc && pc.connectionState !== "closed") {
-                   await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+            } else if (data.type === 'candidate' && listenerId) {
+                const pc = peerConnections.current.get(listenerId);
+                if (pc && pc.connectionState !== "closed" && pc.remoteDescription) {
+                   try {
+                     await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+                   } catch(e) {
+                      console.error("Error adding received ICE candidate from listener", e);
+                   }
                 }
-            } else if (data.type === 'listener_left' && clientId) {
-                const pc = peerConnections.current.get(clientId);
+            } else if (data.type === 'listener_left' && listenerId) {
+                const pc = peerConnections.current.get(listenerId);
                 if (pc) {
                     pc.close();
-                    peerConnections.current.delete(clientId);
+                    peerConnections.current.delete(listenerId);
                 }
             }
         };
 
-        socketRef.current.onerror = (error) => {
+        ws.onerror = (error) => {
             console.error("WebSocket Error:", error);
             toast({ variant: 'destructive', title: 'Broadcast Error', description: 'Could not connect to the signaling server.' });
             stopBroadcast();
         };
 
-        socketRef.current.onclose = () => {
+        ws.onclose = () => {
             if (streamStatus !== 'Offline') {
                 toast({ variant: 'destructive', title: 'Connection Lost', description: 'Disconnected from signaling server.' });
                 stopBroadcast();
