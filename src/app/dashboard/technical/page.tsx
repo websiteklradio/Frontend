@@ -199,9 +199,11 @@ export default function TechnicalPage() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ 
             audio: {
-                echoCancellation: true,
-                noiseSuppression: true,
-                autoGainControl: true,
+                echoCancellation: false,
+                noiseSuppression: false,
+                autoGainControl: false,
+                channelCount: 2,
+                sampleRate: 48000
             } 
         });
         localStreamRef.current = stream;
@@ -230,13 +232,23 @@ export default function TechnicalPage() {
 
         ws.onmessage = async (event) => {
             const data = JSON.parse(event.data);
-            const listenerId = data.listenerId;
 
-            if (data.type === 'listener_joined' && listenerId) {
+            if (data.type === 'listener_joined') {
+                const listenerId = data.listenerId;
+                if (!localStreamRef.current) return;
+
                 const pc = new RTCPeerConnection(WEBRTC_CONFIG);
                 peerConnections.current.set(listenerId, pc);
 
-                localStreamRef.current?.getTracks().forEach(track => pc.addTrack(track, localStreamRef.current!));
+                localStreamRef.current.getTracks().forEach(track => pc.addTrack(track, localStreamRef.current!));
+
+                const sender = pc.getSenders().find(s => s.track?.kind === "audio");
+                if (sender) {
+                    const params = sender.getParameters();
+                    if (!params.encodings) params.encodings = [{}];
+                    params.encodings[0].maxBitrate = 192000;
+                    sender.setParameters(params).catch(console.error);
+                }
 
                 pc.onicecandidate = (e) => {
                     if (e.candidate && ws.readyState === WebSocket.OPEN) {
@@ -260,13 +272,13 @@ export default function TechnicalPage() {
                         listenerId: listenerId
                     }));
                 }
-            } else if (data.type === 'answer' && listenerId) {
-                const pc = peerConnections.current.get(listenerId);
+            } else if (data.type === 'answer') {
+                const pc = peerConnections.current.get(data.listenerId);
                 if (pc && pc.signalingState !== 'closed') {
                    await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
                 }
-            } else if (data.type === 'candidate' && listenerId) {
-                const pc = peerConnections.current.get(listenerId);
+            } else if (data.type === 'candidate') {
+                 const pc = peerConnections.current.get(data.listenerId);
                 if (pc && pc.connectionState !== "closed" && pc.remoteDescription) {
                    try {
                      await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
@@ -274,7 +286,8 @@ export default function TechnicalPage() {
                       console.error("Error adding received ICE candidate from listener", e);
                    }
                 }
-            } else if (data.type === 'listener_left' && listenerId) {
+            } else if (data.type === 'listener_left') {
+                const listenerId = data.listenerId;
                 const pc = peerConnections.current.get(listenerId);
                 if (pc) {
                     pc.close();

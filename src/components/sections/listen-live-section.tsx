@@ -60,10 +60,6 @@ export function ListenLiveSection() {
       peerConnectionRef.current = pc;
 
       pc.onconnectionstatechange = () => {
-        if (pc.connectionState === 'connected' && streamState !== 'live') {
-          setStreamState('live');
-          toast({ title: "You're listening live!", description: 'Enjoy the show.' });
-        }
         if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected' || pc.connectionState === 'closed') {
           cleanupConnection(streamState === 'live');
         }
@@ -72,6 +68,7 @@ export function ListenLiveSection() {
       pc.ontrack = (event) => {
         if (audioRef.current) {
           audioRef.current.srcObject = event.streams[0];
+          audioRef.current.preload = "auto";
           audioRef.current.play().catch(error => {
             console.error("Audio playback failed:", error);
             toast({
@@ -81,6 +78,12 @@ export function ListenLiveSection() {
             })
           });
         }
+        const receiver = pc.getReceivers().find(r => r.track.kind === "audio");
+        if (receiver?.jitterBufferTarget !== undefined) {
+          receiver.jitterBufferTarget = 200; // 200ms for music
+        }
+        setStreamState('live');
+        toast({ title: "You're listening live!", description: 'Enjoy the show.' });
       };
       
       const ws = new WebSocket(SIGNALING_URL);
