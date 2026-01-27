@@ -68,6 +68,7 @@ export default function TechnicalPage() {
   const peerConnections = useRef<Map<string, RTCPeerConnection>>(new Map());
   const socketRef = useRef<WebSocket | null>(null);
   const animationFrameRef = useRef<number>();
+  const connectedRef = useRef(false);
 
   // Visualizer refs
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -117,7 +118,7 @@ export default function TechnicalPage() {
 
   const stopBroadcast = useCallback(() => {
     setStreamStatus(currentStatus => {
-        if (currentStatus === 'Offline') return 'Offline';
+        if (currentStatus === 'Offline' && !connectedRef.current) return 'Offline';
 
         if (animationFrameRef.current) {
             cancelAnimationFrame(animationFrameRef.current);
@@ -152,6 +153,7 @@ export default function TechnicalPage() {
             socketRef.current = null;
         }
         
+        connectedRef.current = false;
         return 'Offline';
     });
   }, []);
@@ -193,7 +195,8 @@ export default function TechnicalPage() {
   }, []);
 
   const startBroadcast = useCallback(async () => {
-    if (socketRef.current) return;
+    if (connectedRef.current) return;
+    connectedRef.current = true;
 
     setStreamStatus('Connecting...');
     try {
@@ -257,7 +260,7 @@ export default function TechnicalPage() {
                 }
             } else if (data.type === 'candidate' && clientId) {
                 const pc = peerConnections.current.get(clientId);
-                if (pc) {
+                if (pc && pc.connectionState !== "closed") {
                    await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
                 }
             } else if (data.type === 'listener_left' && clientId) {

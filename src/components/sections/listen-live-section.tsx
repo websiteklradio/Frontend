@@ -16,10 +16,11 @@ export function ListenLiveSection() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
+  const connectedRef = useRef(false);
 
   const cleanupConnection = useCallback(() => {
     setStreamState(currentState => {
-        if (currentState === 'offline') return 'offline';
+        if (currentState === 'offline' && !connectedRef.current) return 'offline';
 
         if (socketRef.current) {
             if(socketRef.current.readyState === WebSocket.OPEN) {
@@ -36,12 +37,15 @@ export function ListenLiveSection() {
         if (audioRef.current) {
             audioRef.current.srcObject = null;
         }
+        
+        connectedRef.current = false;
         return 'offline';
     });
   }, []);
 
   const handleTuneIn = useCallback(() => {
-    if (streamState !== 'offline' || socketRef.current) return;
+    if (streamState !== 'offline' || connectedRef.current) return;
+    connectedRef.current = true;
 
     setStreamState('connecting');
     toast({ title: 'Connecting to Live Stream...', description: 'This may take a moment.' });
@@ -62,6 +66,14 @@ export function ListenLiveSection() {
             pc.ontrack = (e) => {
                 if (audioRef.current) {
                     audioRef.current.srcObject = e.streams[0];
+                    audioRef.current.play().catch(error => {
+                        console.error("Audio playback failed:", error);
+                        toast({
+                            variant: "destructive",
+                            title: "Audio Playback Failed",
+                            description: "Your browser may have blocked audio. Please refresh and try again.",
+                        });
+                    });
                     setStreamState('live');
                     toast({ title: "You're listening live!", description: 'Enjoy the show.' });
                 }
@@ -89,7 +101,7 @@ export function ListenLiveSection() {
                 }));
             }
         } else if (data.type === 'candidate') {
-            if (peerConnectionRef.current) {
+            if (peerConnectionRef.current && peerConnectionRef.current.connectionState !== "closed") {
                 await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(data.candidate));
             }
         } else if (data.type === 'broadcast_end') {
