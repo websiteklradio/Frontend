@@ -34,8 +34,6 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AuthProvider>
       <DashboardContent>{children}</DashboardContent>
-    </AuthProvider>
   );
 }

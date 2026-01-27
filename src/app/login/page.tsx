@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AuthProvider, useAuth } from '@/context/auth-context';
+import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/use-toast';
 import { NavbarKL } from '@/components/ui/navbar-kl';
 import {
@@ -26,7 +26,7 @@ import {
 import { roleDisplayName } from '@/lib/types';
 
 
-function LoginComponent() {
+export default function LoginPage() {
   const { login, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [username, setUsername] = useState('');
@@ -133,13 +133,5 @@ function LoginComponent() {
       </p>
     </div>
     </>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <AuthProvider>
-      <LoginComponent />
-    </AuthProvider>
   );
 }

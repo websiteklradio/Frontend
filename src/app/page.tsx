@@ -1,6 +1,5 @@
 'use client';
 
-import { AuthProvider } from '@/context/auth-context';
 import { HeroSection } from '@/components/sections/hero-section';
 import { StickyScrollSection } from '@/components/sections/sticky-scroll-section';
 import { ListenLiveSection } from '@/components/sections/listen-live-section';
@@ -28,8 +27,6 @@ function HomeComponent() {
 
 export default function Home() {
   return (
-    <AuthProvider>
-      <HomeComponent />
-    </AuthProvider>
+    <HomeComponent />
   );
 }
