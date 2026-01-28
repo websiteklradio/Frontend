@@ -11,7 +11,17 @@ import { LenisProvider } from '@/components/lenis-provider';
 function HomeComponent() {
   return (
     <LenisProvider>
-      <div className="flex min-h-screen flex-col">
+      <div className="relative flex min-h-screen flex-col overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute top-0 left-0 w-full h-full object-cover -z-20"
+        >
+          <source src="https://ik.imagekit.io/bhanuteja110/Radio/Website.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/50 -z-10" />
         <NavbarKL />
         <main className="flex-1 pt-24">
           <HeroSection />
