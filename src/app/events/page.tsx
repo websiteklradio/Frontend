@@ -60,7 +60,7 @@ export default function EventsPage() {
         loop
         muted
         playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover -z-20"
+        className="fixed top-0 left-0 w-full h-full object-cover -z-20"
       >
         <source src="https://ik.imagekit.io/bhanuteja110/Radio/Untitled%20video%20-%20Made%20with%20Clipchamp%20(2).mp4" type="video/mp4" />
       </video>

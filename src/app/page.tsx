@@ -17,7 +17,7 @@ function HomeComponent() {
           loop
           muted
           playsInline
-          className="absolute top-0 left-0 w-full h-full object-cover -z-20"
+          className="fixed top-0 left-0 w-full h-full object-cover -z-20"
         >
           <source src="https://ik.imagekit.io/bhanuteja110/Radio/Website.mp4" type="video/mp4" />
         </video>
