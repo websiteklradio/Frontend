@@ -59,11 +59,27 @@ export default function RJWingPage() {
     const fetchData = async () => {
       setIsLoading(true);
 
-      try {
-        const scriptRes = await api.get('/rj/live-script');
-        setLiveScript(scriptRes.data);
-      } catch (error) {
-        console.error('Failed to fetch live script', error);
+      const scriptPromise = api.get('/rj/live-script');
+      const newsPromise = api.get('/rj/news');
+      const announcementsPromise = api.get('/public/announcements');
+      const podcastPromise = api.get('/rj/podcast');
+
+      const [
+        scriptResult,
+        newsResult,
+        announcementsResult,
+        podcastResult,
+      ] = await Promise.allSettled([
+        scriptPromise,
+        newsPromise,
+        announcementsPromise,
+        podcastPromise,
+      ]);
+
+      if (scriptResult.status === 'fulfilled') {
+        setLiveScript(scriptResult.value.data);
+      } else {
+        console.error('Failed to fetch live script', scriptResult.reason);
         toast({
           variant: 'destructive',
           title: 'Error',
@@ -71,27 +87,22 @@ export default function RJWingPage() {
         });
       }
 
-      try {
-        const newsRes = await api.get('/rj/news');
-        setAssignedNews(newsRes.data);
-      } catch (error) {
-        console.error('Failed to fetch news', error);
-        // Silently fail is ok, UI will show an empty state.
+      if (newsResult.status === 'fulfilled') {
+        setAssignedNews(newsResult.value.data);
+      } else {
+        console.error('Failed to fetch news', newsResult.reason);
       }
       
-      try {
-        const announcementsRes = await api.get('/public/announcements');
-        setAnnouncements(announcementsRes.data);
-      } catch (error) {
-        console.error('Failed to fetch announcements', error);
-        // Silently fail is ok, UI will show an empty state.
+      if (announcementsResult.status === 'fulfilled') {
+        setAnnouncements(announcementsResult.value.data);
+      } else {
+        console.error('Failed to fetch announcements', announcementsResult.reason);
       }
 
-      try {
-        const podcastRes = await api.get('/rj/podcast');
-        setLivePodcast(podcastRes.data);
-      } catch (error) {
-        console.error('Failed to fetch live podcast', error);
+      if (podcastResult.status === 'fulfilled') {
+        setLivePodcast(podcastResult.value.data);
+      } else {
+        console.error('Failed to fetch live podcast', podcastResult.reason);
         setLivePodcast(null);
       }
 

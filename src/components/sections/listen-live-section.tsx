@@ -198,7 +198,7 @@ export function ListenLiveSection() {
             >
               {getButtonText()}
             </Button>
-             <audio ref={audioRef} autoPlay controls className="mt-4" />
+             <audio ref={audioRef} autoPlay hidden />
           </CardContent>
         </Card>
       </div>

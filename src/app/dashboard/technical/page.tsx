@@ -352,7 +352,6 @@ export default function TechnicalPage() {
 
     setIsFetching(true);
     const originalSuggestions = [...songSuggestions];
-    setSongSuggestions(prev => prev.filter(s => !selectedSuggestions.includes(s.id)));
 
     try {
       await api.delete('/technical/song-suggestions', { data: { ids: selectedSuggestions } });
@@ -361,6 +360,10 @@ export default function TechnicalPage() {
         description: `${selectedSuggestions.length} song(s) have been removed.`,
       });
       setSelectedSuggestions([]);
+      
+      const suggestionsRes = await api.get('/technical/song-suggestions');
+      setSongSuggestions(suggestionsRes.data);
+
     } catch (error) {
       console.error('Failed to delete suggestions', error);
       setSongSuggestions(originalSuggestions);
@@ -371,7 +374,6 @@ export default function TechnicalPage() {
       });
     } finally {
       setIsFetching(false);
-      await fetchSuggestions();
     }
   };
 

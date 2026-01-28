@@ -28,7 +28,7 @@ const navItems: NavItem[] = [
   { href: '/dashboard/admin', label: 'Admin Panel', roles: ['station_head'] },
 ];
 
-export function MainNav({ isMobile = false }: { isMobile?: boolean }) {
+export function MainNav({ isMobile = false, onNavigate }: { isMobile?: boolean, onNavigate?: () => void }) {
   const pathname = usePathname();
   const { user } = useAuth();
 
@@ -43,6 +43,7 @@ export function MainNav({ isMobile = false }: { isMobile?: boolean }) {
           <Link
             key={item.href}
             href={item.href}
+            onClick={onNavigate}
             className={cn(
                 "text-muted-foreground hover:text-foreground",
                 pathname === item.href && "text-foreground"

@@ -71,7 +71,7 @@ export function DashboardHeader() {
           </button>
 
           <div className="flex flex-col space-y-6 text-lg">
-            <MainNav isMobile={true}/>
+            <MainNav isMobile={true} onNavigate={toggle} />
 
             <Button
                 variant="destructive"
