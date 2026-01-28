@@ -14,13 +14,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import React, { useState } from 'react';
-import api from '@/lib/api';
+import { useAuth } from '@/context/auth-context';
 
 function SuggestionForm() {
+  const { addSongSuggestion } = useAuth();
   const { toast } = useToast();
   const [listenerName, setListenerName] = useState('');
   const [songTitle, setSongTitle] = useState('');
   const [movie, setMovie] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,22 +35,18 @@ function SuggestionForm() {
       return;
     }
 
-    try {
-        await api.post('/public/song-suggestion', { listenerName, songTitle, movie });
-        toast({
-          title: 'Suggestion received!',
-          description: "Thanks for the recommendation. We'll check it out!",
-        });
-        setListenerName('');
-        setSongTitle('');
-        setMovie('');
-    } catch (error) {
-        console.error("Failed to submit suggestion", error);
-        toast({
-            variant: 'destructive',
-            title: 'Submission Failed',
-            description: 'Could not send your suggestion. Please try again later.',
-        });
+    setIsSubmitting(true);
+    const result = await addSongSuggestion({ name: listenerName, songTitle, movie });
+    setIsSubmitting(false);
+
+    if (result.success) {
+      toast({
+        title: 'Suggestion received!',
+        description: "Thanks for the recommendation. We'll check it out!",
+      });
+      setListenerName('');
+      setSongTitle('');
+      setMovie('');
     }
   };
 
@@ -96,9 +94,9 @@ function SuggestionForm() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full" variant="default">
+            <Button type="submit" className="w-full" variant="default" disabled={isSubmitting}>
               <Send className="mr-2 h-4 w-4" />
-              Submit Suggestion
+              {isSubmitting ? 'Submitting...' : 'Submit Suggestion'}
             </Button>
           </CardFooter>
         </form>

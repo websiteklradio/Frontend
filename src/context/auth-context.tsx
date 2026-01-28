@@ -31,7 +31,7 @@ type AuthContextType = {
   login: (role: string, username: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   songSuggestions: SongSuggestion[];
-  addSongSuggestion: (suggestion: Omit<SongSuggestion, 'id' | 'submittedAt' | 'status'>) => void;
+  addSongSuggestion: (suggestion: Omit<SongSuggestion, 'id' | 'submittedAt' | 'status'>) => Promise<{ success: boolean }>;
   setSongSuggestions: (suggestions: SongSuggestion[]) => void;
   assignedNews: AssignedNewsItem[];
 };
@@ -57,11 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         avatarId: userData.avatarId || '1',
     };
     setUser(apiUser);
-    setLoading(false); // Explicitly set loading to false on success
+    setLoading(false);
     const redirectPath = roleRedirects[apiUser.role] || '/dashboard';
     router.push(redirectPath);
     router.refresh(); 
-  }, [router, setLoading]);
+  }, [router]);
   
   const verifyAuth = useCallback(async () => {
     const token = localStorage.getItem('token');
@@ -136,18 +136,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push('/login');
   }, [router]);
   
-  const addSongSuggestion = useCallback(async (suggestion: Omit<SongSuggestion, 'id' | 'submittedAt' | 'status'>) => {
+  const addSongSuggestion = useCallback(async (suggestion: Omit<SongSuggestion, 'id' | 'submittedAt' | 'status'>) : Promise<{ success: boolean }> => {
      try {
       const response = await api.post('/public/song-suggestion', suggestion);
-      // Assuming the backend returns the newly created suggestion
       setSongSuggestions(prev => [response.data, ...prev]);
-    } catch (error) {
+      return { success: true };
+    } catch (error: any) {
       console.error('Failed to submit song suggestion:', error);
       toast({
         variant: 'destructive',
         title: 'Submission Failed',
-        description: 'Could not submit your song suggestion. Please try again later.',
+        description: error.response?.data?.message || 'Could not submit your song suggestion. Please try again later.',
       });
+      return { success: false };
     }
   }, [toast]);
 
