@@ -9,7 +9,7 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, Pen, Trash, Save, Megaphone, Podcast, Newspaper, Star } from 'lucide-react';
+import { PlusCircle, Pen, Trash, Save, Megaphone, Podcast, Newspaper, Star, PlayCircle } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -18,13 +18,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -63,10 +56,8 @@ type PodcastScript = {
   title: string;
   topic: string;
   content: string;
-  assignedTo?: string;
   lastEdited: string;
-  isLive?: boolean;
-  status: 'pending' | 'completed';
+  status: 'draft' | 'recording' | 'completed';
 };
 
 type NewsItem = {
@@ -78,15 +69,7 @@ type NewsItem = {
     isLive?: boolean;
 };
 
-type User = {
-  id: string;
-  name: string;
-  role: string;
-};
-
-
 export default function CreativePage() {
-  const [rjs, setRjs] = useState<User[]>([]);
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   
@@ -108,7 +91,6 @@ export default function CreativePage() {
   const [podcastTitle, setPodcastTitle] = useState('');
   const [podcastTopic, setPodcastTopic] = useState('');
   const [podcastContent, setPodcastContent] = useState('');
-  const [assignedRj, setAssignedRj] = useState<string | undefined>(undefined);
   
   const [news, setNews] = useState<NewsItem[]>([]);
   const [isNewsDialogOpen, setIsNewsDialogOpen] = useState(false);
@@ -137,15 +119,6 @@ export default function CreativePage() {
         toast({ variant: "destructive", title: "Fetch Error", description: "Could not load podcast scripts." });
       });
 
-      const usersPromise = api.get('/users').then(res => {
-        if (res.data) {
-          setRjs(res.data.filter((u: User) => u.role === 'rj'));
-        }
-      }).catch(err => {
-        console.error("Failed to fetch users", err);
-        toast({ variant: "destructive", title: "Fetch Error", description: "Could not load user list for assignments." });
-      });
-
       const newsPromise = api.get('/creative/news').then(res => setNews(res.data)).catch(err => {
         console.error("Failed to fetch news", err);
         toast({ variant: "destructive", title: "Fetch Error", description: "Could not load news items." });
@@ -155,7 +128,6 @@ export default function CreativePage() {
         scriptsPromise,
         announcementsPromise,
         podcastsPromise,
-        usersPromise,
         newsPromise,
       ]);
       
@@ -288,7 +260,6 @@ export default function CreativePage() {
     setPodcastTitle('');
     setPodcastTopic('');
     setPodcastContent('');
-    setAssignedRj(undefined);
     setIsPodcastDialogOpen(true);
   };
 
@@ -297,7 +268,6 @@ export default function CreativePage() {
     setPodcastTitle(podcast.title);
     setPodcastTopic(podcast.topic);
     setPodcastContent(podcast.content);
-    setAssignedRj(podcast.assignedTo);
     setIsPodcastDialogOpen(true);
   };
 
@@ -311,7 +281,6 @@ export default function CreativePage() {
         title: podcastTitle, 
         topic: podcastTopic,
         content: podcastContent,
-        assignedTo: assignedRj === 'unassigned' ? undefined : assignedRj 
     };
 
     try {
@@ -344,14 +313,18 @@ export default function CreativePage() {
     }
   };
 
-  const handleSetLivePodcast = async (podcastId: string) => {
+  const handleMarkForRecording = async (podcastId: string) => {
     try {
-      await api.patch(`/creative/podcasts/${podcastId}/live`);
-      setPodcastScripts(prev => prev.map(p => ({ ...p, isLive: p.id === podcastId })));
-      toast({ title: 'Live Podcast Set', description: 'The podcast script has been marked as live for RJs.' });
+        await api.patch(`/creative/podcasts/${podcastId}/recording`);
+        
+        // Refetch to get the latest state, as backend handles status logic
+        const podcastsResponse = await api.get('/creative/podcasts');
+        setPodcastScripts(podcastsResponse.data);
+
+        toast({ title: 'Podcast Sent for Recording', description: 'The podcast is now available for RJs.' });
     } catch (error: any) {
-      console.error("Failed to set live podcast", error);
-      toast({ variant: 'destructive', title: 'Failed', description: error.response?.data?.message || 'Could not set the live podcast script.' });
+        console.error("Failed to set podcast for recording", error);
+        toast({ variant: 'destructive', title: 'Failed', description: error.response?.data?.message || 'Could not mark the podcast for recording.' });
     }
   };
 
@@ -489,7 +462,6 @@ export default function CreativePage() {
             setPodcastTitle('');
             setPodcastTopic('');
             setPodcastContent('');
-            setAssignedRj(undefined);
           }
       }}>
         <DialogContent className="sm:max-w-[625px]">
@@ -507,20 +479,6 @@ export default function CreativePage() {
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="podcast-topic" className="text-right">Topic</Label>
               <Input id="podcast-topic" value={podcastTopic} onChange={(e) => setPodcastTopic(e.target.value)} className="col-span-3" />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="podcast-assign" className="text-right">Assign to RJ</Label>
-              <Select onValueChange={setAssignedRj} value={assignedRj}>
-                <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select an RJ" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="unassigned">Unassigned</SelectItem>
-                    {rjs.map((rj) => (
-                      <SelectItem key={rj.id} value={rj.id}>{rj.name}</SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="podcast-content" className="text-right">Content</Label>
@@ -676,25 +634,25 @@ export default function CreativePage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Live</TableHead>
+                  <TableHead>For Recording</TableHead>
                   <TableHead>Title</TableHead>
-                  <TableHead>Assigned To</TableHead>
+                  <TableHead>Topic</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {podcastScripts.length > 0 ? podcastScripts.map((podcast) => (
-                  <TableRow key={podcast.id} className={podcast.isLive ? 'bg-primary/10' : ''}>
+                  <TableRow key={podcast.id} className={podcast.status === 'recording' ? 'bg-primary/10' : ''}>
                     <TableCell>
-                      <Button onClick={() => handleSetLivePodcast(podcast.id)} variant="ghost" size="icon" className="h-8 w-8" disabled={podcast.isLive}>
-                        <Star className={`h-4 w-4 ${podcast.isLive ? 'text-primary fill-primary' : 'text-muted-foreground'}`} />
+                      <Button onClick={() => handleMarkForRecording(podcast.id)} variant="ghost" size="icon" className="h-8 w-8" disabled={podcast.status !== 'draft'}>
+                        <PlayCircle className={`h-4 w-4 ${podcast.status === 'recording' ? 'text-primary' : 'text-muted-foreground'}`} />
                       </Button>
                     </TableCell>
                     <TableCell className="font-medium">{podcast.title}</TableCell>
-                    <TableCell>{rjs.find(r => r.id === podcast.assignedTo)?.name || 'Unassigned'}</TableCell>
+                    <TableCell>{podcast.topic}</TableCell>
                     <TableCell>
-                      <Badge variant={podcast.status === 'completed' ? 'secondary' : 'default'}>
+                      <Badge variant={podcast.status === 'completed' ? 'secondary' : podcast.status === 'recording' ? 'default' : 'outline'}>
                         {podcast.status}
                       </Badge>
                     </TableCell>
