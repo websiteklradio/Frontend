@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useEffect, useRef } from "react"
@@ -193,9 +194,9 @@ export function ParticleTextEffect({ words = DEFAULT_WORDS, className }: Particl
 
     // Generate new color
     const newColor = {
-      r: Math.random() * 255,
-      g: Math.random() * 255,
-      b: Math.random() * 255,
+      r: 255,
+      g: 255,
+      b: 255,
     }
 
     const particles = particlesRef.current
