@@ -4,7 +4,7 @@ export function HeroSection() {
   return (
     <section className="relative w-full pt-24 md:py-32 lg:py-40">
       <div className="container mx-auto max-w-5xl px-4 text-center">
-        <h1 className="font-headline tracking-tighter text-[clamp(2rem,10vw,8rem)] font-black">
+        <h1 className="font-headline tracking-tighter text-[clamp(2rem,10vw,8rem)] font-black text-stroke-black-2">
           The Voice of Klians
         </h1>
         <p className="mt-6 max-w-3xl mx-auto text-muted-foreground md:text-xl">
