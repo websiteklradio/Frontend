@@ -45,22 +45,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useToast();
-
-  const handleLoginSuccess = useCallback((userData: any, token: string) => {
-    localStorage.setItem('token', token);
-    setAuthToken(token);
-    const apiUser: User = {
-        id: userData.id,
-        name: userData.name,
-        username: userData.username,
-        role: userData.role,
-        avatarId: userData.avatarId || '1',
-    };
-    setUser(apiUser);
-    setLoading(false);
-    const redirectPath = roleRedirects[apiUser.role] || '/dashboard';
-    router.replace(redirectPath);
-  }, [router]);
   
   const verifyAuth = useCallback(async () => {
     const token = localStorage.getItem('token');
@@ -117,16 +101,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(async (role: string, username: string, password: string): Promise<{ success: boolean; error?: string }> => {
     setLoading(true);
     try {
-      const response = await api.post('/auth/login', { username, role, password }); 
+      const response = await api.post('/auth/login', { username, role, password });
       const { user: userData, token } = response.data;
-      handleLoginSuccess(userData, token);
+
+      localStorage.setItem('token', token);
+      setAuthToken(token);
+
+      // We don't set the user here. We redirect and let verifyAuth handle it on the new page.
+      // This ensures the user state is fresh and verified from the token, preventing race conditions.
+      const redirectPath = roleRedirects[userData.role as UserRole] || '/dashboard';
+      router.replace(redirectPath);
+      
+      // setLoading is not set to false here because the page is changing.
+      // verifyAuth will handle the loading state on the destination page.
       return { success: true };
     } catch (error: any) {
       setLoading(false);
       const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
       return { success: false, error: errorMessage };
     }
-  }, [handleLoginSuccess]);
+  }, [router]);
   
   const logout = useCallback(() => {
     setUser(null);
