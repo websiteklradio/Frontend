@@ -59,8 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(apiUser);
     setLoading(false);
     const redirectPath = roleRedirects[apiUser.role] || '/dashboard';
-    router.push(redirectPath);
-    router.refresh(); 
+    router.replace(redirectPath);
   }, [router]);
   
   const verifyAuth = useCallback(async () => {
@@ -71,7 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (!token) {
         if (!isPublicPage && !isAuthPage) {
-            router.push('/login');
+            router.replace('/login');
         }
         setLoading(false);
         return;
@@ -92,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setUser(apiUser);
             if (isAuthPage) {
                 const redirectPath = roleRedirects[apiUser.role] || '/dashboard';
-                router.push(redirectPath);
+                router.replace(redirectPath);
             }
         } else {
             throw new Error('Invalid session');
@@ -103,7 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setAuthToken(null);
         setUser(null);
         if (!isPublicPage && !isAuthPage) {
-            router.push('/login');
+            router.replace('/login');
         }
     } finally {
         setLoading(false);
