@@ -114,11 +114,6 @@ export function ListenLiveSection() {
           }, 2000);
         }
         
-        const receiver = pc.getReceivers().find(r => r.track.kind === "audio");
-        if (receiver?.jitterBufferTarget !== undefined) {
-          receiver.jitterBufferTarget = 200; // 200ms for music
-        }
-        
         setStreamState('live');
         toast({ title: "You're listening live!", description: 'Enjoy the show.' });
       };

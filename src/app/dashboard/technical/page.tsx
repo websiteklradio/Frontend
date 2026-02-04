@@ -246,14 +246,6 @@ export default function TechnicalPage() {
 
                 localStreamRef.current.getTracks().forEach(track => pc.addTrack(track, localStreamRef.current!));
 
-                const sender = pc.getSenders().find(s => s.track?.kind === "audio");
-                if (sender) {
-                    const params = sender.getParameters();
-                    if (!params.encodings) params.encodings = [{}];
-                    params.encodings[0].maxBitrate = 192000;
-                    sender.setParameters(params).catch(console.error);
-                }
-
                 pc.onicecandidate = (e) => {
                     if (e.candidate && ws.readyState === WebSocket.OPEN) {
                         ws.send(JSON.stringify({
