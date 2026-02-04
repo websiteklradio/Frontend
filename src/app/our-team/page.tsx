@@ -33,7 +33,7 @@ const teamMembers = [
   },
   {
     role: 'Broadcasting Head',
-    name: 'Isabella Grant',
+    name: 'Ram Mandavilli',
     avatarId: 'broadcasting-head',
   },
   {
