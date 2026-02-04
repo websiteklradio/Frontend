@@ -16,8 +16,6 @@ export function ListenLiveSection() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
-  const iceCandidateQueue = useRef<RTCIceCandidateInit[]>([]);
-  const debugIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const cleanupConnection = useCallback((showToast = false) => {
     if (socketRef.current) {
@@ -28,20 +26,12 @@ export function ListenLiveSection() {
         socketRef.current = null;
     }
     if (peerConnectionRef.current) {
-        peerConnectionRef.current.onconnectionstatechange = null;
-        peerConnectionRef.current.ontrack = null;
-        peerConnectionRef.current.onicecandidate = null;
         peerConnectionRef.current.close();
         peerConnectionRef.current = null;
     }
     if (audioRef.current) {
         audioRef.current.srcObject = null;
     }
-    if (debugIntervalRef.current) {
-      clearInterval(debugIntervalRef.current);
-      debugIntervalRef.current = null;
-    }
-    iceCandidateQueue.current = [];
     setStreamState('offline');
     if (showToast) {
         toast({
@@ -52,10 +42,10 @@ export function ListenLiveSection() {
     }
   }, [toast]);
 
-  const handleTuneIn = useCallback(async () => {
+  const handleTuneIn = useCallback(() => {
     if (streamState !== 'offline') {
-      toast({ title: 'Stream disconnected.' });
       cleanupConnection();
+      toast({ title: 'Stream disconnected.' });
       return;
     }
 
@@ -65,57 +55,56 @@ export function ListenLiveSection() {
     try {
       const pc = new RTCPeerConnection(WEBRTC_CONFIG);
       peerConnectionRef.current = pc;
-
-      pc.onconnectionstatechange = () => {
-        if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected' || pc.connectionState === 'closed') {
-          cleanupConnection(streamState === 'live');
-        }
-      };
       
       pc.ontrack = (event) => {
-        console.log("TRACK RECEIVED", event.streams[0]);
         if (audioRef.current) {
           const stream = event.streams[0];
           if (!stream) return;
-
+          
           audioRef.current.srcObject = stream;
           audioRef.current.autoplay = true;
           audioRef.current.playsInline = true;
 
-          audioRef.current.play().catch(error => {
-            console.error("Audio playback failed due to autoplay restrictions:", error);
+          audioRef.current.play().catch(() => {
+            console.warn("Audio playback was blocked. Waiting for user interaction.");
             toast({
                 variant: 'destructive',
                 title: "Audio Locked",
                 description: "Your browser has blocked audio. Click anywhere to unmute.",
             });
-            
             const unlockAudio = () => {
-              if (audioRef.current) {
+              if(audioRef.current) {
                 audioRef.current.play().catch(playError => {
                   console.error("Failed to play audio on user interaction:", playError);
                 });
               }
+              document.body.removeEventListener('click', unlockAudio);
+              document.body.removeEventListener('touchstart', unlockAudio);
             };
             
             document.body.addEventListener('click', unlockAudio, { once: true });
             document.body.addEventListener('touchstart', unlockAudio, { once: true });
           });
           
-          if (debugIntervalRef.current) clearInterval(debugIntervalRef.current);
-          debugIntervalRef.current = setInterval(async () => {
-            if (!peerConnectionRef.current) return;
-            const stats = await peerConnectionRef.current.getStats();
-            stats.forEach(r => {
-              if (r.type === "inbound-rtp" && r.kind === "audio") {
-                console.log("Audio bytes received:", r.bytesReceived);
-              }
-            });
-          }, 2000);
+          setStreamState('live');
+          toast({ title: "You're listening live!", description: 'Enjoy the show.' });
         }
-        
-        setStreamState('live');
-        toast({ title: "You're listening live!", description: 'Enjoy the show.' });
+      };
+
+      pc.onicecandidate = (event) => {
+        if (event.candidate && socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+          socketRef.current.send(JSON.stringify({
+            type: 'candidate',
+            candidate: event.candidate,
+            roomId: LIVE_STREAM_ROOM_ID,
+          }));
+        }
+      };
+
+      pc.onconnectionstatechange = () => {
+        if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected' || pc.connectionState === 'closed') {
+          cleanupConnection(streamState === 'live');
+        }
       };
       
       const ws = new WebSocket(SIGNALING_URL);
@@ -136,16 +125,6 @@ export function ListenLiveSection() {
 
         if (data.type === 'offer') {
           await currentPc.setRemoteDescription(new RTCSessionDescription(data.offer));
-          
-          for (const candidate of iceCandidateQueue.current) {
-            try {
-              await currentPc.addIceCandidate(candidate);
-            } catch (e) {
-              console.error("Error adding queued ICE candidate:", e);
-            }
-          }
-          iceCandidateQueue.current = [];
-
           const answer = await currentPc.createAnswer();
           await currentPc.setLocalDescription(answer);
 
@@ -153,33 +132,19 @@ export function ListenLiveSection() {
             ws.send(JSON.stringify({
               type: 'answer',
               answer: currentPc.localDescription,
-              roomId: LIVE_STREAM_ROOM_ID
+              roomId: LIVE_STREAM_ROOM_ID,
+              listenerId: data.listenerId,
             }));
           }
         } else if (data.type === 'candidate' && data.candidate) {
-           const candidate = new RTCIceCandidate(data.candidate);
-           if (currentPc.remoteDescription) {
-             try {
-                await currentPc.addIceCandidate(candidate);
-             } catch(e) {
-                console.error("Error adding ICE candidate", e);
-             }
-           } else {
-             iceCandidateQueue.current.push(candidate);
+           try {
+              await currentPc.addIceCandidate(new RTCIceCandidate(data.candidate));
+           } catch(e) {
+              console.error("Error adding ICE candidate", e);
            }
         } else if (data.type === 'broadcast_end') {
            toast({ title: 'Broadcast has ended', description: 'Thanks for listening!' });
            cleanupConnection();
-        }
-      };
-      
-      pc.onicecandidate = (event) => {
-        if (event.candidate && ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({
-            type: 'candidate',
-            candidate: event.candidate,
-            roomId: LIVE_STREAM_ROOM_ID
-          }));
         }
       };
 
@@ -229,7 +194,7 @@ export function ListenLiveSection() {
               {streamState === 'live' ? 'We Are Live!' : 'Listen Live'}
             </h2>
             <p className="mt-2 max-w-md text-primary-foreground/80">
-              {streamState === 'live' ? "You're tuned in to KL Radio." : "When we go live, you can tune in here!"}
+              {streamState === 'live' ? "You're tuned in to KL Radio. Tap anywhere if you can't hear audio." : "When we go live, you can tune in here!"}
             </p>
             <div className="my-8 h-[60px] w-[240px] flex items-center justify-center">
               {streamState === 'live' ? <AudioWave /> : <div className="text-primary-foreground/50 text-sm">Stream Offline</div>}
