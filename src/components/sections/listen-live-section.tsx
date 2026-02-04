@@ -16,6 +16,7 @@ export function ListenLiveSection() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
+  const iceCandidateQueue = useRef<RTCIceCandidateInit[]>([]);
 
   const cleanupConnection = useCallback((showToast = false) => {
     if (socketRef.current) {
@@ -35,6 +36,7 @@ export function ListenLiveSection() {
     if (audioRef.current) {
         audioRef.current.srcObject = null;
     }
+    iceCandidateQueue.current = [];
     setStreamState('offline');
     if (showToast) {
         toast({
@@ -104,6 +106,16 @@ export function ListenLiveSection() {
 
         if (data.type === 'offer') {
           await currentPc.setRemoteDescription(new RTCSessionDescription(data.offer));
+          
+          for (const candidate of iceCandidateQueue.current) {
+            try {
+              await currentPc.addIceCandidate(candidate);
+            } catch (e) {
+              console.error("Error adding queued ICE candidate:", e);
+            }
+          }
+          iceCandidateQueue.current = [];
+
           const answer = await currentPc.createAnswer();
           await currentPc.setLocalDescription(answer);
 
@@ -115,12 +127,15 @@ export function ListenLiveSection() {
             }));
           }
         } else if (data.type === 'candidate' && data.candidate) {
+           const candidate = new RTCIceCandidate(data.candidate);
            if (currentPc.remoteDescription) {
              try {
-                await currentPc.addIceCandidate(new RTCIceCandidate(data.candidate));
+                await currentPc.addIceCandidate(candidate);
              } catch(e) {
                 console.error("Error adding ICE candidate", e);
              }
+           } else {
+             iceCandidateQueue.current.push(candidate);
            }
         } else if (data.type === 'broadcast_end') {
            toast({ title: 'Broadcast has ended', description: 'Thanks for listening!' });

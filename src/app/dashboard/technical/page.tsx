@@ -68,6 +68,8 @@ export default function TechnicalPage() {
   const peerConnections = useRef<Map<string, RTCPeerConnection>>(new Map());
   const socketRef = useRef<WebSocket | null>(null);
   const animationFrameRef = useRef<number>();
+  const iceCandidateQueues = useRef<Map<string, RTCIceCandidateInit[]>>(new Map());
+
 
   // Visualizer refs
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -142,6 +144,7 @@ export default function TechnicalPage() {
 
         peerConnections.current.forEach(pc => pc.close());
         peerConnections.current.clear();
+        iceCandidateQueues.current.clear();
 
         if (socketRef.current) {
             if (socketRef.current.readyState === WebSocket.OPEN) {
@@ -237,6 +240,7 @@ export default function TechnicalPage() {
                 const listenerId = data.listenerId;
                 if (!localStreamRef.current) return;
 
+                iceCandidateQueues.current.set(listenerId, []);
                 const pc = new RTCPeerConnection(WEBRTC_CONFIG);
                 peerConnections.current.set(listenerId, pc);
 
@@ -276,16 +280,32 @@ export default function TechnicalPage() {
                 const pc = peerConnections.current.get(data.listenerId);
                 if (pc && pc.signalingState !== 'closed') {
                    await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
+                   
+                   const queue = iceCandidateQueues.current.get(data.listenerId);
+                   if (queue) {
+                       for (const candidate of queue) {
+                           try {
+                               await pc.addIceCandidate(candidate);
+                           } catch (e) {
+                               console.error("Error adding queued ICE candidate:", e);
+                           }
+                       }
+                       iceCandidateQueues.current.delete(data.listenerId);
+                   }
                 }
             } else if (data.type === 'candidate') {
                  const pc = peerConnections.current.get(data.listenerId);
-                if (pc && pc.connectionState !== "closed" && pc.remoteDescription) {
-                   try {
-                     await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
-                   } catch(e) {
-                      console.error("Error adding received ICE candidate from listener", e);
-                   }
-                }
+                 const candidate = new RTCIceCandidate(data.candidate);
+
+                 if (pc && pc.remoteDescription) {
+                    try {
+                        await pc.addIceCandidate(candidate);
+                    } catch(e) {
+                       console.error("Error adding received ICE candidate from listener", e);
+                    }
+                 } else {
+                     iceCandidateQueues.current.get(data.listenerId)?.push(candidate);
+                 }
             } else if (data.type === 'listener_left') {
                 const listenerId = data.listenerId;
                 const pc = peerConnections.current.get(listenerId);
@@ -293,6 +313,7 @@ export default function TechnicalPage() {
                     pc.close();
                     peerConnections.current.delete(listenerId);
                 }
+                iceCandidateQueues.current.delete(listenerId);
             }
         };
 
