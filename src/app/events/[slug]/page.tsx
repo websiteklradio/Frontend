@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ArrowLeft } from 'lucide-react';
-import Image from 'next/image';
 import Masonry from '@/components/ui/masonry';
+import { useEffect, useState } from 'react';
 
 const events = [
     {
@@ -67,21 +67,33 @@ const events = [
     }
   ];
 
+interface MasonryItem {
+  id: string;
+  img: string;
+  url: string;
+  height: number;
+}
+
 export default function EventDetailPage({ params }: { params: { slug: string } }) {
   const event = events.find(e => e.image === params.slug);
   const eventImage = PlaceHolderImages.find(p => p.id === params.slug);
   
-  const masonryItems = Array.from({ length: 12 }).map((_, i) => {
-    const seed = `${params.slug}${i}`;
-    const height = Math.floor(Math.random() * (900 - 400 + 1)) + 400; // Random height
-    const imgUrl = `https://picsum.photos/seed/${seed}/600/${height}`;
-    return {
-      id: seed,
-      img: imgUrl,
-      url: imgUrl,
-      height: height
-    };
-  });
+  const [masonryItems, setMasonryItems] = useState<MasonryItem[]>([]);
+
+  useEffect(() => {
+    const items = Array.from({ length: 12 }).map((_, i) => {
+      const seed = `${params.slug}${i}`;
+      const height = Math.floor(Math.random() * (900 - 400 + 1)) + 400; // Random height
+      const imgUrl = `https://picsum.photos/seed/${seed}/600/${height}`;
+      return {
+        id: seed,
+        img: imgUrl,
+        url: imgUrl,
+        height: height
+      };
+    });
+    setMasonryItems(items);
+  }, [params.slug]);
 
   return (
     <div className="relative flex min-h-screen flex-col text-foreground overflow-x-hidden">
