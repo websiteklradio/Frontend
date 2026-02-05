@@ -1,3 +1,5 @@
+'use client';
+
 import { NavbarKL } from '@/components/ui/navbar-kl';
 import { SiteFooter } from '@/components/site-footer';
 import { Button } from '@/components/ui/button';
@@ -5,6 +7,7 @@ import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
+import Masonry from '@/components/ui/masonry';
 
 const events = [
     {
@@ -68,10 +71,17 @@ export default function EventDetailPage({ params }: { params: { slug: string } }
   const event = events.find(e => e.image === params.slug);
   const eventImage = PlaceHolderImages.find(p => p.id === params.slug);
   
-  const galleryImages = Array.from({ length: 6 }).map((_, i) => ({
-    src: `https://picsum.photos/seed/${params.slug}${i}/800/600`,
-    alt: `${event?.title} gallery image ${i + 1}`,
-  }));
+  const masonryItems = Array.from({ length: 12 }).map((_, i) => {
+    const seed = `${params.slug}${i}`;
+    const height = Math.floor(Math.random() * (900 - 400 + 1)) + 400; // Random height
+    const imgUrl = `https://picsum.photos/seed/${seed}/600/${height}`;
+    return {
+      id: seed,
+      img: imgUrl,
+      url: imgUrl,
+      height: height
+    };
+  });
 
   return (
     <div className="relative flex min-h-screen flex-col text-foreground overflow-x-hidden">
@@ -88,8 +98,8 @@ export default function EventDetailPage({ params }: { params: { slug: string } }
 
         <NavbarKL />
 
-        <main className="flex-1 flex flex-col items-center justify-center pt-32 pb-20">
-             <div className="container mx-auto max-w-4xl px-4">
+        <main className="flex-1 flex flex-col items-center pt-32 pb-20">
+             <div className="container mx-auto max-w-6xl px-4">
                 {event ? (
                     <div className="bg-background/70 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-white/10">
                         <div
@@ -107,11 +117,17 @@ export default function EventDetailPage({ params }: { params: { slug: string } }
                         
                         <div className="mt-12">
                             <h2 className="font-headline text-3xl font-bold tracking-tight text-center mb-8">Event Gallery</h2>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {galleryImages.map((img, index) => (
-                                    <Image key={index} src={img.src} alt={img.alt} width={800} height={600} className="w-full h-48 object-cover rounded-lg shadow-md hover:scale-105 transition-transform duration-300" />
-                                ))}
-                            </div>
+                            <Masonry
+                                items={masonryItems}
+                                ease="power3.out"
+                                duration={0.6}
+                                stagger={0.05}
+                                animateFrom="bottom"
+                                scaleOnHover
+                                hoverScale={1.05}
+                                blurToFocus
+                                colorShiftOnHover={false}
+                            />
                         </div>
 
                         <div className="text-center mt-12">
