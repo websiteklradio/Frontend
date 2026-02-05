@@ -5,6 +5,7 @@ import { SiteFooter } from '@/components/site-footer';
 import { useEffect, useRef } from 'react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import Link from 'next/link';
 
 const events = [
   {
@@ -151,7 +152,7 @@ export default function EventsPage() {
               z-index: -1;
               width: 100%;
               height: 100%;
-              border-radius: 5px;
+              border-radius: 12px;
               box-shadow: 0 14px 50px -4px hsla(0, 0%, 0%, 0.15);
               opacity: 0;
               transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1.4);
@@ -168,7 +169,7 @@ export default function EventsPage() {
               position: absolute;
               width: 100%;
               height: 100%;
-              border-radius: 5px;
+              border-radius: 12px;
               background-color: hsl(var(--background));
               border: 1px solid hsl(var(--border));
             }
@@ -188,13 +189,16 @@ export default function EventsPage() {
               background-color: hsla(223, 13%, 87%, 1);
               background-position: center;
               background-size: cover;
-              border-radius: 5px 5px 0 0;
+              border-radius: 12px 12px 0 0;
               width: 100%;
               height: 250px;
             }
             .front .info {
                 height: calc(420px - 250px);
                 justify-content: center;
+            }
+            .back .info {
+                justify-content: space-between;
             }
             .back h2 {
               margin-top: 6px;
@@ -210,6 +214,21 @@ export default function EventsPage() {
                 margin: 0px;
                 min-width: 24px;
                 min-height: 24px;
+            }
+            .explore-btn {
+                display: block;
+                margin-top: 1rem;
+                padding: 0.75rem 1.5rem;
+                background-color: hsl(var(--primary));
+                color: hsl(var(--primary-foreground));
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: 600;
+                transition: background-color 0.3s;
+                text-align: center;
+            }
+            .explore-btn:hover {
+                background-color: hsl(var(--primary) / 0.8);
             }
         `}</style>
         <NavbarKL />
@@ -243,10 +262,19 @@ export default function EventsPage() {
                                 </div>
                                 <div className="side back">
                                     <div className="info">
+                                      <div>
                                         <h2>{event.title}</h2>
-                                        <ScrollArea className="h-[320px] pr-4">
+                                        <ScrollArea className="h-[260px] pr-4">
                                           <p>{event.description}</p>
                                         </ScrollArea>
+                                      </div>
+                                      <Link
+                                        href={`/events/${event.image}`}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="explore-btn"
+                                      >
+                                        Explore
+                                      </Link>
                                     </div>
                                 </div>
                             </div>
