@@ -23,7 +23,7 @@ export default function DashboardPage() {
     const fetchData = async () => {
       setIsLoading(true);
       
-      const suggestionsPromise = api.get('/technical/song-suggestions').then(res => {
+      const suggestionsPromise = api.get('/admin/song-suggestions').then(res => {
         setSongSuggestionsCount(res.data.length);
       }).catch(() => {
         setSongSuggestionsCount(0);

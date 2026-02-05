@@ -15,11 +15,11 @@ export default function SuggestionsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user?.role === 'Technical' || user?.role === 'Station Head') {
+    if (user?.role === 'rj') {
       const fetchSuggestions = async () => {
         try {
           setLoading(true);
-          const response = await api.get('/technical/song-suggestions');
+          const response = await api.get('/rj/song-suggestions');
           setSuggestions(response.data);
         } catch (error) {
           console.error("Failed to fetch song suggestions:", error);
