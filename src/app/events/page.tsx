@@ -2,10 +2,9 @@
 
 import { NavbarKL } from '@/components/ui/navbar-kl';
 import { SiteFooter } from '@/components/site-footer';
-import CardSwap, { Card } from '@/components/ui/card-swap';
-import Image from 'next/image';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { useEffect, useRef } from 'react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const events = [
   {
@@ -66,48 +65,192 @@ const events = [
 ];
 
 export default function EventsPage() {
-  const eventCards = events.map((event, i) => {
-    const eventImage = PlaceHolderImages.find((p) => p.id === event.image);
-    return (
-      <Card key={i}>
-        <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold font-headline">{event.title}</h3>
-          <ScrollArea className="flex-grow my-4 pr-4">
-            <p className="text-muted-foreground text-sm">{event.description}</p>
-          </ScrollArea>
-          <div className="relative h-48 w-full rounded-lg overflow-hidden mt-auto">
-            <Image
-              src={eventImage?.imageUrl || 'https://picsum.photos/seed/default/400/200'}
-              alt={event.title}
-              fill
-              className="object-cover"
-              data-ai-hint={eventImage?.imageHint}
-            />
-          </div>
-        </div>
-      </Card>
-    );
-  });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const cards = containerRef.current?.querySelectorAll('.card');
+    if (!cards) return;
+
+    function transition(this: HTMLElement) {
+        this.classList.toggle('active');
+    }
+
+    cards.forEach(card => {
+        card.addEventListener('click', transition as EventListener);
+    });
+
+    return () => {
+        cards.forEach(card => {
+            card.removeEventListener('click', transition as EventListener);
+        });
+    };
+  }, []);
 
   return (
-    <div className="relative flex min-h-screen flex-col text-foreground overflow-hidden">
-      <NavbarKL />
-      <main className="flex-1 flex flex-col items-center justify-center pt-32 pb-20">
-        <div className="container mx-auto max-w-6xl px-4 text-center">
-          <h1 className="font-headline text-5xl font-bold tracking-tighter md:text-6xl">
-            Our Events
-          </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-muted-foreground md:text-lg">
-            A look back at the moments that made us who we are.
-          </p>
+    <div className="relative flex min-h-screen flex-col text-foreground overflow-x-hidden">
+        <style jsx global>{`
+            .events-page-body {
+                background-color: hsla(223, 13%, 87%, 1);
+                background-image: linear-gradient(140deg, hsla(0, 0%, 100%, 1), hsla(223, 13%, 87%, 1));
+                color: hsla(0, 0%, 20%, 1);
+            }
+            .events-page-body h1, .events-page-body h2, .events-page-body h4 {
+                font-family: var(--font-headline), sans-serif;
+                text-transform: uppercase;
+                color: hsla(0, 0%, 20%, 1);
+            }
+            .events-page-body p, .events-page-body li {
+                font-family: var(--font-body), sans-serif;
+                font-weight: 400;
+                color: #555;
+                line-height: 22px;
+            }
+            .event-grid-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 1rem;
+                padding: 2rem 1rem;
+                width: 100%;
+            }
+            .cardContainer {
+              position: relative;
+              width: 300px;
+              height: 400px;
+              min-width: 300px;
+              min-height: 400px;
+              margin: 4px;
+              perspective: 1000px;
+            }
+            .card.active {
+              transform: translateZ(0px) rotateY(180deg) !important;
+            }
+            .card.active:after {
+              display: none;
+            }
+            .card {
+              display: inline-block;
+              width: 100%;
+              height: 100%;
+              cursor: pointer;
+              -moz-backface-visibility: hidden;
+              transform-style: preserve-3d;
+              transform: translateZ(-100px);
+              transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+            .card:after {
+              content: '';
+              position: absolute;
+              z-index: -1;
+              width: 100%;
+              height: 100%;
+              border-radius: 5px;
+              box-shadow: 0 14px 50px -4px hsla(0, 0%, 0%, 0.15);
+              opacity: 0;
+              transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1.4);
+            }
+            .card:hover {
+              transform: translateZ(0px);
+            }
+            .card:hover:after {
+              opacity: 1;
+            }
+            .card .side {
+              -webkit-backface-visibility: hidden;
+              backface-visibility: hidden;
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              border-radius: 5px;
+              background-color: hsla(0, 0%, 100%, 1);
+            }
+            .card .front {
+              z-index: 2;
+            }
+            .card .back {
+              transform: rotateY(180deg);
+            }
+            .card .info {
+              padding: 16px;
+              height: 100%;
+              display: flex;
+              flex-direction: column;
+            }
+            .front .img {
+              background-color: hsla(223, 13%, 87%, 1);
+              background-position: center;
+              background-size: cover;
+              border-radius: 5px 5px 0 0;
+              width: 100%;
+              height: 250px;
+            }
+            .front .info {
+                height: calc(400px - 250px);
+                justify-content: center;
+            }
+            .back h2 {
+              margin-top: 6px;
+              margin-bottom: 18px;
+            }
+            h2 {
+                font-size: 27px;
+                font-weight: 500;
+                letter-spacing: -0.2px;
+                margin-bottom: 10px;
+            }
+            svg {
+                margin: 0px;
+                min-width: 24px;
+                min-height: 24px;
+            }
+        `}</style>
+        <div className="events-page-body w-full">
+            <NavbarKL />
+            <main className="flex-1 flex flex-col items-center justify-start pt-32 pb-20">
+                 <div className="container mx-auto max-w-6xl px-4 text-center mb-16">
+                    <h1 className="text-5xl font-bold tracking-tighter md:text-6xl">
+                        Our Events
+                    </h1>
+                    <p className="mt-4 max-w-2xl mx-auto text-black/70 md:text-lg">
+                        Click on a card to learn more about each event.
+                    </p>
+                </div>
+
+                <div ref={containerRef} className="event-grid-container">
+                    {events.map((event, i) => {
+                        const eventImage = PlaceHolderImages.find((p) => p.id === event.image);
+                        return (
+                            <div
+                                key={i}
+                                className="cardContainer inactive"
+                            >
+                                <div className="card">
+                                    <div className="side front">
+                                        <div
+                                            className="img"
+                                            style={{ backgroundImage: `url(${eventImage?.imageUrl || 'https://picsum.photos/seed/default/300/250'})` }}
+                                        ></div>
+                                        <div className="info">
+                                            <h2>{event.title}</h2>
+                                        </div>
+                                    </div>
+                                    <div className="side back">
+                                        <div className="info">
+                                            <h2>{event.title}</h2>
+                                            <ScrollArea className="h-[280px] pr-4">
+                                              <p>{event.description}</p>
+                                            </ScrollArea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </main>
+            <SiteFooter />
         </div>
-        <div className="flex-grow w-full flex items-center justify-center relative mt-16">
-          <CardSwap cardDistance={40} verticalDistance={-50}>
-            {eventCards}
-          </CardSwap>
-        </div>
-      </main>
-      <SiteFooter />
     </div>
   );
 }
