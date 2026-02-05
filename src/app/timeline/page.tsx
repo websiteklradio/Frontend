@@ -28,9 +28,9 @@ const TimelinePage: React.FC = () => {
     },
     {
       id: '3',
-      date: '2019',
-      title: 'Digital Expansion',
-      description: 'Launched the first version of the KL Radio website and mobile app, allowing listeners to tune in from anywhere. This expansion brought our content to a global audience.',
+      date: '2025-December',
+      title: 'Hoisted and Organised Youth Radio Andhra for the first time at KLU',
+      description: '',
       icon: <Globe className="text-white" />,
       image: 'https://images.unsplash.com/photo-1522199755839-a2bacb67c546?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2342&q=80',
       category: 'Technology',
