@@ -29,7 +29,7 @@ export default function DashboardPage() {
         setSongSuggestionsCount(0);
       });
 
-      const announcementsPromise = api.get('/public/announcements').then(res => {
+      const announcementsPromise = api.get('/creative/announcements').then(res => {
         setAnnouncementsCount(res.data.length);
       }).catch(() => {
         setAnnouncementsCount(0);

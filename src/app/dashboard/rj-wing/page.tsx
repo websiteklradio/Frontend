@@ -71,7 +71,7 @@ export default function RJWingPage() {
 
       const scriptPromise = api.get('/rj/live-script');
       const newsPromise = api.get('/rj/news');
-      const announcementsPromise = api.get('/public/announcements');
+      const announcementsPromise = api.get('/creative/announcements');
       const podcastPromise = api.get('/rj/podcast');
 
       const [

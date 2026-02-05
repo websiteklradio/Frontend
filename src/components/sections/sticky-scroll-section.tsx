@@ -25,7 +25,7 @@ export function StickyScrollSection({ items, title = "Announcements" }: { items?
         }
       } else {
           try {
-            const response = await api.get('/public/announcements');
+            const response = await api.get('/creative/announcements');
             const data = response.data || [];
             if (data.length > 0) {
                 const formattedData = data.map((item: any) => ({ title: item.title, content: item.content }));

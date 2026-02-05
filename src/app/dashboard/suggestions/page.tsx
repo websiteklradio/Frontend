@@ -19,7 +19,7 @@ export default function SuggestionsPage() {
       const fetchSuggestions = async () => {
         try {
           setLoading(true);
-          const response = await api.get('/api/technical/song-suggestions');
+          const response = await api.get('/technical/song-suggestions');
           setSuggestions(response.data);
         } catch (error) {
           console.error("Failed to fetch song suggestions:", error);
@@ -34,7 +34,7 @@ export default function SuggestionsPage() {
       };
       fetchSuggestions();
     }
-  }, [user]);
+  }, [user, toast]);
 
   const handleSetSuggestions = async (newSuggestions: SongSuggestion[]) => {
     // This function can be used to update state, and potentially sync with backend
