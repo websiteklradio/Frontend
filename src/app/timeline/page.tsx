@@ -48,7 +48,7 @@ const TimelinePage: React.FC = () => {
     },
     {
       id: '5',
-      date: '2026-September',
+      date: '2025-September',
       title: 'Resonance and Official Media Partner for SAMYAK - 2025',
       description: '',
       icon: <Book className="text-white" />,
