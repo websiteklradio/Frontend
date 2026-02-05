@@ -103,12 +103,12 @@ export default function EventsPage() {
             .card h2, .card h4 {
                 font-family: var(--font-headline), sans-serif;
                 text-transform: uppercase;
-                color: hsla(0, 0%, 20%, 1);
+                color: hsl(var(--foreground));
             }
             .card p, .card li {
                 font-family: var(--font-body), sans-serif;
                 font-weight: 400;
-                color: #555;
+                color: hsl(var(--muted-foreground));
                 line-height: 22px;
             }
             .event-grid-container {
@@ -169,7 +169,8 @@ export default function EventsPage() {
               width: 100%;
               height: 100%;
               border-radius: 5px;
-              background-color: hsla(0, 0%, 100%, 1);
+              background-color: hsl(var(--background));
+              border: 1px solid hsl(var(--border));
             }
             .card .front {
               z-index: 2;
