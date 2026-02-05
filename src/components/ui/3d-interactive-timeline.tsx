@@ -279,7 +279,13 @@ export const Timeline3D: React.FC<Timeline3DProps> = ({
                     )}
 
                     <div className="p-6">
-                      <span className={`block text-sm font-mono text-accent tracking-wider mb-2`}>
+                      <span
+                        className={`block text-sm font-mono text-white tracking-wider mb-2`}
+                        style={{
+                          textShadow:
+                            '0 0 8px rgba(255, 255, 255, 0.8), 0 0 12px hsl(var(--primary) / 0.5)',
+                        }}
+                      >
                         {event.date}
                       </span>
                       <h3 className="text-2xl font-bold mb-2">{event.title}</h3>

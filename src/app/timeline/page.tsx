@@ -10,7 +10,7 @@ const TimelinePage: React.FC = () => {
   const timelineEvents: TimelineEvent[] = [
     {
       id: '1',
-      date: '2026-January',
+      date: '2026 – January',
       title: 'Calendar Distribution and Collaboration with NTR district Police department',
       description: 'KL Radio was established with the vision of creating a vibrant campus community through music, entertainment, and information. The first broadcast hit the airwaves, marking the beginning of a new era in campus life.',
       icon: <Radio className="text-white" />,
