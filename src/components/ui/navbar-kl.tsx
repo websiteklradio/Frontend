@@ -36,11 +36,11 @@ const NavbarKL = () => {
             </Link>
 
             <nav className="hidden md:flex items-center gap-6">
-              <Link href="/timeline" className="text-sm text-gray-200 hover:text-white transition">
-                Timeline
-              </Link>
               <Link href="/#announcements" className="text-sm text-gray-200 hover:text-white transition">
                 Announcements
+              </Link>
+              <Link href="/#suggestions" className="text-sm text-gray-200 hover:text-white transition">
+                Suggestions
               </Link>
               <Link href="/events" className="text-sm text-gray-200 hover:text-white transition">
                 Events
@@ -48,8 +48,8 @@ const NavbarKL = () => {
               <Link href="/our-team" className="text-sm text-gray-200 hover:text-white transition">
                 Our Team
               </Link>
-              <Link href="/#suggestions" className="text-sm text-gray-200 hover:text-white transition">
-                Suggestions
+              <Link href="/timeline" className="text-sm text-gray-200 hover:text-white transition">
+                Timeline
               </Link>
             </nav>
 
@@ -82,11 +82,11 @@ const NavbarKL = () => {
             </button>
 
             <div className="flex flex-col items-center justify-center h-full space-y-6 text-lg">
-              <Link href="/timeline" onClick={toggle}>Timeline</Link>
               <Link href="/#announcements" onClick={toggle}>Announcements</Link>
+              <Link href="/#suggestions" onClick={toggle}>Suggestions</Link>
               <Link href="/events" onClick={toggle}>Events</Link>
               <Link href="/our-team" onClick={toggle}>Our Team</Link>
-              <Link href="/#suggestions" onClick={toggle}>Suggestions</Link>
+              <Link href="/timeline" onClick={toggle}>Timeline</Link>
 
               <Link 
                 href="/login" 
