@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem('token');
     const isAuthPage = pathname === '/login';
     const publicPages = ['/', '/events', '/our-team'];
-    const isPublicPage = publicPages.includes(pathname);
+    const isPublicPage = publicPages.some(page => (page === '/' && pathname === '/') || (page !== '/' && pathname.startsWith(page)));
 
     if (!token) {
         if (!isPublicPage && !isAuthPage) {
