@@ -78,7 +78,7 @@ export default function EventDetailPage() {
 
   useEffect(() => {
     if (slug) {
-      const items = Array.from({ length: 12 }).map((_, i) => {
+      const items = Array.from({ length: 4 }).map((_, i) => {
         const seed = `${slug}${i}`;
         const height = Math.floor(Math.random() * (900 - 400 + 1)) + 400; // Random height
         return `https://picsum.photos/seed/${seed}/600/${height}`;
