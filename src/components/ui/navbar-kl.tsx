@@ -20,7 +20,7 @@ const NavbarKL = () => {
 
   return (
     <>
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-3xl h-16 flex justify-center items-center z-50">
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-4xl h-16 flex justify-center items-center z-50">
         <header className="w-full bg-black/30 backdrop-blur-lg text-white flex justify-center px-4 py-3 z-50 rounded-full shadow-lg">
           <div className="flex items-center justify-between w-full">
             
@@ -36,6 +36,9 @@ const NavbarKL = () => {
             </Link>
 
             <nav className="hidden md:flex items-center gap-6">
+              <Link href="/timeline" className="text-sm text-gray-200 hover:text-white transition">
+                Timeline
+              </Link>
               <Link href="/#announcements" className="text-sm text-gray-200 hover:text-white transition">
                 Announcements
               </Link>
@@ -79,6 +82,7 @@ const NavbarKL = () => {
             </button>
 
             <div className="flex flex-col items-center justify-center h-full space-y-6 text-lg">
+              <Link href="/timeline" onClick={toggle}>Timeline</Link>
               <Link href="/#announcements" onClick={toggle}>Announcements</Link>
               <Link href="/events" onClick={toggle}>Events</Link>
               <Link href="/our-team" onClick={toggle}>Our Team</Link>
