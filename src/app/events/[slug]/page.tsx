@@ -9,6 +9,7 @@ import { ArrowLeft } from 'lucide-react';
 import ExpandableGallery from '@/components/ui/gallery-animation';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import ImageTransitionGallery from '@/components/ui/ImageTransitionGallery';
 
 const events = [
     {
@@ -95,12 +96,14 @@ export default function EventDetailPage() {
       const imageCount = galleryImageCounts[slug] || 4; // Default to 4
       const items = Array.from({ length: imageCount }).map((_, i) => {
         const seed = `${slug}${i}`;
-        const height = Math.floor(Math.random() * (900 - 400 + 1)) + 400; // Random height
-        return `https://picsum.photos/seed/${seed}/600/${height}`;
+        return `https://picsum.photos/seed/${seed}/800/600`;
       });
       setGalleryImages(items);
     }
   }, [slug]);
+
+  const useNewGallery = galleryImages.length > 5;
+  const transitionGalleryImages = galleryImages.map(url => ({ src: url }));
 
   return (
     <div className="relative flex min-h-screen flex-col text-foreground overflow-x-hidden">
@@ -136,7 +139,11 @@ export default function EventDetailPage() {
                         
                         <div className="mt-12">
                             <h2 className="font-headline text-3xl font-bold tracking-tight text-center mb-8">Event Gallery</h2>
-                            <ExpandableGallery images={galleryImages} className="w-full" />
+                            {useNewGallery ? (
+                                <ImageTransitionGallery images={transitionGalleryImages} />
+                            ) : (
+                                <ExpandableGallery images={galleryImages} className="w-full" />
+                            )}
                         </div>
 
                         <div className="text-center mt-12">
