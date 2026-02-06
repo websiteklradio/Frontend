@@ -115,9 +115,9 @@ const TimelinePage: React.FC = () => {
     },
     {
       id: '12',
-      date: '2027-April',
-      title: 'Reached 10,000 Monthly Listeners',
-      description: 'A major milestone for KL Radio, reaching 10,000 unique monthly listeners.',
+      date: '2024-September',
+      title: 'Media Partnered for KL KABADDI Season 2 for the First time and Official Media Partner for SAMYAK 2024 for the first time',
+      description: '',
       icon: <Award className="text-white" />,
       image: 'https://images.unsplash.com/photo-1534330207526-8e8a74ddb71b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80',
       category: 'Milestone',
