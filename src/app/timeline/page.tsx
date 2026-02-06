@@ -153,6 +153,14 @@ const TimelinePage: React.FC = () => {
       category: 'Community',
       color: 'blue',
     },
+    {
+      id: '16',
+      date: '2024-June',
+      title: 'New Event Title',
+      description: 'Description for the new event.',
+      icon: <Radio className="text-white" />,
+      image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80',
+    },
   ];
 
   return (
