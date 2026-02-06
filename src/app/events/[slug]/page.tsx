@@ -85,6 +85,12 @@ export default function EventDetailPage() {
           'https://ik.imagekit.io/tz33swtq7h/Resonance/_DSC4072.JPG?updatedAt=1770367609552',
           'https://ik.imagekit.io/tz33swtq7h/Resonance/_DSC4075.JPG?updatedAt=1770367609322',
         ]);
+      } else if (slug === 'event-samyak') {
+        setGalleryImages([
+          'https://ik.imagekit.io/tz33swtq7h/Resonance/_J4A6004.JPG.jpeg',
+          'https://ik.imagekit.io/tz33swtq7h/Resonance/C8806T01.JPG',
+          'https://ik.imagekit.io/tz33swtq7h/Resonance/C8683T01.JPG',
+        ]);
       } else {
         const items = Array.from({ length: 4 }).map((_, i) => {
           const seed = `${slug}${i}`;
