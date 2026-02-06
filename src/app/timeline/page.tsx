@@ -135,12 +135,12 @@ const TimelinePage: React.FC = () => {
     },
     {
       id: '14',
-      date: '2027-June',
-      title: 'Partnership with Local Businesses',
-      description: 'Forged partnerships with local businesses for sponsorships and collaborations.',
-      icon: <Briefcase className="text-white" />,
+      date: '2024-August',
+      title: 'Initiated an event named "SAY NO TO DRUGS WAR"',
+      description: '',
+      icon: <Radio className="text-white" />,
       image: 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80',
-      category: 'Business',
+      category: 'Awareness',
       color: 'rose',
     },
     {
