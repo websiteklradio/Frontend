@@ -107,9 +107,9 @@ const TimelinePage: React.FC = () => {
     },
     {
       id: '11',
-      date: '2027-March',
-      title: 'Interview with a Famous Alumnus',
-      description: 'Featured an exclusive interview with a distinguished alumnus, sharing their success story.',
+      date: '2024-December',
+      title: 'Hosted and Partnered for KL KABADDI LEAGUE Season 3',
+      description: '',
       icon: <Radio className="text-white" />,
       image: 'https://images.unsplash.com/photo-1557760205-4f36531c38a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80',
     },
