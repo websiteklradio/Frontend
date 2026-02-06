@@ -78,12 +78,21 @@ export default function EventDetailPage() {
 
   useEffect(() => {
     if (slug) {
-      const items = Array.from({ length: 4 }).map((_, i) => {
-        const seed = `${slug}${i}`;
-        const height = Math.floor(Math.random() * (900 - 400 + 1)) + 400; // Random height
-        return `https://picsum.photos/seed/${seed}/600/${height}`;
-      });
-      setGalleryImages(items);
+      if (slug === 'event-resonance') {
+        setGalleryImages([
+          'https://ik.imagekit.io/tz33swtq7h/Resonance/DSC08982.JPG?updatedAt=1770367610318',
+          'https://ik.imagekit.io/tz33swtq7h/Resonance/_DSC4073.JPG?updatedAt=1770367609676',
+          'https://ik.imagekit.io/tz33swtq7h/Resonance/_DSC4072.JPG?updatedAt=1770367609552',
+          'https://ik.imagekit.io/tz33swtq7h/Resonance/_DSC4075.JPG?updatedAt=1770367609322',
+        ]);
+      } else {
+        const items = Array.from({ length: 4 }).map((_, i) => {
+          const seed = `${slug}${i}`;
+          const height = Math.floor(Math.random() * (900 - 400 + 1)) + 400; // Random height
+          return `https://picsum.photos/seed/${seed}/600/${height}`;
+        });
+        setGalleryImages(items);
+      }
     }
   }, [slug]);
 
