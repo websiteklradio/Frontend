@@ -61,10 +61,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 avatarId: userData.avatarId || '1',
             };
             setUser(apiUser);
-            if (isAuthPage) {
-                const redirectPath = roleRedirects[apiUser.role] || '/dashboard';
-                router.replace(redirectPath);
-            }
         } else {
             throw new Error('Invalid session');
         }
@@ -85,6 +81,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     verifyAuth();
   }, [verifyAuth]);
 
+  useEffect(() => {
+    if (user && pathname === '/login') {
+      const redirectPath = roleRedirects[user.role] || '/dashboard';
+      router.replace(redirectPath);
+    }
+  }, [user, pathname, router]);
   
   const login = useCallback(async (role: string, username: string, password: string): Promise<{ success: boolean; error?: string }> => {
     setLoading(true);
@@ -103,9 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         avatarId: userData.avatarId || '1',
       };
       setUser(apiUser);
-      
-      const redirectPath = roleRedirects[userData.role as UserRole] || '/dashboard';
-      router.replace(redirectPath);
+      setLoading(false);
       
       return { success: true };
     } catch (error: any) {
@@ -113,7 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
       return { success: false, error: errorMessage };
     }
-  }, [router]);
+  }, []);
   
   const logout = useCallback(() => {
     setUser(null);
