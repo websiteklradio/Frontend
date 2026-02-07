@@ -145,6 +145,21 @@ const kabaddiImages = [
     'https://ik.imagekit.io/tz33swtq7h/Kabaddi/KABADDI/WhatsApp%20Image%202026-02-05%20at%2010.58.27%20PM.jpeg?updatedAt=1770460516509'
 ];
 
+const klsat2Images = [
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/DSC9800.JPG?updatedAt=1770460599413',
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/DSC9818.JPG?updatedAt=1770460599137',
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/DSC9793.JPG?updatedAt=1770460598607',
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/DSC9808.JPG?updatedAt=1770460598343',
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/_DSC0835.jpg?updatedAt=1770460598304',
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/_DSC0842.jpg?updatedAt=1770460597890',
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/_DSC0732.jpg?updatedAt=1770460597665',
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/_DSC1273.jpg?updatedAt=1770460597309',
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/WhatsApp%20Image%202026-02-06%20at%2012.13.28%20PM.jpeg?updatedAt=1770460596988',
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/DSC09911_edited.jpg?updatedAt=1770460596821',
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/WhatsApp%20Image%202026-02-06%20at%2012.13.30%20PM.jpeg?updatedAt=1770460596260',
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/WhatsApp%20Image%202026-02-06%20at%2012.18.36%20PM.jpeg?updatedAt=1770460596267'
+];
+
 
 export default function EventDetailPage() {
   const params = useParams<{ slug: string }>();
@@ -164,6 +179,8 @@ export default function EventDetailPage() {
         setGalleryImages(femflareImages);
       } else if (slug === 'event-kabbadi') {
         setGalleryImages(kabaddiImages);
+      } else if (slug === 'event-klsat2') {
+        setGalleryImages(klsat2Images);
       } else {
         const imageCount = galleryImageCounts[slug] || 4; // Default to 4
         const items = Array.from({ length: imageCount }).map((_, i) => {
@@ -198,9 +215,10 @@ export default function EventDetailPage() {
                 {event ? (
                     <div className="bg-background/70 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-white/10">
                         <div
-                            className="w-full h-96 bg-cover bg-no-repeat bg-center rounded-lg mb-6"
+                            className="w-full h-[32rem] bg-contain bg-no-repeat bg-center rounded-lg mb-6"
                             style={{ 
                                 backgroundImage: `url(${eventImage?.imageUrl || 'https://picsum.photos/seed/default/800/400'})`,
+                                backgroundPosition: 'center center',
                             }}
                         ></div>
                         <div className="text-center">
