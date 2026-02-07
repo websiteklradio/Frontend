@@ -76,12 +76,38 @@ const galleryImageCounts: { [key: string]: number } = {
   'event-klsat2': 13,
   'event-prachayamila': 3,
   'event-radio-fiesta': 15,
-  'event-resonance': 25,
+  'event-resonance': 23,
   'event-samyak': 9,
   'event-surabi': 6,
   'event-udbav': 5,
   'event-yuva': 23,
 };
+
+const resonanceImages = [
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/DSC07351.JPG?updatedAt=1770460872039',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/DSC08868.JPG?updatedAt=1770460872109',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/DSC08979.JPG?updatedAt=1770460873307',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/DSC08982.JPG?updatedAt=1770460874425',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4064.JPG?updatedAt=1770460874642',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4070.JPG?updatedAt=1770460874798',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4061.JPG?updatedAt=1770460874870',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4068.JPG?updatedAt=1770460875207',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4088.JPG?updatedAt=1770460875362',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4072.JPG?updatedAt=1770460875390',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4069.JPG?updatedAt=1770460875403',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4089.JPG?updatedAt=1770460875406',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4083.JPG?updatedAt=1770460875492',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4085.JPG?updatedAt=1770460875473',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4101.JPG?updatedAt=1770460875576',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/DSC09061.JPG?updatedAt=1770460875539',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4073.JPG?updatedAt=1770460875632',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4063.JPG?updatedAt=1770460875695',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4082.JPG?updatedAt=1770460879130',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4075.JPG?updatedAt=1770460879211',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/_DSC4067.JPG?updatedAt=1770460879266',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/RAV_8690.JPG?updatedAt=1770460876548',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/DSC08994.JPG?updatedAt=1770460874664'
+];
 
 export default function EventDetailPage() {
   const params = useParams<{ slug: string }>();
@@ -93,12 +119,16 @@ export default function EventDetailPage() {
 
   useEffect(() => {
     if (slug) {
-      const imageCount = galleryImageCounts[slug] || 4; // Default to 4
-      const items = Array.from({ length: imageCount }).map((_, i) => {
-        const seed = `${slug}${i}`;
-        return `https://picsum.photos/seed/${seed}/800/600`;
-      });
-      setGalleryImages(items);
+      if (slug === 'event-resonance') {
+        setGalleryImages(resonanceImages);
+      } else {
+        const imageCount = galleryImageCounts[slug] || 4; // Default to 4
+        const items = Array.from({ length: imageCount }).map((_, i) => {
+          const seed = `${slug}${i}`;
+          return `https://picsum.photos/seed/${seed}/800/600`;
+        });
+        setGalleryImages(items);
+      }
     }
   }, [slug]);
 
