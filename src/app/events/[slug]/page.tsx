@@ -180,6 +180,18 @@ const radioFiestaImages = [
     'https://ik.imagekit.io/tz33swtq7h/Radio%20Fiesta/Radio%20Fiesta/WhatsApp%20Image%202026-02-05%20at%2010.32.06%20PM.jpeg?updatedAt=1770460772934'
 ];
 
+const samyakImages = [
+    'https://ik.imagekit.io/tz33swtq7h/Samyak-25/Samyak-25/DSC09590.JPG?updatedAt=1770461137629',
+    'https://ik.imagekit.io/tz33swtq7h/Samyak-25/Samyak-25/DSC06384.JPG?updatedAt=1770461134293',
+    'https://ik.imagekit.io/tz33swtq7h/Samyak-25/Samyak-25/C8806T01.JPG?updatedAt=1770461123734',
+    'https://ik.imagekit.io/tz33swtq7h/Samyak-25/Samyak-25/DSC09570.JPG?updatedAt=1770461133388',
+    'https://ik.imagekit.io/tz33swtq7h/Samyak-25/Samyak-25/DSC08595.JPG?updatedAt=1770461131420',
+    'https://ik.imagekit.io/tz33swtq7h/Samyak-25/Samyak-25/C8423T01.JPG?updatedAt=1770461124321',
+    'https://ik.imagekit.io/tz33swtq7h/Samyak-25/Samyak-25/C8683T01.JPG?updatedAt=1770461121913',
+    'https://ik.imagekit.io/tz33swtq7h/Samyak-25/Samyak-25/WhatsApp%20Image%202026-02-06%20at%2011.04.15%20AM.jpeg?updatedAt=1770461122521',
+    'https://ik.imagekit.io/tz33swtq7h/Resonance/_J4A6004.JPG.jpeg'
+];
+
 
 export default function EventDetailPage() {
   const params = useParams<{ slug: string }>();
@@ -205,6 +217,8 @@ export default function EventDetailPage() {
         setGalleryImages(parichayamilaImages);
       } else if (slug === 'event-radio-fiesta') {
         setGalleryImages(radioFiestaImages);
+      } else if (slug === 'event-samyak') {
+        setGalleryImages(samyakImages);
       } else {
         const imageCount = galleryImageCounts[slug] || 4; // Default to 4
         const items = Array.from({ length: imageCount }).map((_, i) => {
@@ -242,7 +256,8 @@ export default function EventDetailPage() {
                             className="w-full h-[32rem] bg-contain bg-no-repeat bg-center rounded-lg mb-6"
                             style={{ 
                                 backgroundImage: `url(${eventImage?.imageUrl || 'https://picsum.photos/seed/default/800/400'})`,
-                                backgroundPosition: 'center',
+                                backgroundSize: 'contain',
+                                backgroundPosition: 'center center',
                             }}
                         ></div>
                         <div className="text-center">
