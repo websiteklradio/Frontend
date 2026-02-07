@@ -76,7 +76,7 @@ const galleryImageCounts: { [key: string]: number } = {
   'event-klsat2': 13,
   'event-prachayamila': 3,
   'event-radio-fiesta': 15,
-  'event-resonance': 24,
+  'event-resonance': 25,
   'event-samyak': 9,
   'event-surabi': 6,
   'event-udbav': 5,
