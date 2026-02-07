@@ -94,14 +94,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       localStorage.setItem('token', token);
       setAuthToken(token);
+      
+      const apiUser: User = {
+          id: userData.id,
+          name: userData.name,
+          username: userData.username,
+          role: userData.role,
+          avatarId: userData.avatarId || '1',
+      };
+      setUser(apiUser);
+      setLoading(false);
 
-      // We don't set the user here. We redirect and let verifyAuth handle it on the new page.
-      // This ensures the user state is fresh and verified from the token, preventing race conditions.
       const redirectPath = roleRedirects[userData.role as UserRole] || '/dashboard';
       router.replace(redirectPath);
       
-      // setLoading is not set to false here because the page is changing.
-      // verifyAuth will handle the loading state on the destination page.
       return { success: true };
     } catch (error: any) {
       setLoading(false);
