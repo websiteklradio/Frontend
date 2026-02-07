@@ -79,34 +79,46 @@
       "imageHint": "live music"
     },
     {
+      "id": "event-calendar",
+      "imageUrl": "https://images.unsplash.com/photo-1506784983877-45594efa4c85?q=80&w=800&auto=format&fit=crop",
+      "imageHint": "calendar schedule",
+      "description": "Calendar event"
+    },
+    {
+      "id": "event-femflare",
+      "imageUrl": "https://images.unsplash.com/photo-1573496773905-f5b17e76b254?q=80&w=800&auto=format&fit=crop",
+      "imageHint": "woman empowerment",
+      "description": "Femflare event"
+    },
+    {
+      "id": "event-kabbadi",
+      "imageUrl": "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?q=80&w=800&auto=format&fit=crop",
+      "imageHint": "sports game",
+      "description": "Kabbadi event"
+    },
+    {
+      "id": "event-klsat2",
+      "imageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop",
+      "imageHint": "technology fair",
+      "description": "KLSAT2 event"
+    },
+    {
+      "id": "event-prachayamila",
+      "imageUrl": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop",
+      "imageHint": "students meeting",
+      "description": "Parichayamila event"
+    },
+    {
+      "id": "event-radio-fiesta",
+      "imageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop",
+      "imageHint": "radio concert",
+      "description": "Radio Fiesta event"
+    },
+    {
       "id": "event-samyak",
       "imageUrl": "https://images.unsplash.com/photo-1620736287754-0647f41d1c61?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjb2xsZWdlJTIwZmVzdHxlbnwwfHx8fDE3Njk2NjQ0NDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "college fest",
       "description": "Samyak event"
-    },
-    {
-      "id": "event-podcasts",
-      "imageUrl": "https://images.unsplash.com/photo-1581464628523-fa4f91e15dc7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwb2RjYXN0JTIwcmVjb3JkaW5nfGVufDB8fHx8MTc2OTY2NDQ0MHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "podcast recording",
-      "description": "Podcasts event"
-    },
-    {
-      "id": "event-yuva",
-      "imageUrl": "https://images.unsplash.com/photo-1763639700554-05bbc741768b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx5b3V0aCUyMGV2ZW50fGVufDB8fHx8MTc2OTY2NDQ0MHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "youth event",
-      "description": "Yuva event"
-    },
-    {
-      "id": "event-ethnic",
-      "imageUrl": "https://images.unsplash.com/photo-1758913340758-88d5719d37f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxldGhuaWMlMjB3ZWFyfGVufDB8fHx8MTc2OTU4Mjg2N3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "ethnic wear",
-      "description": "Ethnic day event"
-    },
-    {
-      "id": "event-funfesta",
-      "imageUrl": "https://images.unsplash.com/photo-1642056447310-b2163a0218b8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmdW4lMjBnYW1lc3xlbnwwfHx8fDE3Njk2NjQ0NDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "fun games",
-      "description": "Funfesta event"
     },
     {
       "id": "event-resonance",
@@ -115,22 +127,10 @@
       "description": "Resonance event"
     },
     {
-      "id": "event-drugs",
-      "imageUrl": "https://images.unsplash.com/photo-1763168555657-00921f695ffd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YXdhcmVuZXNzJTIwY2FtcGFpZ258ZW58MHx8fHwxNzY5NjMyNTk2fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "awareness campaign",
-      "description": "Say no to drugs event"
-    },
-    {
-      "id": "event-sil",
-      "imageUrl": "https://images.unsplash.com/photo-1759922378146-8e143fb47cd4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzdHVkZW50JTIwZXZlbnR8ZW58MHx8fHwxNzY5NjI0MjY3fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "student event",
-      "description": "SIL event"
-    },
-    {
-      "id": "event-vasantham",
-      "imageUrl": "https://images.unsplash.com/photo-1621832985143-e8b8b093e3b7?q=80&w=800&auto=format&fit=crop",
-      "imageHint": "saree fashion",
-      "description": "Vasantham event"
+      "id": "event-surabi",
+      "imageUrl": "https://images.unsplash.com/photo-1549989476-69a92fa57c36?q=80&w=800&auto=format&fit=crop",
+      "imageHint": "cultural performance",
+      "description": "Surabhi event"
     },
     {
       "id": "event-udbav",
@@ -139,10 +139,10 @@
       "description": "Udbav event"
     },
     {
-      "id": "event-carnival",
-      "imageUrl": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=800&auto=format&fit=crop",
-      "imageHint": "music festival",
-      "description": "Carnival event"
+      "id": "event-yuva",
+      "imageUrl": "https://images.unsplash.com/photo-1763639700554-05bbc741768b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx5b3V0aCUyMGV2ZW50fGVufDB8fHx8MTc2OTY2NDQ0MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "youth event",
+      "description": "Yuva event"
     }
   ]
 }

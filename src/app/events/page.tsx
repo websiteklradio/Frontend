@@ -9,59 +9,59 @@ import Link from 'next/link';
 
 const events = [
   {
-    title: 'Vasantham',
-    description: `Not only in campus we are here to explore each every corner associated with your passion. Here we introduce multiple number of talents and the back stories of each and every ornament and the history of sarees that we are carrying forward from few decades`,
-    image: 'event-vasantham'
+    title: 'Calendar',
+    description: 'Our annual calendar launch, showcasing a year of memories and achievements.',
+    image: 'event-calendar'
   },
   {
-    title: 'Udbav',
-    description: `"UDBAV" An event where talent meets the opportunity.. Along with our students we are always encourage  people out of  campus to showcase their talents and grab the recognitions from our Team and the university`,
-    image: 'event-udbav'
+    title: 'Femflare',
+    description: 'Celebrating the spirit of womanhood with inspiring talks and performances.',
+    image: 'event-femflare'
   },
   {
-    title: 'Carnival',
-    description: `"CARNIVAL"- For Few minutes we forgot about ourselves , academics. we will vibe for each and every bite of music and create memories which will lock in our cameras`,
-    image: 'event-carnival'
+    title: 'Kabaddi',
+    description: 'High-energy Kabaddi tournament where teams battle for glory.',
+    image: 'event-kabbadi'
   },
   {
-    title: 'Samyak',
-    description: `2 days which equals to 48 hours but in our definition these two days are not meant for 48 hours which will be equals to lifetime memories...The photos , vedioes, reunions, meetups, catchups, and mainly guests and last but not least non-stop DJ. we don't let our energies down for those two days ..Every single student in this university will be waiting for these night's to hangout with their friends`,
-    image: 'event-samyak'
+    title: 'KLSAT2',
+    description: 'Showcasing cutting-edge student projects and technological innovations.',
+    image: 'event-klsat2'
   },
   {
-    title: 'Podcasts',
-    description: `Till the date you are very familiar without our Liveshows ,podcasts with our lectures, events associated with KLRadio..Here for the first time in the history we did a wonderful Podcasts with the personalities known for their talent along with passions.We are so greatful to have time to gain the knowledge from the great people.`,
-    image: 'event-podcasts'
+    title: 'Parichayamila',
+    description: 'A grand welcome for the new batch of students to the KL family.',
+    image: 'event-prachayamila'
   },
   {
-    title: 'Yuva Event',
-    description: `Great initiative taken by Youth Radio Andhra. .initiative to meet new persons and encourage the hidden talents and showcase them among all behalf of AP state..`,
-    image: 'event-yuva'
-  },
-  {
-    title: 'Ethnic Day',
-    description: `meet the students who carry their confidence by their outfits and showcase their way of beauty from their customes`,
-    image: 'event-ethnic'
-  },
-  {
-    title: 'Funfesta',
-    description: `guys here you can see the components includes songs, dance, translating dailogues , playing games , arranging puzzles and what not!!! I will promise that you will enjoy this events for sure`,
-    image: 'event-funfesta'
+    title: 'Radio Fiesta',
+    description: 'The ultimate celebration of radio with live shows, music, and fun.',
+    image: 'event-radio-fiesta'
   },
   {
     title: 'Resonance',
-    description: `Hardest good byes includes lifetime memories and endless relationships with our extended family...Our senior radio members are reconiziged by their own talents and new head's are introduced through this event`,
+    description: `Hardest goodbyes include lifetime memories and endless relationships with our extended family. Our senior radio members are recognized and new heads are introduced.`,
     image: 'event-resonance'
   },
   {
-    title: 'Say No To Drugs',
-    description: `we are not only succeed in cultural events we did many programmerelated to the topic "SAY NO TO DRUGS"`,
-    image: 'event-drugs'
+    title: 'Samyak',
+    description: `Our university's biggest cultural fest. Two days of non-stop fun, music, and memories.`,
+    image: 'event-samyak'
   },
   {
-    title: 'SIL Events',
-    description: `not only events consists of entertainment, awareness we  conducted events and provided SIL points that students crave for.`,
-    image: 'event-sil'
+    title: 'Surabhi',
+    description: 'A cultural extravaganza showcasing diverse talents in music, dance, and arts.',
+    image: 'event-surabi'
+  },
+  {
+    title: 'Udbhav',
+    description: `"UDBAV" An event where talent meets opportunity, encouraging students to showcase their skills.`,
+    image: 'event-udbav'
+  },
+  {
+    title: 'Yuva',
+    description: `A great initiative to meet new people, encourage hidden talents, and showcase them on a large platform.`,
+    image: 'event-yuva'
   }
 ];
 
