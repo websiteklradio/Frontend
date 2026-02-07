@@ -80,7 +80,7 @@
     },
     {
       "id": "event-calendar",
-      "imageUrl": "https://images.unsplash.com/photo-1506784983877-45594efa4c85?q=80&w=800&auto=format&fit=crop",
+      "imageUrl": "https://ik.imagekit.io/tz33swtq7h/Calender/Calendar/DSC01069.JPG?updatedAt=1770460285751",
       "imageHint": "calendar schedule",
       "description": "Calendar event"
     },
@@ -116,7 +116,7 @@
     },
     {
       "id": "event-samyak",
-      "imageUrl": "https://images.unsplash.com/photo-1620736287754-0647f41d1c61?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjb2xsZWdlJTIwZmVzdHxlbnwwfHx8fDE3Njk2NjQ0NDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://ik.imagekit.io/tz33swtq7h/Resonance/_J4A6004.JPG.jpeg",
       "imageHint": "college fest",
       "description": "Samyak event"
     },
