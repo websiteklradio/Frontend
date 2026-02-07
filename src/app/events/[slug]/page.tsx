@@ -130,6 +130,16 @@ const resonanceImages = [
     'https://ik.imagekit.io/tz33swtq7h/Resonance/Resonance/DSC08994.JPG?updatedAt=1770460874664'
 ];
 
+const femflareImages = [
+    'https://ik.imagekit.io/tz33swtq7h/Femflare/femflare/DSC07668_edited.jpg?updatedAt=1770460423661',
+    'https://ik.imagekit.io/tz33swtq7h/Femflare/femflare/DSC07810_edited.jpg?updatedAt=1770460424103',
+    'https://ik.imagekit.io/tz33swtq7h/Femflare/femflare/DSC07854_edited.jpg?updatedAt=1770460424413',
+    'https://ik.imagekit.io/tz33swtq7h/Femflare/femflare/DSC07908_edited.jpg?updatedAt=1770460424465',
+    'https://ik.imagekit.io/tz33swtq7h/Femflare/femflare/DSC07820_edited.jpg?updatedAt=1770460424524',
+    'https://ik.imagekit.io/tz33swtq7h/Femflare/femflare/DSC07834_edited.jpg?updatedAt=1770460424558'
+];
+
+
 export default function EventDetailPage() {
   const params = useParams<{ slug: string }>();
   const slug = params ? params.slug : null;
@@ -144,6 +154,8 @@ export default function EventDetailPage() {
         setGalleryImages(resonanceImages);
       } else if (slug === 'event-calendar') {
         setGalleryImages(calendarImages);
+      } else if (slug === 'event-femflare') {
+        setGalleryImages(femflareImages);
       } else {
         const imageCount = galleryImageCounts[slug] || 4; // Default to 4
         const items = Array.from({ length: imageCount }).map((_, i) => {
