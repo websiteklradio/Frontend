@@ -196,9 +196,9 @@ const surabhiImages = [
     'https://ik.imagekit.io/tz33swtq7h/Surabi-25/Surabi-25/IMG_1337.JPG?updatedAt=1770461285784',
     'https://ik.imagekit.io/tz33swtq7h/Surabi-25/Surabi-25/IMG_1263.JPG?updatedAt=1770461285687',
     'https://ik.imagekit.io/tz33swtq7h/Surabi-25/Surabi-25/IMG_1104.JPG?updatedAt=1770461285466',
+    'https://ik.imagekit.io/tz33swtq7h/Surabi-25/Surabi-25/WhatsApp%20Image%202026-02-05%20at%2010.33.34%20PM.jpeg?updatedAt=1770461285440',
     'https://ik.imagekit.io/tz33swtq7h/Surabi-25/Surabi-25/DSC00932.JPG?updatedAt=1770461284575',
-    'https://ik.imagekit.io/tz33swtq7h/Surabi-25/Surabi-25/DSC00857%20(1).JPG?updatedAt=1770461284508',
-    'https://ik.imagekit.io/tz33swtq7h/Surabi-25/Surabi-25/WhatsApp%20Image%202026-02-05%20at%2010.33.34%20PM.jpeg?updatedAt=1770461285440'
+    'https://ik.imagekit.io/tz33swtq7h/Surabi-25/Surabi-25/DSC00857%20(1).JPG?updatedAt=1770461284508'
 ];
 
 
