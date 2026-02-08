@@ -14,7 +14,7 @@ import ImageTransitionGallery from '@/components/ui/ImageTransitionGallery';
 const events = [
     {
       title: 'Calendar',
-      description: 'Our annual calendar launch, showcasing a year of memories and achievements.',
+      description: 'The KL Radio Calendar was introduced as a thoughtful initiative to document and celebrate important events, festivals, and significant days throughout the year. Designed exclusively for KL Radio, the calendar reflects the organization’s journey, values, and milestones, serving as both a functional guide and a symbol of unity and identity.',
       image: 'event-calendar'
     },
     {
@@ -29,27 +29,27 @@ const events = [
     },
     {
       title: 'KLSAT2',
-      description: 'Showcasing cutting-edge student projects and technological innovations.',
+      description: 'KLSAT-2 represents a remarkable achievement in innovation and technological advancement at KL University. The successful development and launch of three satellites in the presence of distinguished authorities stands as a testament to academic excellence and vision. KL Radio proudly served as the media partner for this historic event, contributing to the dissemination of inspiration and highlighting how small dreams can transform into extraordinary realities.',
       image: 'event-klsat2'
     },
     {
       title: 'Parichayamila',
-      description: 'A grand welcome for the new batch of students to the KL family.',
+      description: 'KL Radio continuously supports and encourages the creative talents hidden within university students. *Parichayamila* is a cover song collaboratively produced by students, capturing emotions of love, elegance, and artistic expression. The grand launch of this cover song highlighted teamwork, musical passion, and the dedication of young artists, serving as a proud moment for KL Radio and its creative community.',
       image: 'event-prachayamila'
     },
     {
       title: 'Radio Fiesta',
-      description: 'The ultimate celebration of radio with live shows, music, and fun.',
+      description: 'Radio Fiesta marks an exciting milestone in KL Radio’s journey of event organization. Building on years of successful initiatives, Radio Fiesta was introduced as a dedicated celebration to showcase talent, creativity, and entertainment. The event brought students together to enjoy performances, engage socially, and create lasting memories, strengthening the sense of unity and joy within the campus.',
       image: 'event-radio-fiesta'
     },
     {
       title: 'Resonance',
-      description: `Hardest goodbyes include lifetime memories and endless relationships with our extended family. Our senior radio members are recognized and new heads are introduced.`,
+      description: `Resonance is an emotional and meaningful event that marks transitions within the KL Radio family. It serves as a farewell to senior radio members while celebrating the lifelong memories, friendships, and bonds they have built. The event also recognizes the talents and contributions of outgoing members and introduces new leadership, symbolizing continuity, growth, and the strengthening of the KL Radio community.`,
       image: 'event-resonance'
     },
     {
       title: 'Samyak',
-      description: `Our university's biggest cultural fest. Two days of non-stop fun, music, and memories.`,
+      description: `Samyak is one of the most eagerly awaited events in the university, spanning two days that transform into a lifetime of cherished memories. Although defined as 48 hours, Samyak transcends time through its electrifying energy, nonstop DJ performances, guest appearances, reunions, meetups, and countless moments of joy. Students from across the university come together to celebrate friendship, freedom, and festivity, making Samyak a symbol of collective happiness and unforgettable campus life.`,
       image: 'event-samyak'
     },
     {
@@ -59,12 +59,12 @@ const events = [
     },
     {
       title: 'Udbhav',
-      description: `"UDBAV" An event where talent meets opportunity, encouraging students to showcase their skills.`,
+      description: `Udbav is a dynamic platform designed to bridge talent and opportunity. Through this event, KL Radio extends its encouragement not only to university students but also to individuals outside the campus, inviting them to showcase their skills and creativity. Udbav plays a crucial role in identifying emerging talent, providing recognition, and offering exposure at both team and university levels. It fosters confidence, inclusivity, and a strong sense of achievement among participants.`,
       image: 'event-udbav'
     },
     {
       title: 'Yuva',
-      description: `A great initiative to meet new people, encourage hidden talents, and showcase them on a large platform.`,
+      description: `The Yuva Event is a meaningful initiative led by Youth Radio Andhra Pradesh with the objective of identifying and nurturing hidden talents among youth. This event serves as a platform to connect with new individuals, encourage creativity, and provide statewide exposure across Andhra Pradesh. By promoting inclusivity and innovation, the Yuva Event empowers young minds and strengthens the voice of youth through expression and collaboration.`,
       image: 'event-yuva'
     }
   ];
@@ -146,7 +146,6 @@ const kabaddiImages = [
 ];
 
 const klsat2Images = [
-    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/DSC9800.JPG?updatedAt=1770460599413',
     'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/DSC9818.JPG?updatedAt=1770460599137',
     'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/DSC9793.JPG?updatedAt=1770460598607',
     'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/DSC9808.JPG?updatedAt=1770460598343',
@@ -157,7 +156,8 @@ const klsat2Images = [
     'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/WhatsApp%20Image%202026-02-06%20at%2012.13.28%20PM.jpeg?updatedAt=1770460596988',
     'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/DSC09911_edited.jpg?updatedAt=1770460596821',
     'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/WhatsApp%20Image%202026-02-06%20at%2012.13.30%20PM.jpeg?updatedAt=1770460596260',
-    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/WhatsApp%20Image%202026-02-06%20at%2012.18.36%20PM.jpeg?updatedAt=1770460596267'
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/WhatsApp%20Image%202026-02-06%20at%2012.18.36%20PM.jpeg?updatedAt=1770460596267',
+    'https://ik.imagekit.io/tz33swtq7h/Klsat/KLSAT/DSC9800.JPG?updatedAt=1770460599413'
 ];
 
 const parichayamilaImages = [
@@ -264,11 +264,9 @@ export default function EventDetailPage() {
                 {event ? (
                     <div className="bg-background/70 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-white/10">
                         <div
-                            className="w-full h-[32rem] bg-contain bg-no-repeat bg-center rounded-lg mb-6"
+                            className="w-full h-[32rem] bg-cover bg-center rounded-lg mb-6"
                             style={{ 
                                 backgroundImage: `url(${eventImage?.imageUrl || 'https://picsum.photos/seed/default/800/400'})`,
-                                backgroundSize: 'contain',
-                                backgroundPosition: 'center center',
                             }}
                         ></div>
                         <div className="text-center">
