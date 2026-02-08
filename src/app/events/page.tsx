@@ -15,12 +15,12 @@ const events = [
   },
   {
     title: 'Femflare',
-    description: 'Celebrating the spirit of womanhood with inspiring talks and performances.',
+    description: 'Femflare is a vibrant celebration dedicated to honoring the strength, resilience, and achievements of women. The event brings together inspiring talks, thought-provoking discussions, and powerful performances that highlight the diverse roles women play in society. By creating a platform for expression, dialogue, and inspiration, Femflare encourages confidence, empowerment, and awareness, fostering a supportive environment that celebrates womanhood in all its forms.',
     image: 'event-femflare'
   },
   {
     title: 'Kabaddi',
-    description: 'High-energy Kabaddi tournament where teams battle for glory.',
+    description: 'The Kabaddi event is a high-energy and adrenaline-filled tournament that showcases teamwork, strategy, and physical endurance. Teams compete with passion and determination, displaying sportsmanship and competitive spirit at its finest. The tournament not only promotes physical fitness and discipline but also strengthens camaraderie and unity among participants, making it a thrilling experience for both players and spectators.',
     image: 'event-kabbadi'
   },
   {
@@ -50,7 +50,7 @@ const events = [
   },
   {
     title: 'Surabhi',
-    description: 'A cultural extravaganza showcasing diverse talents in music, dance, and arts.',
+    description: 'Surabhi is a grand cultural extravaganza that brings together a vibrant blend of music, dance, and artistic performances. The event provides a stage for students to showcase their diverse talents and creative expressions, reflecting cultural richness and artistic excellence. Surabhi celebrates unity in diversity by encouraging participation, creativity, and appreciation for the arts, creating an atmosphere filled with color, rhythm, and inspiration.',
     image: 'event-surabi'
   },
   {
