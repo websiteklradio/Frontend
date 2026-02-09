@@ -113,8 +113,15 @@ function OurTeamPageContent() {
             blurAmount={2}
         >
             <ScrollStackItem itemClassName="bg-card/70 backdrop-blur-lg border border-white/10 text-card-foreground">
-                <h2 className="text-3xl font-bold font-headline">RJ Wing</h2>
-                <p className="mt-4 text-lg text-muted-foreground">The voices of KL Radio. Our RJs are the charismatic hosts who connect with the audience, conduct engaging shows, and bring an infectious energy to the airwaves every single day.</p>
+                 <div className="flex h-full items-center gap-8">
+                    <div className="relative w-1/2 h-full overflow-hidden rounded-2xl">
+                        <Image src="https://ik.imagekit.io/tz33swtq7h/WhatsApp%20Image%202026-02-09%20at%2010.08.26%20PM.jpeg" alt="RJ Wing" fill className="object-cover" />
+                    </div>
+                    <div className="w-1/2">
+                        <h2 className="text-3xl font-bold font-headline">RJ Wing</h2>
+                        <p className="mt-4 text-lg text-muted-foreground">The voices of KL Radio. Our RJs are the charismatic hosts who connect with the audience, conduct engaging shows, and bring an infectious energy to the airwaves every single day.</p>
+                    </div>
+                </div>
             </ScrollStackItem>
             <ScrollStackItem itemClassName="bg-card/70 backdrop-blur-lg border border-white/10 text-card-foreground">
                 <h2 className="text-3xl font-bold font-headline">Creative Wing</h2>
