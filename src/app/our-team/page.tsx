@@ -6,6 +6,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import CircularGallery from '@/components/ui/circular-gallery';
 import ScrollStack, { ScrollStackItem } from '@/components/ui/ScrollStack';
 import { LenisProvider } from '@/components/lenis-provider';
+import Image from 'next/image';
 
 const teamMembers = [
   {
@@ -120,8 +121,15 @@ function OurTeamPageContent() {
                 <p className="mt-4 text-lg text-muted-foreground">The heart of our programming. From drafting compelling show scripts and engaging announcements to producing our thought-provoking podcasts, this wing is where ideas take flight.</p>
             </ScrollStackItem>
             <ScrollStackItem itemClassName="bg-card/70 backdrop-blur-lg border border-white/10 text-card-foreground">
-                <h2 className="text-3xl font-bold font-headline">Technical Wing</h2>
-                <p className="mt-4 text-lg text-muted-foreground">The wizards behind the curtain. This dedicated team manages our live broadcast infrastructure, develops and maintains the station's web presence, and ensures all technology runs smoothly.</p>
+                 <div className="flex h-full items-center gap-8">
+                    <div className="w-1/2">
+                        <h2 className="text-3xl font-bold font-headline">Technical Wing</h2>
+                        <p className="mt-4 text-lg text-muted-foreground">The wizards behind the curtain. This dedicated team manages our live broadcast infrastructure, develops and maintains the station's web presence, and ensures all technology runs smoothly.</p>
+                    </div>
+                    <div className="relative w-1/2 h-full overflow-hidden rounded-2xl">
+                        <Image src="https://ik.imagekit.io/tz33swtq7h/IMG_0259.jpg?updatedAt=1770654468779" alt="Technical Wing" fill className="object-cover" />
+                    </div>
+                </div>
             </ScrollStackItem>
             <ScrollStackItem itemClassName="bg-card/70 backdrop-blur-lg border border-white/10 text-card-foreground">
                 <h2 className="text-3xl font-bold font-headline">Broadcasting Wing</h2>
