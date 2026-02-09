@@ -66,14 +66,14 @@ export default function OurRootsPage() {
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="flex flex-col items-center">
                 <Card className="w-64 h-64 rounded-full overflow-hidden border-4 border-primary shadow-lg">
-                    <Image src={founder.imageUrl} alt={founder.name} width={256} height={256} className="w-full h-full object-cover" />
+                    <Image src={founder.imageUrl} alt={founder.name} width={256} height={256} className="w-full h-full object-cover transition-transform duration-300 hover:scale-110" />
                 </Card>
                 <h3 className="mt-4 text-2xl font-bold">{founder.name}</h3>
                 <p className="text-muted-foreground">{founder.role}</p>
             </div>
             <div className="flex flex-col items-center">
                 <Card className="w-64 h-64 rounded-full overflow-hidden border-4 border-primary shadow-lg">
-                    <Image src={ceo.imageUrl} alt={ceo.name} width={256} height={256} className="w-full h-full object-cover" />
+                    <Image src={ceo.imageUrl} alt={ceo.name} width={256} height={256} className="w-full h-full object-cover transition-transform duration-300 hover:scale-110" />
                 </Card>
                 <h3 className="mt-4 text-2xl font-bold">{ceo.name}</h3>
                 <p className="text-muted-foreground">{ceo.role}</p>
