@@ -20,8 +20,7 @@ const ceo = {
 };
 
 const exHeads = [
-    { name: 'Trivedh', role: 'Ex-Head', imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png' },
-    { name: 'Surya Sahit', role: 'Ex-Head', imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png?updatedAt=1770741347243' },
+    { name: 'Charan', role: 'Ex-Head', imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png?updatedAt=1770741682984' },
 ];
 
 export default function OurRootsPage() {
@@ -68,7 +67,7 @@ export default function OurRootsPage() {
             <h2 className="font-headline text-4xl font-bold tracking-tighter md:text-5xl mb-12">
               Former Heads
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+            <div className="flex flex-wrap justify-center gap-8">
               {exHeads.map((member) => (
                 <div key={member.name} className="flex flex-col items-center text-center">
                   <Card className="w-32 h-32 rounded-full overflow-hidden shadow-md">
