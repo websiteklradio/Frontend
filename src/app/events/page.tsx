@@ -152,7 +152,7 @@ export default function EventsPage() {
               z-index: -1;
               width: 100%;
               height: 100%;
-              border-radius: 12px;
+              border-radius: var(--radius);
               box-shadow: 0 14px 50px -4px hsla(0, 0%, 0%, 0.15);
               opacity: 0;
               transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1.4);
@@ -169,8 +169,8 @@ export default function EventsPage() {
               position: absolute;
               width: 100%;
               height: 100%;
-              border-radius: 12px;
-              background-color: hsl(var(--background));
+              border-radius: var(--radius);
+              background-color: hsl(var(--card));
               border: 1px solid hsl(var(--border));
             }
             .card .front {
@@ -189,7 +189,7 @@ export default function EventsPage() {
               background-color: hsla(223, 13%, 87%, 1);
               background-position: center;
               background-size: cover;
-              border-radius: 12px 12px 0 0;
+              border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
               width: 100%;
               height: 250px;
             }
