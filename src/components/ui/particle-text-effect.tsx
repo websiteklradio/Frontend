@@ -186,7 +186,7 @@ export function ParticleTextEffect({ words = DEFAULT_WORDS, className }: Particl
 
     // Draw text
     offscreenCtx.fillStyle = "white"
-    const fontSize = Math.max(24, Math.min(100, canvas.width / 12));
+    const fontSize = Math.max(24, Math.min(100, canvas.width / 8))
     offscreenCtx.font = `bold ${fontSize}px 'Lexend', sans-serif`
     offscreenCtx.textAlign = "center"
     offscreenCtx.textBaseline = "middle"
@@ -336,14 +336,19 @@ export function ParticleTextEffect({ words = DEFAULT_WORDS, className }: Particl
         if(parent) {
             canvas.width = parent.clientWidth
             canvas.height = parent.clientHeight
-            nextWord(words[wordIndexRef.current % words.length], canvas)
+            if(canvas.width > 0 && canvas.height > 0) {
+                nextWord(words[wordIndexRef.current % words.length], canvas)
+            }
         }
     }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Initialize with first word
-    nextWord(words[0], canvas)
+    // Initialize with first word if canvas is ready
+    if (canvas.width > 0 && canvas.height > 0) {
+        nextWord(words[0], canvas)
+    }
+    
 
     // Start animation
     animate()
