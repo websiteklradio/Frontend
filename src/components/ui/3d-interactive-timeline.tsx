@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { cn } from '@/lib/utils';
 
 export interface TimelineEvent {
   id: string;
@@ -258,7 +259,7 @@ export const Timeline3D: React.FC<Timeline3DProps> = ({
                         <motion.img
                           src={event.image}
                           alt={event.title}
-                          className="w-full h-full object-cover"
+                          className={cn("w-full h-full object-cover", event.id === '1' && 'object-top')}
                           initial={{ scale: 1.2 }}
                           animate={{ 
                             scale: activeEvent === event.id ? 1.05 : 1,
