@@ -38,6 +38,7 @@ const exHeads = [
     { name: 'M. Sumanth', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead16/400/400' },
     { name: 'P. Jahnavi', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead17/400/400' },
     { name: 'S. Vamsi', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead18/400/400' },
+    { name: 'Trivedh', role: 'Ex-Head', imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png' },
 ];
 
 export default function OurRootsPage() {
