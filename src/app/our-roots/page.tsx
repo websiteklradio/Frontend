@@ -20,24 +20,6 @@ const ceo = {
 };
 
 const exHeads = [
-    { name: 'Dr. K. Sarath', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead1/400/400' },
-    { name: 'Dr. Habibulla Khan', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead2/400/400' },
-    { name: 'K. Sasidhar', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead3/400/400' },
-    { name: 'M. Pavan', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead4/400/400' },
-    { name: 'M. Revanth', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead5/400/400' },
-    { name: 'G. Hemanth', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead6/400/400' },
-    { name: 'A. Dheeraj', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead7/400/400' },
-    { name: 'B. Varun', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead8/400/400' },
-    { name: 'Ch. Amulya', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead9/400/400' },
-    { name: 'D. Vinay', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead10/400/400' },
-    { name: 'K. Akhil', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead11/400/400' },
-    { name: 'T. Hemanth', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead12/400/400' },
-    { name: 'B. Abhinav', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead13/400/400' },
-    { name: 'D. Anvesh', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead14/400/400' },
-    { name: 'V. Sumanth', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead15/400/400' },
-    { name: 'M. Sumanth', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead16/400/400' },
-    { name: 'P. Jahnavi', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead17/400/400' },
-    { name: 'S. Vamsi', role: 'Ex-Head', imageUrl: 'https://picsum.photos/seed/exhead18/400/400' },
     { name: 'Trivedh', role: 'Ex-Head', imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png' },
     { name: 'Surya Sahit', role: 'Ex-Head', imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png?updatedAt=1770741347243' },
 ];
