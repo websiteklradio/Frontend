@@ -378,14 +378,19 @@ export function StickyScrollSection({ items, title = "Announcements" }: { items?
             width: 100%;
             transform: none;
           }
+
+          .sticky-scroll-section-container .card {
+            aspect-ratio: 3 / 7;
+          }
           
           .sticky-scroll-section-container .card-front h2 {
-            font-size: 1rem;
+            font-size: 1.5rem;
           }
 
           .sticky-scroll-section-container .card-back {
-            font-size: 0.8rem;
+            font-size: 1.1rem;
             padding: 1.5rem;
+            line-height: 1.5;
           }
 
           .sticky-scroll-section-container .card-back span {
