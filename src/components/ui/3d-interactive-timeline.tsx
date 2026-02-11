@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -258,7 +259,7 @@ export const Timeline3D: React.FC<Timeline3DProps> = ({
                         <motion.img
                           src={event.image}
                           alt={event.title}
-                          className={cn("w-full h-full", (event.id === '1' || event.id === '2') ? "object-contain bg-black" : "object-cover" )}
+                          className="w-full h-full object-contain"
                           initial={{ scale: 1.2 }}
                           animate={{ 
                             scale: activeEvent === event.id ? 1.05 : 1,

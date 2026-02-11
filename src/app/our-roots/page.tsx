@@ -46,11 +46,11 @@ const exHeads: { name: string, role: string, imageUrl: string }[] = [{
 }, {
     name: 'P. Ronith',
     role: 'Former Head',
-    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png?updatedAt=1770747725660'
-}, {
-    name: 'P.Ronith',
-    role: 'Former Head',
     imageUrl: 'https://ik.imagekit.io/tz33swtq7h/WhatsApp%20Image%202026-02-10%20at%207.21.15%20PM.jpeg?updatedAt=1770747943741'
+}, {
+    name: 'Pawan Sai Srinivas Panigrahi',
+    role: 'Former Head',
+    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png?updatedAt=1770747725660'
 }];
 
 export default function OurRootsPage() {
