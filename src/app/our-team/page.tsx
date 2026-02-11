@@ -169,9 +169,14 @@ function OurTeamPageContent() {
                 </div>
             </ScrollStackItem>
             <ScrollStackItem itemClassName="bg-card/70 backdrop-blur-lg border border-white/10 text-card-foreground">
-                <div className="p-4 md:p-0">
-                    <h2 className="text-2xl md:text-3xl font-bold font-headline">PR & Marketing Wing</h2>
-                    <p className="mt-4 text-base md:text-lg text-muted-foreground">The bridge to our community and beyond. They handle public relations, devise marketing strategies, manage our social media presence, and promote our events and the station's brand.</p>
+                 <div className="flex flex-col md:flex-row h-full items-center gap-4 md:gap-8">
+                    <div className="w-full md:w-1/2 p-4 md:p-0">
+                        <h2 className="text-2xl md:text-3xl font-bold font-headline">PR & Marketing Wing</h2>
+                        <p className="mt-4 text-base md:text-lg text-muted-foreground">The bridge to our community and beyond. They handle public relations, devise marketing strategies, manage our social media presence, and promote our events and the station's brand.</p>
+                    </div>
+                    <div className="relative w-full md:w-1/2 h-48 md:h-full overflow-hidden rounded-2xl">
+                        <Image src="https://ik.imagekit.io/tz33swtq7h/IMG_8900.JPG.jpeg" alt="PR & Marketing Wing" fill className="object-cover" />
+                    </div>
                 </div>
             </ScrollStackItem>
             <ScrollStackItem itemClassName="bg-card/70 backdrop-blur-lg border border-white/10 text-card-foreground">
