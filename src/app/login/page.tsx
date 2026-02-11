@@ -295,7 +295,7 @@ export default function LoginPage() {
      <div className="min-h-screen grid lg:grid-cols-2">
       <div className="relative hidden lg:flex flex-col justify-between bg-gradient-to-br from-primary/90 via-primary to-primary/80 p-12 text-primary-foreground">
         <div className="relative z-20 flex items-center gap-3 text-lg font-semibold">
-           <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={40} height={40} className="h-10 w-10 rounded-full" />
+           <Image src="https://ik.imagekit.io/tz33swtq7h/logo.jpg" alt="KL Radio Logo" width={40} height={40} className="h-10 w-10 rounded-full" />
             <span>KL Radio</span>
         </div>
 
@@ -482,7 +482,7 @@ export default function LoginPage() {
       <div className="flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-[420px]">
           <div className="lg:hidden flex items-center justify-center gap-2 text-lg font-semibold mb-12">
-            <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={40} height={40} className="h-10 w-10 rounded-full" />
+            <Image src="https://ik.imagekit.io/tz33swtq7h/logo.jpg" alt="KL Radio Logo" width={40} height={40} className="h-10 w-10 rounded-full" />
             <span className="font-semibold text-xl">KL Radio</span>
           </div>
 

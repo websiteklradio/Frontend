@@ -14,7 +14,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-24 max-w-screen-2xl items-center justify-between">
         <Link href="/" className="flex items-center space-x-4">
-          <Image src="https://ik.imagekit.io/bhanuteja110/image.png" alt="KL Radio Logo" width={160} height={160} className="h-40 w-40 rounded-full" />
+          <Image src="https://ik.imagekit.io/tz33swtq7h/logo.jpg" alt="KL Radio Logo" width={160} height={160} className="h-40 w-40 rounded-full" />
           <span className="font-bold sm:inline-block text-2xl">KL Radio</span>
         </Link>
         <div className="flex flex-1 items-center justify-end space-x-4">

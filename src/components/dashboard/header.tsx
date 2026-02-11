@@ -28,7 +28,7 @@ export function DashboardHeader() {
         <div className="flex items-center justify-between w-full">
           <Link href="/dashboard" className="flex items-center gap-3">
             <Image
-              src="https://ik.imagekit.io/bhanuteja110/image.png"
+              src="https://ik.imagekit.io/tz33swtq7h/logo.jpg"
               alt="KL Radio Logo"
               width={40}
               height={40}
