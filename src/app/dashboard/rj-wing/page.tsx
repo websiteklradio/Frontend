@@ -16,6 +16,13 @@ import api from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
 type Script = {
   id: string;
@@ -54,6 +61,7 @@ export default function RJWingPage() {
   const [assignedNews, setAssignedNews] = useState<NewsItem[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [podcastForRecording, setPodcastForRecording] = useState<PodcastScript | null>(null);
+  const [selectedNewsItem, setSelectedNewsItem] = useState<NewsItem | null>(null);
 
   const fetchPodcast = async () => {
     try {
@@ -197,9 +205,9 @@ export default function RJWingPage() {
                   <div className="space-y-4">
                     {isLoading ? <div className="space-y-2 pr-4"><Skeleton className="h-16 w-full" /><Skeleton className="h-16 w-full" /></div> : assignedNews.length > 0 ? (
                         assignedNews.map((item) => (
-                        <div key={item.id} className="p-4 border rounded-lg">
-                            <h3 className="font-semibold">{item.title}</h3>
-                            <p className="text-sm text-muted-foreground mt-1">{item.content}</p>
+                        <div key={item.id} className="p-4 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => setSelectedNewsItem(item)}>
+                            <h3 className="font-semibold truncate">{item.title}</h3>
+                            <p className="text-sm text-muted-foreground mt-1 truncate">{item.content}</p>
                             <p className="text-xs text-muted-foreground/70 mt-2">Source: {item.source}</p>
                         </div>
                         ))
@@ -280,8 +288,26 @@ export default function RJWingPage() {
           </CardFooter>
         )}
       </Card>
+
+      <Dialog open={!!selectedNewsItem} onOpenChange={(isOpen) => !isOpen && setSelectedNewsItem(null)}>
+        <DialogContent className="sm:max-w-[625px]">
+          {selectedNewsItem && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{selectedNewsItem.title}</DialogTitle>
+                <DialogDescription>
+                  Source: {selectedNewsItem.source}
+                </DialogDescription>
+              </DialogHeader>
+              <ScrollArea className="max-h-[60vh] my-4">
+                <div className="pr-4 whitespace-pre-wrap">
+                  <p className="text-sm text-muted-foreground">{selectedNewsItem.content}</p>
+                </div>
+              </ScrollArea>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
-
-    
