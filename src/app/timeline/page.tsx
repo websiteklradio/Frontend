@@ -25,7 +25,7 @@ const TimelinePage: React.FC = () => {
       title: 'Calendar Distribution',
       description: 'The KL Radio Calendar was introduced as a thoughtful initiative to document and celebrate important events, festivals, and significant days throughout the year. Designed exclusively for KL Radio, the calendar reflects the organization’s journey, values, and milestones, serving as both a functional guide and a symbol of unity and identity.',
       icon: <Radio className="text-white" />,
-      image: 'https://ik.imagekit.io/tz33swtq7h/Calender/Calendar/2026%20(3).png',
+      image: 'https://ik.imagekit.io/tz33swtq7h/Calender/Calendar/2026%20(3).png?updatedAt=1770786225522',
     },
     {
       id: '2',
