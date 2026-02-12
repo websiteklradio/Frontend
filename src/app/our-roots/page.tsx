@@ -22,35 +22,35 @@ const ceo = {
 const exHeads: { name: string, role: string, imageUrl: string }[] = [{
     name: 'Trivedh',
     role: 'Former Head',
-    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png'
+    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/our%20roots/Trivedh.png?updatedAt=1770889276887'
 }, {
     name: 'Surya Sahit',
     role: 'Former Head',
-    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png?updatedAt=1770741347243'
+    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/our%20roots/Surya%20Sahit.png?updatedAt=1770889276834'
 }, {
     name: 'Charan',
     role: 'Former Head',
-    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png?updatedAt=1770741682984'
+    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/our%20roots/Charan.png?updatedAt=1770889276853'
 }, {
     name: 'Yoshitha',
     role: 'Former Head',
-    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png?updatedAt=1770743288631'
+    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/our%20roots/Yoshitha.png?updatedAt=1770889276871'
 }, {
     name: 'Adithya Reddy',
     role: 'Former Head',
-    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png?updatedAt=1770743477366'
+    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/our%20roots/Adithya%20Reddy.png?updatedAt=1770889276317'
 }, {
     name: 'Reshmi Paidipati',
     role: 'Former Head',
-    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png?updatedAt=1770746649764'
+    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/our%20roots/Reshmi%20Paidipati.jpeg?updatedAt=1770889276850'
 }, {
-    name: 'P. Ronith',
+    name: 'Ronit',
     role: 'Former Head',
     imageUrl: 'https://ik.imagekit.io/tz33swtq7h/WhatsApp%20Image%202026-02-10%20at%207.21.15%20PM.jpeg?updatedAt=1770747943741'
 }, {
     name: 'Pawan Sai Srinivas Panigrahi',
     role: 'Former Head',
-    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/image.png?updatedAt=1770747725660'
+    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/our%20roots/PAWAN%20SAI%20SRINIVAS%20PANIGRAHI'
 }];
 
 export default function OurRootsPage() {

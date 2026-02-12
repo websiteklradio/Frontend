@@ -131,7 +131,7 @@ function OurTeamPageContent() {
                         <p className="mt-4 text-base md:text-lg text-muted-foreground">The heart of our programming. From drafting compelling show scripts and engaging announcements to producing our thought-provoking podcasts, this wing is where ideas take flight.</p>
                     </div>
                     <div className="relative w-full md:w-1/2 h-48 md:h-full overflow-hidden rounded-2xl">
-                        <Image src="https://ik.imagekit.io/tz33swtq7h/IMG_2721.JPG.jpeg" alt="Creative Wing" fill className="object-cover" />
+                        <Image src="https://ik.imagekit.io/tz33swtq7h/IMG_2721.JPG.jpeg" alt="Creative Wing" fill className="object-contain" />
                     </div>
                 </div>
             </ScrollStackItem>
