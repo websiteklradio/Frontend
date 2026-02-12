@@ -62,6 +62,7 @@ export default function RJWingPage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [podcastForRecording, setPodcastForRecording] = useState<PodcastScript | null>(null);
   const [selectedNewsItem, setSelectedNewsItem] = useState<NewsItem | null>(null);
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
 
   const fetchPodcast = async () => {
     try {
@@ -233,10 +234,10 @@ export default function RJWingPage() {
                         <div className="space-y-4">
                             {isLoading ? <div className="space-y-2 pr-4"><Skeleton className="h-16 w-full" /><Skeleton className="h-16 w-full" /></div> : announcements.length > 0 ? (
                                 announcements.map((announcement) => (
-                                <div key={announcement.id} className="p-4 border rounded-lg">
-                                    <h3 className="font-semibold">{announcement.title}</h3>
+                                <div key={announcement.id} className="p-4 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => setSelectedAnnouncement(announcement)}>
+                                    <h3 className="font-semibold truncate">{announcement.title}</h3>
                                     <p className="text-xs text-muted-foreground mt-1">{new Date(announcement.date).toLocaleDateString()}</p>
-                                    <p className="text-sm text-muted-foreground mt-2">{announcement.content}</p>
+                                    <p className="text-sm text-muted-foreground mt-2 truncate">{announcement.content}</p>
                                 </div>
                                 ))
                             ) : (
@@ -302,6 +303,26 @@ export default function RJWingPage() {
               <ScrollArea className="max-h-[60vh] my-4">
                 <div className="pr-4 whitespace-pre-wrap">
                   <p className="text-sm text-muted-foreground">{selectedNewsItem.content}</p>
+                </div>
+              </ScrollArea>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+      
+      <Dialog open={!!selectedAnnouncement} onOpenChange={(isOpen) => !isOpen && setSelectedAnnouncement(null)}>
+        <DialogContent className="sm:max-w-[625px]">
+          {selectedAnnouncement && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{selectedAnnouncement.title}</DialogTitle>
+                <DialogDescription>
+                  Announced on: {new Date(selectedAnnouncement.date).toLocaleDateString()}
+                </DialogDescription>
+              </DialogHeader>
+              <ScrollArea className="max-h-[60vh] my-4">
+                <div className="pr-4 whitespace-pre-wrap">
+                  <p className="text-sm text-muted-foreground">{selectedAnnouncement.content}</p>
                 </div>
               </ScrollArea>
             </>
