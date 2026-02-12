@@ -1,10 +1,5 @@
 export const events = [
     {
-      title: 'Calendar',
-      description: 'The KL Radio Calendar was introduced as a thoughtful initiative to document and celebrate important events, festivals, and significant days throughout the year. Designed exclusively for KL Radio, the calendar reflects the organization’s journey, values, and milestones, serving as both a functional guide and a symbol of unity and identity.',
-      image: 'event-calendar'
-    },
-    {
       title: 'Femflare',
       description: 'Femflare is a vibrant celebration dedicated to honoring the strength, resilience, and achievements of women. The event brings together inspiring talks, thought-provoking discussions, and powerful performances that highlight the diverse roles women play in society. By creating a platform for expression, dialogue, and inspiration, Femflare encourages confidence, empowerment, and awareness, fostering a supportive environment that celebrates womanhood in all its forms.',
       image: 'event-femflare'
