@@ -159,7 +159,7 @@ const TimelinePage: React.FC = () => {
       title: 'Announcement of New Heads',
       description: '',
       icon: <Book className="text-white" />,
-      image: 'https://ik.imagekit.io/tz33swtq7h/Screenshot%202026-02-12%20115158.png',
+      image: 'https://ik.imagekit.io/tz33swtq7h/Screenshot%202026-02-12%20115713.png?updatedAt=1770877644549',
       category: 'Community',
       color: 'blue',
     },
