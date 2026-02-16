@@ -46,7 +46,7 @@ export const PlaceHolderImages: ImagePlaceholder[] = [
     {
       "id": "broadcasting-head",
       "description": "Team member photo for Broadcasting Head, Ram Mandavilli",
-      "imageUrl": "https://ik.imagekit.io/bhanuteja110/Radio/WhatsApp%20Image%202026-02-04%20at%2010.16.58%20PM.jpeg",
+      "imageUrl": "https://ik.imagekit.io/tz33swtq7h/Ram.jpeg?updatedAt=1771054328581",
       "imageHint": "person microphone"
     },
     {
