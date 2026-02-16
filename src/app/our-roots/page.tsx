@@ -34,7 +34,7 @@ const exHeads: { name: string, role: string, imageUrl: string }[] = [{
 }, {
     name: 'Yoshitha',
     role: 'Former Head',
-    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/our%20roots/Yoshitha.png?updatedAt=1770889276871'
+    imageUrl: 'https://ik.imagekit.io/tz33swtq7h/WhatsApp%20Image%202026-02-16%20at%208.53.03%20PM.jpeg'
 }, {
     name: 'Adithya Reddy',
     role: 'Former Head',
