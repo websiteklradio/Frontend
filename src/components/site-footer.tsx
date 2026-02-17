@@ -20,7 +20,7 @@ export function SiteFooter() {
             <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">
               Contact
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">
+            <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground">
               Privacy Policy
             </Link>
             <div className="flex items-center gap-4">
@@ -45,6 +45,9 @@ export function SiteFooter() {
             P S MEGHAVARSHINI
           </Link>
         </div>
+        <p className="pt-4 text-center text-xs text-muted-foreground/60 max-w-2xl">
+          Songs are streamed via Spotify/YouTube embeds and remain the property of their respective copyright owners under the Copyright Act, 1957 (India). This website does not host or own any music.
+        </p>
       </div>
     </footer>
   );
