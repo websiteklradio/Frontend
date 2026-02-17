@@ -292,6 +292,13 @@ export function ListenLiveSection() {
               {getButtonText()}
             </Button>
 
+            <p className="mt-6 text-xs text-primary-foreground/60 max-w-md">
+              Live will be online from 5:30pm to 8:00pm.
+            </p>
+            <p className="mt-2 text-xs text-primary-foreground/60 max-w-md">
+              All songs are copyrighted by their respective owners. This website claims no ownership of any musical works.
+            </p>
+
             <audio
               ref={audioRef}
               playsInline
