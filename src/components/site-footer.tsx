@@ -37,7 +37,7 @@ export function SiteFooter() {
         </div>
         <div className="pt-4 text-center text-xs text-muted-foreground/80">
           Developed by{' '}
-          <Link href="#" className="font-medium hover:text-foreground hover:underline" target="_blank" rel="noopener noreferrer">
+          <Link href="https://portfolio-bhanu-roan.vercel.app/" className="font-medium hover:text-foreground hover:underline" target="_blank" rel="noopener noreferrer">
             N.BHANUTEJA
           </Link>{' '}
           and{' '}
